@@ -61,7 +61,11 @@ import org.xml.sax.SAXException;
  * This program is used to find Generalized Retriever of Information Tool.
  * 
  * @author Duy L Nguyen (duyl3nguy3n@gmail.com)
- * @version 0.0.1
+ * @version 0.0.2
+ * 
+ * Version 0.0.2
+ * - Consolidated SSN Regex and modes.
+ * - Prepared Text fields for additional regex (Currently Not-Functional)
  * 
  * Version 0.0.1:
  * - Basic GUI interface.
@@ -71,7 +75,9 @@ import org.xml.sax.SAXException;
 public class Main extends JFrame
 {
     public static final String PROGRAM_TITLE = "GRIT";
-    public static final String PROGRAM_VERSION = "0.0.1";
+    public static final String PROGRAM_VERSION = "0.0.2";
+    public static final int WIN_WIDTH = 1200;
+    public static final int WIN_HEIGHT = 950;
     
     // SYSTEM COMPONENTS (invisible system)
     private static final String NL = "\n";
@@ -120,9 +126,7 @@ public class Main extends JFrame
     private String alienCSV;
     private String postCSVResult;
 
-    private List<Pattern> regexHighs;
-    private List<Pattern> regexMediums;
-    private List<Pattern> regexLows;
+    private List<Pattern> regexSSN;
     private List<Pattern> regexDoBs;
     private List<Pattern> regexPoBs;
     private List<Pattern> regexMaidens;
@@ -131,14 +135,16 @@ public class Main extends JFrame
     // GUI COMPONENTS (visible interface)
     private JCheckBox JCBCheckAll;
     private JCheckBox JCBSSN;
-    private JCheckBox JCBHigh;
-    private JCheckBox JCBMedium;
-    private JCheckBox JCBLow;
-
     private JCheckBox JCBPoB; 
     private JCheckBox JCBDoB;
     private JCheckBox JCBMaiden;
     private JCheckBox JCBAlien;
+    
+    private JTextField JTField1;
+    private JTextField JTField2;
+    private JTextField JTField3;
+    private JTextField JTField4;
+    private JTextField JTField5;
     
     private JCheckBox JCBAutoParser;
 
@@ -239,9 +245,7 @@ public class Main extends JFrame
         maidenHTML = "";
         alienHTML = "";
 
-        regexHighs = new ArrayList<Pattern>();
-        regexMediums = new ArrayList<Pattern>();
-        regexLows = new ArrayList<Pattern>();
+        regexSSN = new ArrayList<Pattern>();
         regexDoBs = new ArrayList<Pattern>();
         regexPoBs = new ArrayList<Pattern>();
         regexMaidens = new ArrayList<Pattern>();
@@ -276,27 +280,17 @@ public class Main extends JFrame
         
         // build regex lists
         // perfect old format ssn with hyphens, followed by anything other than a number, dash, or slash
-        addRegexToList("(\\b(?!000)(?!666)(?:[0-6]\\d{2}|7[0-2][0-9]|73[0-3]|7[5-6][0-9]|77[0-2]))-((?!00)\\d{2})-((?!0000)\\d{4})([^0-9-/]|)", regexHighs);
+        addRegexToList("(\\b(?!000)(?!666)(?:[0-6]\\d{2}|7[0-2][0-9]|73[0-3]|7[5-6][0-9]|77[0-2]))-((?!00)\\d{2})-((?!0000)\\d{4})([^0-9-/]|)", regexSSN);
         // same as above but with a newline in front
-        addRegexToList("\\s?^?SSN?\\s?#\\s?[0-9]", regexHighs); //Combined this one with the above regex
+        addRegexToList("\\s?^?SSN?\\s?#\\s?[0-9]", regexSSN); //Combined this one with the above regex
         //look for a space, the letters SSN, a possible space, and any number
-        addRegexToList("\\sSSN\\s?[0-9]", regexHighs);
+        addRegexToList("\\sSSN\\s?[0-9]", regexSSN);
         // SSN or SSA plus the letters NO, plus a number within 5 spaces
-        addRegexToList(" SSN?A?\\s?No\\s?.{0,5}[0-9]", regexHighs);
+        addRegexToList(" SSN?A?\\s?No\\s?.{0,5}[0-9]", regexSSN);
         // group of 3, 2, 4 separated by a space, bounded by a word boundary
-        addRegexToList("(\\b|^)\\d{3} \\d{2} \\d{4}(\\b|$)", regexHighs);
+        addRegexToList("(\\b|^)\\d{3} \\d{2} \\d{4}(\\b|$)", regexSSN);
         // group of 3, 2, 4 separated by a . a / or - bounded by something other than a number, hyphen or slash
-        addRegexToList("([^0-9.-/]|^)\\d{3}[./-]\\d{2}[./-]\\d{4}([^0-9-/]|$)", regexHighs);
-        // look for # sign, three numbers matching rules, anything, then 6 more numbers
-        addRegexToList("#\\s?((?!000)(?!666)(?:[0-6]\\d{2}|7[0-2][0-9]|73[0-3]|7[5-6][0-9]|77[0-2])).((?!00))\\d\\d\\d\\d\\d\\d\\b", regexMediums);
-        // look for three numbers matching rules, anything, then 6 more numbers WITH WORD BOUNDARIES, started by newline
-        addRegexToList("^((?!000)(?!666)(?:[0-6]\\d{2}|7[0-2][0-9]|73[0-3]|7[5-6][0-9]|77[0-2]))((?!00))\\d\\d\\d\\d\\d\\d\\b", regexMediums);
-        //just the words "social security n plus three numbers"
-        addRegexToList("Social Security N.+?\\d{3}", regexMediums);
-        // all rules but with forward slashes (also matches a lot of dates)
-        addRegexToList("\\s?((?!000)(?!666)(?:[0-6]\\d{2}|7[0-2][0-9]|73[0-3]|7[5-6][0-9]|77[0-2]))/((?!00)\\d{2})/((?!0000)\\d{4})", regexLows);    
-        // look for three numbers matching rules, anything, then 6 more numbers WITH WORD BOUNDARIES, not started by > or <
-        addRegexToList("([^><])\\b((?!000)(?!666)(?:[0-6]\\d{2}|7[0-2][0-9]|73[0-3]|7[5-6][0-9]|77[0-2]))((?!00))\\d\\d\\d\\d\\d\\d\\b", regexLows);
+        addRegexToList("([^0-9.-/]|^)\\d{3}[./-]\\d{2}[./-]\\d{4}([^0-9-/]|$)", regexSSN);
         
         //"birth" or "born" or "DOB" within 5 words of mm/dd/yy, mm-dd-yy, mm.dd.yy, mm dd yy, mm/dd/yyyy, mm-dd-yyyy ,mm.dd.yyyy ,mm dd yyyy
         addRegexToList("\\b(birth|born|DOB)\\W*(?:\\w*\\W*){1,5}((\\D+|^)(?:(1[0-2]|0?[1-9])([- /.]+)(3[01]|[12][0-9]|0?[1-9])|(3[01]|[12][0-9]|0?[1-9])([- /.]+)(1[0-2]|0?[1-9]))([- /.]+)(?:19|20)?\\d\\d)", regexDoBs);
@@ -342,14 +336,16 @@ public class Main extends JFrame
         
         JCBCheckAll = new JCheckBox();
         JCBSSN = new JCheckBox();
-        JCBHigh = new JCheckBox();
-        JCBMedium = new JCheckBox();
-        JCBLow = new JCheckBox();
-
         JCBDoB = new JCheckBox();
         JCBMaiden = new JCheckBox();
         JCBPoB = new JCheckBox();
         JCBAlien = new JCheckBox();
+        
+        JTField1 = new JTextField();
+        JTField2 = new JTextField();
+        JTField3 = new JTextField();
+        JTField4 = new JTextField();
+        JTField5 = new JTextField();
         
         JCBAutoParser = new JCheckBox();
 
@@ -372,15 +368,8 @@ public class Main extends JFrame
         //Row1: Elements
         JCBCheckAll.setText("Check All Options");
         JCBCheckAll.setToolTipText("(All Options Activated)");
-        JCBSSN.setText("SSN Match");
-        JCBSSN.setToolTipText("Match SSN Results");
-        JCBHigh.setText("High probability"); JCBHigh.setSelected(true);
-        JCBHigh.setToolTipText("Matches (SSN#, SS#, SSN, 555-55-5555). Most likely to match SSNs. Fewest false positives.");
-        JCBMedium.setText("Medium probability");
-        JCBMedium.setToolTipText("Matches (Social Security Number, #555555555). Matches additional SSNs. More false positives.");
-        JCBLow.setText("Low probability");
-        JCBLow.setToolTipText("Matches (9 numbers in a row, uneven/other dividers). Less likely to match SSNs. More false positives.");
-
+        JCBSSN.setText("SSN Match"); JCBSSN.setSelected(true);
+        JCBSSN.setToolTipText("Matches (SSN#, SS#, SSN, 555-55-5555). Most likely to match SSNs. Fewest false positives.");
         JCBDoB.setText("Date of Birth");
         JCBDoB.setToolTipText("(Birth, Born, DOB with a date) Matches terms related to date of birth.");
         JCBPoB.setText("Place of Birth");
@@ -389,6 +378,7 @@ public class Main extends JFrame
         JCBMaiden.setToolTipText("Matches terms related to maiden names.");
         JCBAlien.setText("Alien Registration Number");
         JCBAlien.setToolTipText("Matches terms to Alien Registration Numbers.");
+        
         
         JCBAutoParser.setText("Read Additional Formats");
         JCBAutoParser.setToolTipText("The program will attempt to read additional file formats.");
@@ -447,23 +437,25 @@ public class Main extends JFrame
 
         //Row1: Panel1: Elements Added
         JPanel panel1 = new JPanel();
-        panel1.setBorder(BorderFactory.createTitledBorder("Match Modes"));
+        panel1.setBorder(BorderFactory.createTitledBorder("PII Match Modes"));
         panel1.setLayout(new BoxLayout(panel1, BoxLayout.PAGE_AXIS));
+        panel1.add(JCBCheckAll);
         panel1.add(JCBSSN);
         panel1.add(JCBDoB);
         panel1.add(JCBMaiden);
         panel1.add(JCBPoB);
         panel1.add(JCBAlien);
-/*
+
         //Row1: Panel2: Elements Added
         JPanel panel2 = new JPanel();
         panel2.setBorder(BorderFactory.createTitledBorder("Other Match Mode"));
         panel2.setLayout(new BoxLayout(panel2, BoxLayout.PAGE_AXIS));
-        panel2.add(JCBDoB);
-        panel2.add(JCBMaiden);
-        panel2.add(JCBPoB);
-        panel2.add(JCBAlien);
-*/
+        panel2.add(JTField1);
+        panel2.add(JTField2);
+        panel2.add(JTField3);
+        panel2.add(JTField4);
+        panel2.add(JTField5);
+
         //Row1: Panel3: Elements Added
         JPanel panel3 = new JPanel();
         panel3.setBorder(BorderFactory.createTitledBorder("Read Mode"));
@@ -497,9 +489,9 @@ public class Main extends JFrame
         JPanel row1 = new JPanel();
         row1.setMinimumSize(new Dimension(Integer.MAX_VALUE, 100));
         row1.setMaximumSize(new Dimension(Integer.MAX_VALUE, 120));
-        row1.setLayout(new GridLayout(0, 3));
+        row1.setLayout(new GridLayout(0, 4));
         row1.add(panel1);
-        //row1.add(panel2);
+        row1.add(panel2);
         row1.add(panel3);
         row1.add(panel4);
         
@@ -558,8 +550,8 @@ public class Main extends JFrame
         this.setTitle(PROGRAM_TITLE + " " + PROGRAM_VERSION);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setResizable(true);
-        this.setPreferredSize(new Dimension(1200, 800));
-        this.setMaximumSize(new Dimension(1200,800));
+        this.setPreferredSize(new Dimension(WIN_WIDTH, WIN_HEIGHT));
+        this.setMaximumSize(new Dimension(WIN_WIDTH,WIN_HEIGHT));
         this.setContentPane(JPMain);
 
 
@@ -684,17 +676,13 @@ public class Main extends JFrame
             if (event.getSource() == JCBCheckAll)
             {
                 if(JCBCheckAll.isSelected() == true) {
-                    JCBHigh.setSelected(true);
-                    JCBMedium.setSelected(true);
-                    JCBLow.setSelected(true);
+                    JCBSSN.setSelected(true);
                     JCBDoB.setSelected(true);
                     JCBMaiden.setSelected(true);
                     JCBPoB.setSelected(true);
                     JCBAlien.setSelected(true);
                } else {
-                    JCBHigh.setSelected(false);
-                    JCBMedium.setSelected(false);
-                    JCBLow.setSelected(false);
+            	   	JCBSSN.setSelected(false);
                     JCBDoB.setSelected(false);
                     JCBMaiden.setSelected(false);
                     JCBPoB.setSelected(false);
@@ -869,7 +857,7 @@ public class Main extends JFrame
             if (event.getSource() == JBRun) 
             {
                 // check if a match mode is selected
-                if (!JCBHigh.isSelected() && !JCBMedium.isSelected() && !JCBLow.isSelected() && !JCBPoB.isSelected() && !JCBDoB.isSelected() && !JCBMaiden.isSelected() && !JCBAlien.isSelected())
+                if (!JCBSSN.isSelected() && !JCBPoB.isSelected() && !JCBDoB.isSelected() && !JCBMaiden.isSelected() && !JCBAlien.isSelected())
                 {
                     JOptionPane.showMessageDialog(Main.this, "ERROR: No match mode is selected.");
                     return; // stop here
@@ -1210,50 +1198,18 @@ public class Main extends JFrame
                 String line = lineA + lineB;
                 Matcher patternMatcher = null;
 
-                if (JCBHigh.isSelected())
+                if (JCBSSN.isSelected())
                 {
-                    for (Pattern regexHigh : regexHighs)
+                    for (Pattern regexHigh : regexSSN)
                     {
                         patternMatcher = regexHigh.matcher(line);
                         while (patternMatcher.find())
                         {
                             ssnCounter++;
-                            resultSSNList.add(new Match(ssnCounter, "High", patternMatcher.group(), line, fileExtension, file, lineNum));
-                            resultSSNListUnique.add(new Match(ssnCounter, "High", patternMatcher.group(), line, fileExtension, file, lineNum));
+                            resultSSNList.add(new Match(ssnCounter, "SSN", patternMatcher.group(), line, fileExtension, file, lineNum));
+                            resultSSNListUnique.add(new Match(ssnCounter, "SSN", patternMatcher.group(), line, fileExtension, file, lineNum));
                             
-                            JBTableModel.addRow(new Object[]{ssnCounter, "High", patternMatcher.group(), line, fileExtension, file, lineNum});
-                        }
-                    }
-                }
-
-                if (JCBMedium.isSelected())
-                {
-                    for (Pattern regexMedium : regexMediums)
-                    {
-                        patternMatcher = regexMedium.matcher(line);
-                        while (patternMatcher.find())
-                        {
-                            ssnCounter++;
-                            resultSSNList.add(new Match(ssnCounter, "Medium", patternMatcher.group(), line, fileExtension, file, lineNum));
-                            resultSSNListUnique.add(new Match(ssnCounter, "Medium", patternMatcher.group(), line, fileExtension, file, lineNum));
-                            
-                            JBTableModel.addRow(new Object[]{ssnCounter, "Medium", patternMatcher.group(), line, fileExtension, file, lineNum});
-                        }
-                    }
-                }
-
-                if (JCBLow.isSelected())
-                {
-                    for (Pattern regexLow : regexLows)
-                    {
-                        patternMatcher = regexLow.matcher(line);
-                        while (patternMatcher.find())
-                        {
-                            ssnCounter++;
-                            resultSSNList.add(new Match(ssnCounter, "Low", patternMatcher.group(), line, fileExtension, file, lineNum));
-                            resultSSNListUnique.add(new Match(ssnCounter, "Low", patternMatcher.group(), line, fileExtension, file, lineNum));
-                            
-                            JBTableModel.addRow(new Object[]{ssnCounter, "Low", patternMatcher.group(), line, fileExtension, file, lineNum});
+                            JBTableModel.addRow(new Object[]{ssnCounter, "SSN", patternMatcher.group(), line, fileExtension, file, lineNum});
                         }
                     }
                 }
@@ -1338,50 +1294,18 @@ public class Main extends JFrame
 
                 Matcher patternMatcher = null;
 
-                if (JCBHigh.isSelected())
+                if (JCBSSN.isSelected())
                 {
-                    for (Pattern regexHigh : regexHighs)
+                    for (Pattern regexHigh : regexSSN)
                     {
                         patternMatcher = regexHigh.matcher(lineA);
                         while (patternMatcher.find())
                         {
                             ssnCounter++;
-                            resultSSNList.add(new Match(ssnCounter, "High", patternMatcher.group(), lineA, fileExtension, file, lineNum));
-                            resultSSNListUnique.add(new Match(ssnCounter, "High", patternMatcher.group(), lineA, fileExtension, file, lineNum));
+                            resultSSNList.add(new Match(ssnCounter, "SSN", patternMatcher.group(), lineA, fileExtension, file, lineNum));
+                            resultSSNListUnique.add(new Match(ssnCounter, "SSN", patternMatcher.group(), lineA, fileExtension, file, lineNum));
 
-                            JBTableModel.addRow(new Object[]{ssnCounter, "High", patternMatcher.group(), lineA, fileExtension, file, lineNum});
-                        }
-                    }
-                }
-
-                if (JCBMedium.isSelected())
-                {
-                    for (Pattern regexMedium : regexMediums)
-                    {
-                        patternMatcher = regexMedium.matcher(lineA);
-                        while (patternMatcher.find())
-                        {
-                            ssnCounter++;
-                            resultSSNList.add(new Match(ssnCounter, "Medium", patternMatcher.group(), lineA, fileExtension, file, lineNum));
-                            resultSSNListUnique.add(new Match(ssnCounter, "Medium", patternMatcher.group(), lineA, fileExtension, file, lineNum));
-                            
-                            JBTableModel.addRow(new Object[]{ssnCounter, "Medium", patternMatcher.group(), lineA, fileExtension, file, lineNum});
-                        }
-                    }
-                }
-
-                if (JCBLow.isSelected())
-                {
-                    for (Pattern regexLow : regexLows)
-                    {
-                        patternMatcher = regexLow.matcher(lineA);
-                        while (patternMatcher.find())
-                        {
-                            ssnCounter++;
-                            resultSSNList.add(new Match(ssnCounter, "Low", patternMatcher.group(), lineA, fileExtension, file, lineNum));
-                            resultSSNListUnique.add(new Match(ssnCounter, "Low", patternMatcher.group(), lineA, fileExtension, file, lineNum));
-
-                            JBTableModel.addRow(new Object[]{ssnCounter, "Low", patternMatcher.group(), lineA, fileExtension, file, lineNum});
+                            JBTableModel.addRow(new Object[]{ssnCounter, "SSN", patternMatcher.group(), lineA, fileExtension, file, lineNum});
                         }
                     }
                 }
@@ -1541,7 +1465,7 @@ public class Main extends JFrame
         private void buildCSVResult()
         {
             postCSVResult += csvWriter.addTableHeader();
-            if (JCBHigh.isSelected() || JCBMedium.isSelected() || JCBLow.isSelected())
+            if (JCBSSN.isSelected())
             {
                 postCSVResult += ssnCSV;
             }
@@ -1577,7 +1501,7 @@ public class Main extends JFrame
             postHtmlResult += htmlWriter.addOpenCenterTag();
             postHtmlResult += htmlWriter.addOpenNavTag();
             postHtmlResult += htmlWriter.addOpenNavULTag();
-            if (JCBHigh.isSelected() || JCBMedium.isSelected() || JCBLow.isSelected())
+            if (JCBSSN.isSelected())
             {
                 postHtmlResult += htmlWriter.addOpenNavLITag();
                 postHtmlResult += htmlWriter.addCounter(ssnCounter);
@@ -1625,7 +1549,7 @@ public class Main extends JFrame
             postHtmlResult += htmlWriter.addCloseNavTag();
             postHtmlResult += htmlWriter.addCloseCenterTag();
 
-            if (JCBHigh.isSelected() || JCBMedium.isSelected() || JCBLow.isSelected() && (ssnCounter > 0))
+            if (JCBSSN.isSelected() && (ssnCounter > 0))
             {
                 postHtmlResult += htmlWriter.addOpenPanelTag();
                 postHtmlResult += htmlWriter.addAnchorLink("ssnResults", "SSN Found Results");
