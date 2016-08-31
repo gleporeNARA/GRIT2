@@ -1,7 +1,8 @@
 package grit;
 
-import javax.swing.*;   
+import javax.swing.*;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hsmf.MAPIMessage;
 import org.apache.poi.hsmf.exceptions.ChunkNotFoundException;
 import org.apache.poi.hssf.extractor.ExcelExtractor;
@@ -60,8 +61,11 @@ import org.xml.sax.SAXException;
 /**
  * This program is used to find Generalized Retriever of Information Tool.
  * 
- * @author Duy L Nguyen (duyl3nguy3n@gmail.com)
- * @version 0.0.2
+ * @author Gautam Mehta (gxmehta@gmail.com), Duy L Nguyen (duyl3nguy3n@gmail.com)
+ * @version 0.0.3
+ * Version 0.0.3
+ * - Other Match mode activated
+ * - All 5 text boxes can search "text" in a single line. Multi-line search has issues.
  * 
  * Version 0.0.2
  * - Consolidated SSN Regex and modes.
@@ -75,7 +79,7 @@ import org.xml.sax.SAXException;
 public class Main extends JFrame
 {
     public static final String PROGRAM_TITLE = "GRIT";
-    public static final String PROGRAM_VERSION = "0.0.2";
+    public static final String PROGRAM_VERSION = "0.0.3";
     public static final int WIN_WIDTH = 1200;
     public static final int WIN_HEIGHT = 950;
     
@@ -105,6 +109,7 @@ public class Main extends JFrame
     private int fileCounter;
     private int readCounter;
     private int matchCounter;
+    private int textCounter;
     private int ssnCounter;
     private int dobCounter;
     private int pobCounter;
@@ -113,12 +118,16 @@ public class Main extends JFrame
     private ExtensionCounter extCounter;
     private Date startSearch;
     private Date endSearch;
+    
+    private String textHTML;
     private String ssnHTML;
     private String dobHTML;
     private String pobHTML;
     private String maidenHTML;
     private String alienHTML;
     private String postHtmlResult;
+    
+    private String textCSV;
     private String ssnCSV;
     private String dobCSV;
     private String pobCSV;
@@ -126,12 +135,13 @@ public class Main extends JFrame
     private String alienCSV;
     private String postCSVResult;
 
+    private List<Pattern> regexText;
     private List<Pattern> regexSSN;
     private List<Pattern> regexDoBs;
     private List<Pattern> regexPoBs;
     private List<Pattern> regexMaidens;
     private List<Pattern> regexAliens;
-
+    
     // GUI COMPONENTS (visible interface)
     private JCheckBox JCBCheckAll;
     private JCheckBox JCBSSN;
@@ -172,6 +182,9 @@ public class Main extends JFrame
     private JScrollPane extPane;
     private JScrollPane catPane;
     
+    private ArrayList<Match> resultTextList;
+    private HashSet<Match> resultTextListUnique;
+    private ArrayList<Match> resultTextListUniqueFinal;
     private ArrayList<Match> resultSSNList;
     private HashSet<Match> resultSSNListUnique;
     private ArrayList<Match> resultSSNListUniqueFinal;
@@ -232,6 +245,7 @@ public class Main extends JFrame
         fileCounter = 0;
         readCounter = 0;
         matchCounter = 0;
+        textCounter = 0;
         ssnCounter = 0;
         dobCounter = 0;
         maidenCounter = 0;
@@ -239,21 +253,26 @@ public class Main extends JFrame
         extCounter = new ExtensionCounter();
         startSearch = null;
         endSearch = null;
+        textHTML = "";
         ssnHTML = "";
         dobHTML = "";
         pobHTML = "";
         maidenHTML = "";
         alienHTML = "";
 
+        regexText = new ArrayList<Pattern>();
         regexSSN = new ArrayList<Pattern>();
         regexDoBs = new ArrayList<Pattern>();
         regexPoBs = new ArrayList<Pattern>();
         regexMaidens = new ArrayList<Pattern>();
         regexAliens = new ArrayList<Pattern>();
-        
+                
+        resultTextList = new ArrayList<Match>();
+        resultTextListUnique = new HashSet<Match>();        
+        resultTextListUniqueFinal = new ArrayList<Match>(); 
         resultSSNList = new ArrayList<Match>();
         resultSSNListUnique = new HashSet<Match>();        
-        resultSSNListUniqueFinal = new ArrayList<Match>();        
+        resultSSNListUniqueFinal = new ArrayList<Match>(); 
         resultOtherMatchList = new ArrayList<Match>();
         skipFiles = new ArrayList<File>();
         skipExtensions = new HashSet<String>();
@@ -279,6 +298,7 @@ public class Main extends JFrame
         skipExtensions.add("tiff");
         
         // build regex lists
+        
         // perfect old format ssn with hyphens, followed by anything other than a number, dash, or slash
         addRegexToList("(\\b(?!000)(?!666)(?:[0-6]\\d{2}|7[0-2][0-9]|73[0-3]|7[5-6][0-9]|77[0-2]))-((?!00)\\d{2})-((?!0000)\\d{4})([^0-9-/]|)", regexSSN);
         // same as above but with a newline in front
@@ -649,7 +669,9 @@ public class Main extends JFrame
             if (event.getSource() == JBRemoveDuplicates)
             {
                 clearOldExport();
-        
+                JBTableModel.setRowCount(0);
+
+                searchTask.cleanTextResults(resultTextListUnique);
                 searchTask.cleanSSNResults(resultSSNListUnique);
                 searchTask.getOtherResults(resultOtherMatchList);
                 JBTableModel.fireTableDataChanged();
@@ -1174,6 +1196,16 @@ public class Main extends JFrame
             // init line counter
             int lineNum = 1;
             String lineA = "";
+            
+            regexText.clear();
+            
+            addTextToRegex(JTField1.getText());
+            addTextToRegex(JTField2.getText());
+            addTextToRegex(JTField3.getText());
+            addTextToRegex(JTField4.getText());
+            addTextToRegex(JTField5.getText());
+            
+            System.out.println(regexText);
 
             // check if file is readable
             if (fileReader.hasNext())
@@ -1197,12 +1229,90 @@ public class Main extends JFrame
                 String lineB = fileReader.nextLine();
                 String line = lineA + lineB;
                 Matcher patternMatcher = null;
-
+                
+                if (!(JTField1.getText().isEmpty()))
+                {
+                    for (Pattern regexText : regexText)
+                    {
+                        patternMatcher = regexText.matcher(line.toLowerCase());
+	            		while (patternMatcher.find())
+	                    {
+	            			textCounter++;
+	                    	resultTextList.add(new Match(textCounter, "Text", JTField1.getText(), line, fileExtension, file, lineNum));
+	                        resultTextListUnique.add(new Match(textCounter, "Text", JTField1.getText(), line, fileExtension, file, lineNum));
+	                        
+	                        JBTableModel.addRow(new Object[]{textCounter, "Text", JTField1.getText(), line, fileExtension, file, lineNum});
+	                    }	
+                    }
+                }
+              
+                if (!(JTField2.getText().isEmpty()))
+                {
+                    for (Pattern regexText : regexText)
+                    {
+                        patternMatcher = regexText.matcher(line.toLowerCase());
+	            		while (patternMatcher.find())
+	                    {
+	                    	textCounter++;
+	                    	resultTextList.add(new Match(textCounter, "Text", JTField2.getText(), line, fileExtension, file, lineNum));
+	                        resultTextListUnique.add(new Match(textCounter, "Text", JTField2.getText(), line, fileExtension, file, lineNum));
+	                        
+	                        JBTableModel.addRow(new Object[]{textCounter, "Text", JTField2.getText(), line, fileExtension, file, lineNum});
+	                    }	
+                    }
+                }
+                
+                if (!(JTField3.getText().isEmpty()))
+                {
+                    for (Pattern regexText : regexText)
+                    {
+                        patternMatcher = regexText.matcher(line.toLowerCase());
+	            		while (patternMatcher.find())
+	                    {
+	                    	textCounter++;
+	                    	resultTextList.add(new Match(textCounter, "Text", JTField3.getText(), line, fileExtension, file, lineNum));
+	                        resultTextListUnique.add(new Match(textCounter, "Text", JTField3.getText(), line, fileExtension, file, lineNum));
+	                        
+	                        JBTableModel.addRow(new Object[]{textCounter, "Text", JTField3.getText(), line, fileExtension, file, lineNum});
+	                    }	
+                    }
+                }
+                if (!(JTField4.getText().isEmpty()))
+                {
+                    for (Pattern regexText : regexText)
+                    {
+                        patternMatcher = regexText.matcher(line.toLowerCase());
+	            		while (patternMatcher.find())
+	                    {
+	                    	textCounter++;
+	                    	resultTextList.add(new Match(textCounter, "Text", JTField4.getText(), line, fileExtension, file, lineNum));
+	                        resultTextListUnique.add(new Match(textCounter, "Text", JTField4.getText(), line, fileExtension, file, lineNum));
+	                        
+	                        JBTableModel.addRow(new Object[]{textCounter, "Text", JTField4.getText(), line, fileExtension, file, lineNum});
+	                    }	
+                    }
+                }
+                if (!(JTField5.getText().isEmpty()))
+                {
+                    for (Pattern regexText : regexText)
+                    {
+                        patternMatcher = regexText.matcher(line.toLowerCase());
+	            		while (patternMatcher.find())
+	                    {
+	                    	textCounter++;
+	                    	resultTextList.add(new Match(textCounter, "Text", JTField5.getText(), line, fileExtension, file, lineNum));
+	                        resultTextListUnique.add(new Match(textCounter, "Text", JTField5.getText(), line, fileExtension, file, lineNum));
+	                        
+	                        JBTableModel.addRow(new Object[]{textCounter, "Text", JTField5.getText(), line, fileExtension, file, lineNum});
+	                    }	
+                    }
+                }
+				
                 if (JCBSSN.isSelected())
                 {
-                    for (Pattern regexHigh : regexSSN)
+                    for (Pattern regexSSN : regexSSN)
                     {
-                        patternMatcher = regexHigh.matcher(line);
+                        patternMatcher = regexSSN.matcher(line);
                         while (patternMatcher.find())
                         {
                             ssnCounter++;
@@ -1293,12 +1403,91 @@ public class Main extends JFrame
             {
 
                 Matcher patternMatcher = null;
+                
+                if (!(JTField1.getText().isEmpty()))
+                {
+                    for (Pattern regexText : regexText)
+                    {
+                        patternMatcher = regexText.matcher(lineA.toLowerCase());
+	            		while (patternMatcher.find())
+	                    {
+	                    	textCounter++;
+	                    	resultTextList.add(new Match(textCounter, "Text", JTField1.getText(), lineA, fileExtension, file, lineNum));
+	                        resultTextListUnique.add(new Match(textCounter, "Text", JTField1.getText(), lineA, fileExtension, file, lineNum));
+	                        
+	                        JBTableModel.addRow(new Object[]{textCounter, "Text", JTField1.getText(), lineA, fileExtension, file, lineNum});
+	                    }	
+                    }
+                }
+                
+                if (!(JTField2.getText().isEmpty()))
+                {
+                    for (Pattern regexText : regexText)
+                    {
+                        patternMatcher = regexText.matcher(lineA.toLowerCase());
+	            		while (patternMatcher.find())
+	                    {
+	                    	textCounter++;
+	                    	resultTextList.add(new Match(textCounter, "Text", JTField2.getText(), lineA, fileExtension, file, lineNum));
+	                        resultTextListUnique.add(new Match(textCounter, "Text", JTField2.getText(), lineA, fileExtension, file, lineNum));
+	                        
+	                        JBTableModel.addRow(new Object[]{textCounter, "Text", JTField2.getText(), lineA, fileExtension, file, lineNum});
+	                    }	
+                    }
+                }
+                
+                if (!(JTField3.getText().isEmpty()))
+                {
+                    for (Pattern regexText : regexText)
+                    {
+                        patternMatcher = regexText.matcher(lineA.toLowerCase());
+	            		while (patternMatcher.find())
+	                    {
+	                    	textCounter++;
+	                    	resultTextList.add(new Match(textCounter, "Text", JTField3.getText(), lineA, fileExtension, file, lineNum));
+	                        resultTextListUnique.add(new Match(textCounter, "Text", JTField3.getText(), lineA, fileExtension, file, lineNum));
+	                        
+	                        JBTableModel.addRow(new Object[]{textCounter, "Text", JTField3.getText(), lineA, fileExtension, file, lineNum});
+	                    }	
+                    }
+                }
+                if (!(JTField4.getText().isEmpty()))
+                {
+                    for (Pattern regexText : regexText)
+                    {
+                        patternMatcher = regexText.matcher(lineA.toLowerCase());
+	            		while (patternMatcher.find())
+	                    {
+	                    	textCounter++;
+	                    	resultTextList.add(new Match(textCounter, "Text", JTField4.getText(), lineA, fileExtension, file, lineNum));
+	                        resultTextListUnique.add(new Match(textCounter, "Text", JTField4.getText(), lineA, fileExtension, file, lineNum));
+	                        
+	                        JBTableModel.addRow(new Object[]{textCounter, "Text", JTField4.getText(), lineA, fileExtension, file, lineNum});
+	                    }	
+                    }
+                }
+                if (!(JTField5.getText().isEmpty()))
+                {
+                    for (Pattern regexText : regexText)
+                    {
+                        patternMatcher = regexText.matcher(lineA.toLowerCase());
+	            		while (patternMatcher.find())
+	                    {
+	                    	textCounter++;
+	                    	resultTextList.add(new Match(textCounter, "Text", JTField5.getText(), lineA, fileExtension, file, lineNum));
+	                        resultTextListUnique.add(new Match(textCounter, "Text", JTField5.getText(), lineA, fileExtension, file, lineNum));
+	                        
+	                        JBTableModel.addRow(new Object[]{textCounter, "Text", JTField5.getText(), lineA, fileExtension, file, lineNum});
+	                    }	
+                    }
+                }
+         		
 
                 if (JCBSSN.isSelected())
                 {
-                    for (Pattern regexHigh : regexSSN)
+                    for (Pattern regexSSN : regexSSN)
                     {
-                        patternMatcher = regexHigh.matcher(lineA);
+                        patternMatcher = regexSSN.matcher(lineA);
                         while (patternMatcher.find())
                         {
                             ssnCounter++;
@@ -1393,6 +1582,10 @@ public class Main extends JFrame
             for (Match pr : resultOtherMatchList)
             {
                 JBTableModel.addRow(new Object[]{pr.getID(), pr.getConfidence(), pr.getText(), pr.getLine(), pr.getType(), pr.getFile(), pr.getLineNum()});
+                if(pr.getConfidence().matches("Text")){
+                    textHTML += htmlWriter.addTableRow(pr.getID(), pr.getConfidence(), pr.getText(), pr.getLine(), pr.getType(), pr.getFile(), pr.getLineNum());
+                    textCSV += csvWriter.addTableRow(pr.getID(), pr.getConfidence(), pr.getText(), pr.getLine(), pr.getType(), pr.getFile(), pr.getLineNum());
+                }
                 if(pr.getConfidence().matches("PoB")){
                     pobHTML += htmlWriter.addTableRow(pr.getID(), pr.getConfidence(), pr.getText(), pr.getLine(), pr.getType(), pr.getFile(), pr.getLineNum());
                     pobCSV += csvWriter.addTableRow(pr.getID(), pr.getConfidence(), pr.getText(), pr.getLine(), pr.getType(), pr.getFile(), pr.getLineNum());
@@ -1413,10 +1606,41 @@ public class Main extends JFrame
             return resultOtherMatchList;
         }
         
-        private ArrayList cleanSSNResults(HashSet<Match> elf)
-        {
-            JBTableModel.setRowCount(0);
+        private ArrayList cleanTextResults(HashSet<Match> elf)
+        {            
+            for(Match pr : elf)
+            {
+                if(elf.contains(pr))
+                {
+                    resultTextListUniqueFinal.add(pr);
+                }
+            }
             
+            Collections.sort(resultTextListUniqueFinal, new Comparator<Match>() 
+            {
+                @Override
+                public int compare(Match z1, Match z2) 
+                {
+                    if (z1.getID() > z2.getID()) { return 1; }
+                    if (z1.getID() < z2.getID()) { return -1; }
+                    return 0;
+                }
+            });
+            
+            int i = 1;
+            for (Match pr : resultTextListUniqueFinal)
+            {
+                JBTableModel.addRow(new Object[]{ pr.setID(i), pr.getConfidence(), pr.getText(), pr.getLine(), pr.getType(), pr.getFile(), pr.getLineNum() });
+                textHTML += htmlWriter.addTableRow( pr.setID(i), pr.getConfidence(), pr.getText(), pr.getLine(), pr.getType(), pr.getFile(), pr.getLineNum() );
+                textCSV += csvWriter.addTableRow( pr.setID(i), pr.getConfidence(), pr.getText(), pr.getLine(), pr.getType(), pr.getFile(), pr.getLineNum() );
+                i++;
+            }
+            textCounter = resultTextListUniqueFinal.size();
+            return resultTextListUniqueFinal;
+        }
+        
+        private ArrayList cleanSSNResults(HashSet<Match> elf)
+        {            
             for(Match pr : elf)
             {
                 if(elf.contains(pr))
@@ -1448,6 +1672,21 @@ public class Main extends JFrame
             return resultSSNListUniqueFinal;
         }
         
+        
+        private ArrayList<Match> getTextResults(ArrayList<Match> elf)
+        {
+            int i = 1;
+            for (Match pr : elf)
+            {
+                JBTableModel.addRow(new Object[]{ pr.setID(i), pr.getConfidence(), pr.getText(), pr.getLine(), pr.getType(), pr.getFile(), pr.getLineNum() });
+                textHTML += htmlWriter.addTableRow( pr.setID(i), pr.getConfidence(), pr.getText(), pr.getLine(), pr.getType(), pr.getFile(), pr.getLineNum() );
+                textCSV += csvWriter.addTableRow( pr.setID(i), pr.getConfidence(), pr.getText(), pr.getLine(), pr.getType(), pr.getFile(), pr.getLineNum() );
+                i++;
+            }
+            textCounter = resultTextList.size();
+            return resultTextList;
+        }
+        
         private ArrayList<Match> getSSNResults(ArrayList<Match> elf)
         {
             int i = 1;
@@ -1465,6 +1704,10 @@ public class Main extends JFrame
         private void buildCSVResult()
         {
             postCSVResult += csvWriter.addTableHeader();
+            if (!(JTField1.getText().isEmpty()))
+            {
+                postCSVResult += textCSV;
+            }
             if (JCBSSN.isSelected())
             {
                 postCSVResult += ssnCSV;
@@ -1501,6 +1744,14 @@ public class Main extends JFrame
             postHtmlResult += htmlWriter.addOpenCenterTag();
             postHtmlResult += htmlWriter.addOpenNavTag();
             postHtmlResult += htmlWriter.addOpenNavULTag();
+            
+            if (!(JTField1.getText().isEmpty()))
+            {
+                postHtmlResult += htmlWriter.addOpenNavLITag();
+                postHtmlResult += htmlWriter.addCounter(textCounter);
+                postHtmlResult += htmlWriter.addTextLink("textResults", "Text Matches") + "";
+                postHtmlResult += htmlWriter.addCloseNavLITag();
+            }
             if (JCBSSN.isSelected())
             {
                 postHtmlResult += htmlWriter.addOpenNavLITag();
@@ -1543,12 +1794,24 @@ public class Main extends JFrame
             postHtmlResult += htmlWriter.addOpenCenterTag();
             postHtmlResult += htmlWriter.addOpenNavTag();
             postHtmlResult += htmlWriter.addOpenNavULTag();
-            postHtmlResult += htmlWriter.addResultNote(skipFiles.size(), readCounter, totalFiles, ssnCounter + matchCounter, calculateElapsedTime());
+            postHtmlResult += htmlWriter.addResultNote(skipFiles.size(), readCounter, totalFiles, textCounter + ssnCounter + matchCounter, calculateElapsedTime());
             postHtmlResult += htmlWriter.addExtNote(extCounter);
             postHtmlResult += htmlWriter.addCloseNavULTag();
             postHtmlResult += htmlWriter.addCloseNavTag();
             postHtmlResult += htmlWriter.addCloseCenterTag();
 
+            if ((!(JTField1.getText().isEmpty())) && (textCounter > 0))
+            {
+                postHtmlResult += htmlWriter.addOpenPanelTag();
+                postHtmlResult += htmlWriter.addAnchorLink("textResults", "Text Found Results");
+                postHtmlResult += htmlWriter.addOpenTableTag("textResultTable");
+                postHtmlResult += htmlWriter.addTableHeader();
+                postHtmlResult += textHTML;
+                postHtmlResult += htmlWriter.addCloseTableTag();
+                postHtmlResult += htmlWriter.addBackToTopLink("top", "Back to Top");
+                postHtmlResult += htmlWriter.addClosePanelTag();
+            }
+            
             if (JCBSSN.isSelected() && (ssnCounter > 0))
             {
                 postHtmlResult += htmlWriter.addOpenPanelTag();
@@ -1654,7 +1917,7 @@ public class Main extends JFrame
                 if (msg.equals("printCurrentProgress"))
                 {
                     JPBStatus.setVisible(true);
-                    printToProgress("Completed " + fileCounter + " / " + totalFiles + " files." + " Results: " + (ssnCounter + matchCounter) );
+                    printToProgress("Completed " + fileCounter + " / " + totalFiles + " files." + " Results: " + (textCounter + ssnCounter + matchCounter) );
                 }
                 else
                 {
@@ -1667,12 +1930,13 @@ public class Main extends JFrame
         private void getConfidenceTable()
         {
             JBTCatModel.setRowCount(0);
+            JBTCatModel.addRow(new Object[]{"Text Matches",textCounter});
             JBTCatModel.addRow(new Object[]{"SSN Matches",ssnCounter});
             JBTCatModel.addRow(new Object[]{"Date of Birth",dobCounter});
             JBTCatModel.addRow(new Object[]{"Place of Birth",pobCounter});
             JBTCatModel.addRow(new Object[]{"Maiden Names",maidenCounter});
             JBTCatModel.addRow(new Object[]{"Alien Registration Numbers",alienCounter});
-            JBTCatModel.addRow(new Object[]{"Total Matches",ssnCounter + matchCounter});
+            JBTCatModel.addRow(new Object[]{"Total Matches",textCounter + ssnCounter + matchCounter});
         }
         
         private void getExtensionTable()
@@ -1694,6 +1958,7 @@ public class Main extends JFrame
             JPBStatus.setValue(0);
 
             // update
+            getTextResults(resultTextList);
             getSSNResults(resultSSNList);
             getOtherResults(resultOtherMatchList);
             getExtensionTable();
@@ -1710,7 +1975,7 @@ public class Main extends JFrame
             
             // build result messages
             String msg = "*Readable: " + readCounter + " files / " + totalFiles + " files."+ NL;
-            msg += "*Found: " + (ssnCounter + matchCounter) + " matches." + NL;
+            msg += "*Found: " + (textCounter + ssnCounter + matchCounter) + " matches." + NL;
             msg += "*Elapsed Time: " + calculateElapsedTime() + NL;
 
             if (isCancelled())
@@ -1753,15 +2018,31 @@ public class Main extends JFrame
         Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
         regexList.add(pattern);
     }
+    
+    private void addTextToRegex(String text)
+    {
+    	ArrayList<String> tempTextList = new ArrayList<>();
+    	tempTextList.clear();
+    	
+    	String[] tempText = text.split(" ");
+    	for (int i = 0; i < tempText.length; i++)
+		{
+    		tempTextList.add(tempText[i].toLowerCase());
+		}
+    	Pattern pattern = Pattern.compile("\\b(^"+StringUtils.join(tempTextList,"|")+"$)\\b");
+        regexText.add(pattern);
+    }
 
     private void clearOldExport()
     {
+        textHTML = "";
         ssnHTML = "";
         dobHTML = "";
         pobHTML = "";
         maidenHTML = "";
         alienHTML = "";
         postHtmlResult = "";
+        textCSV = "";
         ssnCSV = "";
         dobCSV = "";
         pobCSV = "";
@@ -1779,14 +2060,19 @@ public class Main extends JFrame
         JBTFileExtModel.setNumRows(0);
         JBTCatModel.setRowCount(0);
         skipFiles.clear();
+        resultTextList.clear();
+        resultTextListUnique.clear();
+        resultTextListUniqueFinal.clear();
         resultSSNList.clear();
         resultSSNListUnique.clear();
         resultSSNListUniqueFinal.clear();
         resultOtherMatchList.clear();
+        regexText.clear();
         totalFiles = 0;
         fileCounter = 0;
         readCounter = 0;
         matchCounter = 0;
+        textCounter = 0;
         ssnCounter = 0;
         dobCounter = 0;
         pobCounter = 0;
