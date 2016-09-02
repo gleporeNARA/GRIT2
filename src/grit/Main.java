@@ -1933,7 +1933,7 @@ public class Main extends JFrame
     		tempTextList.add(tempText[i].toLowerCase());
 		}
     	System.out.println("List: "+tempTextList);
-    	Pattern pattern = Pattern.compile("\\b(^"+StringUtils.join(tempTextList,"|")+"$)\\b");
+    	Pattern pattern = Pattern.compile("\\b("+StringUtils.join(tempTextList,"|")+")\\b");
         regexText.add(pattern);
     }
 
