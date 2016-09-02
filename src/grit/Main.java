@@ -62,14 +62,18 @@ import org.xml.sax.SAXException;
  * This program is used to find Generalized Retriever of Information Tool.
  * 
  * @author Gautam Mehta (gxmehta@gmail.com), Duy L Nguyen (duyl3nguy3n@gmail.com)
- * @version 0.0.3
+ * @version 0.0.4
+ * Version 0.0.4
+ * - Revised Input Regex boxes to ONE
+ * - Added Input button for regex file to be read (Currently Not-Functional)
+ * 
  * Version 0.0.3
  * - Other Match mode activated
  * - All 5 text boxes can search "text" in a single line. Multi-line search has issues.
  * 
  * Version 0.0.2
  * - Consolidated SSN Regex and modes.
- * - Prepared Text fields for additional regex (Currently Not-Functional)
+ * - Prepared Text fields for additional regex
  * 
  * Version 0.0.1:
  * - Basic GUI interface.
@@ -79,7 +83,7 @@ import org.xml.sax.SAXException;
 public class Main extends JFrame
 {
     public static final String PROGRAM_TITLE = "GRIT";
-    public static final String PROGRAM_VERSION = "0.0.3";
+    public static final String PROGRAM_VERSION = "0.0.4";
     public static final int WIN_WIDTH = 1200;
     public static final int WIN_HEIGHT = 950;
     
@@ -87,10 +91,12 @@ public class Main extends JFrame
     private static final String NL = "\n";
 
     private File userInput;
+    private File textFileInput;
     private File outputFileHTML;
     private File outputFileCSV;
 
     private static JProgressBar JPBStatus;
+    private static JFileChooser textFileChooser;
     private static JFileChooser fileChooser;
     private static JFileChooser fileSaver;
     private static FileNameExtensionFilter webpageFilter;
@@ -150,11 +156,8 @@ public class Main extends JFrame
     private JCheckBox JCBMaiden;
     private JCheckBox JCBAlien;
     
-    private JTextField JTField1;
-    private JTextField JTField2;
-    private JTextField JTField3;
-    private JTextField JTField4;
-    private JTextField JTField5;
+    private JTextField JTField;
+    private JButton JBTextUpload;
     
     private JCheckBox JCBAutoParser;
 
@@ -202,10 +205,12 @@ public class Main extends JFrame
     private void initSystemComponents()
     {
         userInput = null;
+        textFileInput = null;
         outputFileHTML = null;
         outputFileCSV = null;
 
         fileChooser = null;
+        textFileChooser = null;
         fileSaver = null;
         fileReader = null;
         fileWriter = null;
@@ -330,10 +335,15 @@ public class Main extends JFrame
         addRegexToList("(\\b|^)(A|a)(-?[0-9]){9}(\\b|$)|(\\b|^)(A|a)(-?[0-9]){7}(\\b|$)", regexAliens);
 
         // setting for file chooser
+        textFileChooser = new JFileChooser();
+        textFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);	// set default selection mode
+        textFileChooser.setMultiSelectionEnabled(false);	
+        
+        // setting for file chooser
         fileChooser = new JFileChooser();
         fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);	// set default selection mode
         fileChooser.setMultiSelectionEnabled(false);						// disable multi-selection
-
+        
         // setting for file saver
         fileSaver = new JFileChooser();
         fileSaver.setFileSelectionMode(JFileChooser.FILES_ONLY);
@@ -361,11 +371,8 @@ public class Main extends JFrame
         JCBPoB = new JCheckBox();
         JCBAlien = new JCheckBox();
         
-        JTField1 = new JTextField();
-        JTField2 = new JTextField();
-        JTField3 = new JTextField();
-        JTField4 = new JTextField();
-        JTField5 = new JTextField();
+        JTField = new JTextField();
+        JBTextUpload = new JButton();
         
         JCBAutoParser = new JCheckBox();
 
@@ -399,6 +406,8 @@ public class Main extends JFrame
         JCBAlien.setText("Alien Registration Number");
         JCBAlien.setToolTipText("Matches terms to Alien Registration Numbers.");
         
+        JBTextUpload.setText("Upload Regex");
+        JBTextUpload.setToolTipText("Upload Regex Patterns.");
         
         JCBAutoParser.setText("Read Additional Formats");
         JCBAutoParser.setToolTipText("The program will attempt to read additional file formats.");
@@ -469,12 +478,10 @@ public class Main extends JFrame
         //Row1: Panel2: Elements Added
         JPanel panel2 = new JPanel();
         panel2.setBorder(BorderFactory.createTitledBorder("Other Match Mode"));
-        panel2.setLayout(new BoxLayout(panel2, BoxLayout.PAGE_AXIS));
-        panel2.add(JTField1);
-        panel2.add(JTField2);
-        panel2.add(JTField3);
-        panel2.add(JTField4);
-        panel2.add(JTField5);
+        panel2.setLayout(new BoxLayout(panel2, BoxLayout.LINE_AXIS));
+        panel2.setLayout(new GridLayout(2, 2, 0, 0));
+        panel2.add(JTField);
+        panel2.add(JBTextUpload);
 
         //Row1: Panel3: Elements Added
         JPanel panel3 = new JPanel();
@@ -583,6 +590,7 @@ public class Main extends JFrame
         
         JBRemoveDuplicates.addActionListener(new CleanResultsListener());
         
+        JBTextUpload.addActionListener(new MyIOTextListener());
         JBInput.addActionListener(new MyIOListener());
         JBRun.addActionListener(new MySearchTaskListener());
         JBCancel.addActionListener(new MySearchTaskListener());
@@ -735,7 +743,31 @@ public class Main extends JFrame
         }
     }
 
-
+    
+    /**
+     * This internal class listens for user's input/output
+     */
+    private class MyIOTextListener implements ActionListener
+    {
+        @Override
+        public void actionPerformed(ActionEvent event)
+        {
+            // INPUT BUTTON
+            if (event.getSource() == JBTextUpload) 
+            {
+                // open browse directory/file dialog
+                int userRespond = textFileChooser.showOpenDialog(Main.this);
+ 
+                // user select a directory/file
+                if (userRespond == JFileChooser.APPROVE_OPTION)
+                {
+                	textFileInput = textFileChooser.getSelectedFile();
+                    JBTextUpload.setText("Input: "+textFileInput);
+                }
+            }
+        }
+    }
+    
     /**
      * This internal class listens for user's input/output
      */
@@ -1199,11 +1231,7 @@ public class Main extends JFrame
             
             regexText.clear();
             
-            addTextToRegex(JTField1.getText());
-            addTextToRegex(JTField2.getText());
-            addTextToRegex(JTField3.getText());
-            addTextToRegex(JTField4.getText());
-            addTextToRegex(JTField5.getText());
+            addTextToRegex(JTField.getText());
             
             System.out.println(regexText);
 
@@ -1230,7 +1258,7 @@ public class Main extends JFrame
                 String line = lineA + lineB;
                 Matcher patternMatcher = null;
                 
-                if (!(JTField1.getText().isEmpty()))
+                if (!(JTField.getText().isEmpty()))
                 {
                     for (Pattern regexText : regexText)
                     {
@@ -1238,72 +1266,10 @@ public class Main extends JFrame
 	            		while (patternMatcher.find())
 	                    {
 	            			textCounter++;
-	                    	resultTextList.add(new Match(textCounter, "Text", JTField1.getText(), line, fileExtension, file, lineNum));
-	                        resultTextListUnique.add(new Match(textCounter, "Text", JTField1.getText(), line, fileExtension, file, lineNum));
+	                    	resultTextList.add(new Match(textCounter, "Text", JTField.getText(), line, fileExtension, file, lineNum));
+	                        resultTextListUnique.add(new Match(textCounter, "Text", JTField.getText(), line, fileExtension, file, lineNum));
 	                        
-	                        JBTableModel.addRow(new Object[]{textCounter, "Text", JTField1.getText(), line, fileExtension, file, lineNum});
-	                    }	
-                    }
-                }
-              
-                if (!(JTField2.getText().isEmpty()))
-                {
-                    for (Pattern regexText : regexText)
-                    {
-                        patternMatcher = regexText.matcher(line.toLowerCase());
-	            		while (patternMatcher.find())
-	                    {
-	                    	textCounter++;
-	                    	resultTextList.add(new Match(textCounter, "Text", JTField2.getText(), line, fileExtension, file, lineNum));
-	                        resultTextListUnique.add(new Match(textCounter, "Text", JTField2.getText(), line, fileExtension, file, lineNum));
-	                        
-	                        JBTableModel.addRow(new Object[]{textCounter, "Text", JTField2.getText(), line, fileExtension, file, lineNum});
-	                    }	
-                    }
-                }
-                
-                if (!(JTField3.getText().isEmpty()))
-                {
-                    for (Pattern regexText : regexText)
-                    {
-                        patternMatcher = regexText.matcher(line.toLowerCase());
-	            		while (patternMatcher.find())
-	                    {
-	                    	textCounter++;
-	                    	resultTextList.add(new Match(textCounter, "Text", JTField3.getText(), line, fileExtension, file, lineNum));
-	                        resultTextListUnique.add(new Match(textCounter, "Text", JTField3.getText(), line, fileExtension, file, lineNum));
-	                        
-	                        JBTableModel.addRow(new Object[]{textCounter, "Text", JTField3.getText(), line, fileExtension, file, lineNum});
-	                    }	
-                    }
-                }
-                if (!(JTField4.getText().isEmpty()))
-                {
-                    for (Pattern regexText : regexText)
-                    {
-                        patternMatcher = regexText.matcher(line.toLowerCase());
-	            		while (patternMatcher.find())
-	                    {
-	                    	textCounter++;
-	                    	resultTextList.add(new Match(textCounter, "Text", JTField4.getText(), line, fileExtension, file, lineNum));
-	                        resultTextListUnique.add(new Match(textCounter, "Text", JTField4.getText(), line, fileExtension, file, lineNum));
-	                        
-	                        JBTableModel.addRow(new Object[]{textCounter, "Text", JTField4.getText(), line, fileExtension, file, lineNum});
-	                    }	
-                    }
-                }
-                if (!(JTField5.getText().isEmpty()))
-                {
-                    for (Pattern regexText : regexText)
-                    {
-                        patternMatcher = regexText.matcher(line.toLowerCase());
-	            		while (patternMatcher.find())
-	                    {
-	                    	textCounter++;
-	                    	resultTextList.add(new Match(textCounter, "Text", JTField5.getText(), line, fileExtension, file, lineNum));
-	                        resultTextListUnique.add(new Match(textCounter, "Text", JTField5.getText(), line, fileExtension, file, lineNum));
-	                        
-	                        JBTableModel.addRow(new Object[]{textCounter, "Text", JTField5.getText(), line, fileExtension, file, lineNum});
+	                        JBTableModel.addRow(new Object[]{textCounter, "Text", JTField.getText(), line, fileExtension, file, lineNum});
 	                    }	
                     }
                 }
@@ -1404,7 +1370,7 @@ public class Main extends JFrame
 
                 Matcher patternMatcher = null;
                 
-                if (!(JTField1.getText().isEmpty()))
+                if (!(JTField.getText().isEmpty()))
                 {
                     for (Pattern regexText : regexText)
                     {
@@ -1412,76 +1378,13 @@ public class Main extends JFrame
 	            		while (patternMatcher.find())
 	                    {
 	                    	textCounter++;
-	                    	resultTextList.add(new Match(textCounter, "Text", JTField1.getText(), lineA, fileExtension, file, lineNum));
-	                        resultTextListUnique.add(new Match(textCounter, "Text", JTField1.getText(), lineA, fileExtension, file, lineNum));
+	                    	resultTextList.add(new Match(textCounter, "Text", JTField.getText(), lineA, fileExtension, file, lineNum));
+	                        resultTextListUnique.add(new Match(textCounter, "Text", JTField.getText(), lineA, fileExtension, file, lineNum));
 	                        
-	                        JBTableModel.addRow(new Object[]{textCounter, "Text", JTField1.getText(), lineA, fileExtension, file, lineNum});
+	                        JBTableModel.addRow(new Object[]{textCounter, "Text", JTField.getText(), lineA, fileExtension, file, lineNum});
 	                    }	
                     }
                 }
-                
-                if (!(JTField2.getText().isEmpty()))
-                {
-                    for (Pattern regexText : regexText)
-                    {
-                        patternMatcher = regexText.matcher(lineA.toLowerCase());
-	            		while (patternMatcher.find())
-	                    {
-	                    	textCounter++;
-	                    	resultTextList.add(new Match(textCounter, "Text", JTField2.getText(), lineA, fileExtension, file, lineNum));
-	                        resultTextListUnique.add(new Match(textCounter, "Text", JTField2.getText(), lineA, fileExtension, file, lineNum));
-	                        
-	                        JBTableModel.addRow(new Object[]{textCounter, "Text", JTField2.getText(), lineA, fileExtension, file, lineNum});
-	                    }	
-                    }
-                }
-                
-                if (!(JTField3.getText().isEmpty()))
-                {
-                    for (Pattern regexText : regexText)
-                    {
-                        patternMatcher = regexText.matcher(lineA.toLowerCase());
-	            		while (patternMatcher.find())
-	                    {
-	                    	textCounter++;
-	                    	resultTextList.add(new Match(textCounter, "Text", JTField3.getText(), lineA, fileExtension, file, lineNum));
-	                        resultTextListUnique.add(new Match(textCounter, "Text", JTField3.getText(), lineA, fileExtension, file, lineNum));
-	                        
-	                        JBTableModel.addRow(new Object[]{textCounter, "Text", JTField3.getText(), lineA, fileExtension, file, lineNum});
-	                    }	
-                    }
-                }
-                if (!(JTField4.getText().isEmpty()))
-                {
-                    for (Pattern regexText : regexText)
-                    {
-                        patternMatcher = regexText.matcher(lineA.toLowerCase());
-	            		while (patternMatcher.find())
-	                    {
-	                    	textCounter++;
-	                    	resultTextList.add(new Match(textCounter, "Text", JTField4.getText(), lineA, fileExtension, file, lineNum));
-	                        resultTextListUnique.add(new Match(textCounter, "Text", JTField4.getText(), lineA, fileExtension, file, lineNum));
-	                        
-	                        JBTableModel.addRow(new Object[]{textCounter, "Text", JTField4.getText(), lineA, fileExtension, file, lineNum});
-	                    }	
-                    }
-                }
-                if (!(JTField5.getText().isEmpty()))
-                {
-                    for (Pattern regexText : regexText)
-                    {
-                        patternMatcher = regexText.matcher(lineA.toLowerCase());
-	            		while (patternMatcher.find())
-	                    {
-	                    	textCounter++;
-	                    	resultTextList.add(new Match(textCounter, "Text", JTField5.getText(), lineA, fileExtension, file, lineNum));
-	                        resultTextListUnique.add(new Match(textCounter, "Text", JTField5.getText(), lineA, fileExtension, file, lineNum));
-	                        
-	                        JBTableModel.addRow(new Object[]{textCounter, "Text", JTField5.getText(), lineA, fileExtension, file, lineNum});
-	                    }	
-                    }
-                }
-         		
 
                 if (JCBSSN.isSelected())
                 {
@@ -1704,7 +1607,7 @@ public class Main extends JFrame
         private void buildCSVResult()
         {
             postCSVResult += csvWriter.addTableHeader();
-            if (!(JTField1.getText().isEmpty()))
+            if (!(JTField.getText().isEmpty()))
             {
                 postCSVResult += textCSV;
             }
@@ -1745,7 +1648,7 @@ public class Main extends JFrame
             postHtmlResult += htmlWriter.addOpenNavTag();
             postHtmlResult += htmlWriter.addOpenNavULTag();
             
-            if (!(JTField1.getText().isEmpty()))
+            if (!(JTField.getText().isEmpty()))
             {
                 postHtmlResult += htmlWriter.addOpenNavLITag();
                 postHtmlResult += htmlWriter.addCounter(textCounter);
@@ -1800,7 +1703,7 @@ public class Main extends JFrame
             postHtmlResult += htmlWriter.addCloseNavTag();
             postHtmlResult += htmlWriter.addCloseCenterTag();
 
-            if ((!(JTField1.getText().isEmpty())) && (textCounter > 0))
+            if ((!(JTField.getText().isEmpty())) && (textCounter > 0))
             {
                 postHtmlResult += htmlWriter.addOpenPanelTag();
                 postHtmlResult += htmlWriter.addAnchorLink("textResults", "Text Found Results");
@@ -2024,11 +1927,12 @@ public class Main extends JFrame
     	ArrayList<String> tempTextList = new ArrayList<>();
     	tempTextList.clear();
     	
-    	String[] tempText = text.split(" ");
+    	String[] tempText = text.split("(,)|(\\|)");
     	for (int i = 0; i < tempText.length; i++)
 		{
     		tempTextList.add(tempText[i].toLowerCase());
 		}
+    	System.out.println("List: "+tempTextList);
     	Pattern pattern = Pattern.compile("\\b(^"+StringUtils.join(tempTextList,"|")+"$)\\b");
         regexText.add(pattern);
     }
