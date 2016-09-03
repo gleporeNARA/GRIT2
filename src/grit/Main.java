@@ -83,7 +83,7 @@ import org.xml.sax.SAXException;
 public class Main extends JFrame
 {
     public static final String PROGRAM_TITLE = "GRIT";
-    public static final String PROGRAM_VERSION = "0.0.4";
+    public static final String PROGRAM_VERSION = "0.0.4a";
     public static final int WIN_WIDTH = 1200;
     public static final int WIN_HEIGHT = 950;
     
