@@ -1260,9 +1260,9 @@ public class Main extends JFrame
                 
                 if (!(JTField.getText().isEmpty()))
                 {
-                    for (Pattern regexText : regexText)
+                    for (Pattern regexTexti : regexText)
                     {
-                        patternMatcher = regexText.matcher(line.toLowerCase());
+                        patternMatcher = regexTexti.matcher(line.toLowerCase());
 	            		while (patternMatcher.find())
 	                    {
 	            			textCounter++;
@@ -1276,9 +1276,9 @@ public class Main extends JFrame
 				
                 if (JCBSSN.isSelected())
                 {
-                    for (Pattern regexSSN : regexSSN)
+                    for (Pattern regexSSNi : regexSSN)
                     {
-                        patternMatcher = regexSSN.matcher(line);
+                        patternMatcher = regexSSNi.matcher(line);
                         while (patternMatcher.find())
                         {
                             ssnCounter++;
@@ -1372,9 +1372,9 @@ public class Main extends JFrame
                 
                 if (!(JTField.getText().isEmpty()))
                 {
-                    for (Pattern regexText : regexText)
+                    for (Pattern regexTexti : regexText)
                     {
-                        patternMatcher = regexText.matcher(lineA.toLowerCase());
+                        patternMatcher = regexTexti.matcher(lineA.toLowerCase());
 	            		while (patternMatcher.find())
 	                    {
 	                    	textCounter++;
@@ -1388,9 +1388,9 @@ public class Main extends JFrame
 
                 if (JCBSSN.isSelected())
                 {
-                    for (Pattern regexSSN : regexSSN)
+                    for (Pattern regexSSNi : regexSSN)
                     {
-                        patternMatcher = regexSSN.matcher(lineA);
+                        patternMatcher = regexSSNi.matcher(lineA);
                         while (patternMatcher.find())
                         {
                             ssnCounter++;
