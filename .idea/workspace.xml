@@ -2,7 +2,22 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3b502ca8-8831-447e-9988-8337b78e40c2" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/NARA-GRIT/grit/Main$1.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/NARA-GRIT/grit/Main$2.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/NARA-GRIT/grit/Main$3.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/NARA-GRIT/grit/Main$CheckAllOptionsListener.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/NARA-GRIT/grit/Main$CleanResultsListener.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/NARA-GRIT/grit/Main$MyIOListener.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/NARA-GRIT/grit/Main$MyIOTextListener.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/NARA-GRIT/grit/Main$MyRunModeListener.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/NARA-GRIT/grit/Main$MySearchTaskListener.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/NARA-GRIT/grit/Main$SearchTask$1.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/NARA-GRIT/grit/Main$SearchTask$2.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/NARA-GRIT/grit/Main$SearchTask.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/NARA-GRIT/grit/Main.class" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_GRIT.jar" afterPath="$PROJECT_DIR$/_GRIT.jar" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/NARA-GRIT.iml" afterPath="$PROJECT_DIR$/NARA-GRIT.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/grit/Main.java" afterPath="$PROJECT_DIR$/src/grit/Main.java" />
     </list>
     <ignored path="NARA-GRIT.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -27,10 +42,33 @@
       <file leaf-file-name="Main.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/grit/Main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1710">
-              <caret line="190" column="43" selection-start-line="190" selection-start-column="43" selection-end-line="190" selection-end-column="43" />
+            <state relative-caret-position="940">
+              <caret line="1220" column="13" selection-start-line="1220" selection-start-column="13" selection-end-line="1220" selection-end-column="13" />
               <folding>
                 <element signature="docComment;class#Main#0" expanded="false" />
+                <element signature="method#getTutorial#0;class#Main#0" expanded="false" />
+                <element signature="class#CleanResultsListener#0;class#Main#0" expanded="false" />
+                <element signature="class#CheckAllOptionsListener#0;class#Main#0" expanded="false" />
+                <element signature="class#MyRunModeListener#0;class#Main#0" expanded="false" />
+                <element signature="class#MyIOListener#0;class#Main#0" expanded="false" />
+                <element signature="method#actionPerformed#0;class#MyIOListener#0;class#Main#0" expanded="false" />
+                <element signature="method#recursiveSearch#0;class#SearchTask#0;class#Main#0" expanded="false" />
+                <element signature="e#39915#39921#0" expanded="true" />
+                <element signature="method#getOtherResults#0;class#SearchTask#0;class#Main#0" expanded="false" />
+                <element signature="method#cleanTextResults#0;class#SearchTask#0;class#Main#0" expanded="false" />
+                <element signature="method#cleanSSNResults#0;class#SearchTask#0;class#Main#0" expanded="false" />
+                <element signature="method#getTextResults#0;class#SearchTask#0;class#Main#0" expanded="false" />
+                <element signature="method#getSSNResults#0;class#SearchTask#0;class#Main#0" expanded="false" />
+                <element signature="method#buildCSVResult#0;class#SearchTask#0;class#Main#0" expanded="false" />
+                <element signature="method#buildHtmlResult#0;class#SearchTask#0;class#Main#0" expanded="false" />
+                <element signature="method#doInBackground#0;class#SearchTask#0;class#Main#0" expanded="false" />
+                <element signature="method#process#0;class#SearchTask#0;class#Main#0" expanded="false" />
+                <element signature="method#getConfidenceTable#0;class#SearchTask#0;class#Main#0" expanded="false" />
+                <element signature="method#getExtensionTable#0;class#SearchTask#0;class#Main#0" expanded="false" />
+                <element signature="method#done#0;class#SearchTask#0;class#Main#0" expanded="false" />
+                <element signature="method#clearOldExport#0;class#Main#0" expanded="false" />
+                <element signature="method#clearOldSearch#0;class#Main#0" expanded="false" />
+                <element signature="method#calculateElapsedTime#0;class#Main#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -49,8 +87,9 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/NARA-GRIT.iml" />
         <option value="$PROJECT_DIR$/.idea/artifacts/_GRIT_jar.xml" />
+        <option value="$PROJECT_DIR$/NARA-GRIT.iml" />
+        <option value="$PROJECT_DIR$/src/grit/Main.java" />
       </list>
     </option>
   </component>
@@ -61,7 +100,7 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="-1793" />
+    <option name="x" value="2047" />
     <option name="y" value="23" />
     <option name="width" value="1600" />
     <option name="height" value="1057" />
@@ -161,6 +200,7 @@
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/out" />
+    <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file:///Volumes/Ferrari/Code/NARA/NARA-GRIT/NARA-GRIT.iml" />
   </component>
   <component name="RunManager" selected="Application.Main">
     <configuration default="false" name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
@@ -618,35 +658,35 @@
       <updated>1472916194151</updated>
       <workItem from="1472916195352" duration="576000" />
       <workItem from="1472916778593" duration="51000" />
-      <workItem from="1472916831956" duration="720000" />
+      <workItem from="1472916831956" duration="11502000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1347000" />
+    <option name="totallyTimeSpent" value="12129000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-1793" y="23" width="1600" height="1057" extended-state="0" />
-    <editor active="false" />
+    <frame x="2047" y="23" width="1600" height="1057" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32952183" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1008316" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26611227" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.173125" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.173125" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3991684" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -668,7 +708,9 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager />
+    <breakpoint-manager>
+      <option name="time" value="8" />
+    </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="antWorkspaceConfiguration">
@@ -682,6 +724,29 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="docComment;class#Main#0" expanded="false" />
+            <element signature="method#getTutorial#0;class#Main#0" expanded="false" />
+            <element signature="class#CleanResultsListener#0;class#Main#0" expanded="false" />
+            <element signature="class#CheckAllOptionsListener#0;class#Main#0" expanded="false" />
+            <element signature="class#MyRunModeListener#0;class#Main#0" expanded="false" />
+            <element signature="class#MyIOListener#0;class#Main#0" expanded="false" />
+            <element signature="method#actionPerformed#0;class#MyIOListener#0;class#Main#0" expanded="false" />
+            <element signature="method#recursiveSearch#0;class#SearchTask#0;class#Main#0" expanded="false" />
+            <element signature="e#39915#39921#0" expanded="true" />
+            <element signature="method#getOtherResults#0;class#SearchTask#0;class#Main#0" expanded="false" />
+            <element signature="method#cleanTextResults#0;class#SearchTask#0;class#Main#0" expanded="false" />
+            <element signature="method#cleanSSNResults#0;class#SearchTask#0;class#Main#0" expanded="false" />
+            <element signature="method#getTextResults#0;class#SearchTask#0;class#Main#0" expanded="false" />
+            <element signature="method#getSSNResults#0;class#SearchTask#0;class#Main#0" expanded="false" />
+            <element signature="method#buildCSVResult#0;class#SearchTask#0;class#Main#0" expanded="false" />
+            <element signature="method#buildHtmlResult#0;class#SearchTask#0;class#Main#0" expanded="false" />
+            <element signature="method#doInBackground#0;class#SearchTask#0;class#Main#0" expanded="false" />
+            <element signature="method#process#0;class#SearchTask#0;class#Main#0" expanded="false" />
+            <element signature="method#getConfidenceTable#0;class#SearchTask#0;class#Main#0" expanded="false" />
+            <element signature="method#getExtensionTable#0;class#SearchTask#0;class#Main#0" expanded="false" />
+            <element signature="method#done#0;class#SearchTask#0;class#Main#0" expanded="false" />
+            <element signature="method#clearOldExport#0;class#Main#0" expanded="false" />
+            <element signature="method#clearOldSearch#0;class#Main#0" expanded="false" />
+            <element signature="method#calculateElapsedTime#0;class#Main#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -692,6 +757,29 @@
           <caret line="77" column="17" selection-start-line="77" selection-start-column="17" selection-end-line="77" selection-end-column="17" />
           <folding>
             <element signature="docComment;class#Main#0" expanded="false" />
+            <element signature="method#getTutorial#0;class#Main#0" expanded="false" />
+            <element signature="class#CleanResultsListener#0;class#Main#0" expanded="false" />
+            <element signature="class#CheckAllOptionsListener#0;class#Main#0" expanded="false" />
+            <element signature="class#MyRunModeListener#0;class#Main#0" expanded="false" />
+            <element signature="class#MyIOListener#0;class#Main#0" expanded="false" />
+            <element signature="method#actionPerformed#0;class#MyIOListener#0;class#Main#0" expanded="false" />
+            <element signature="method#recursiveSearch#0;class#SearchTask#0;class#Main#0" expanded="false" />
+            <element signature="e#39915#39921#0" expanded="true" />
+            <element signature="method#getOtherResults#0;class#SearchTask#0;class#Main#0" expanded="false" />
+            <element signature="method#cleanTextResults#0;class#SearchTask#0;class#Main#0" expanded="false" />
+            <element signature="method#cleanSSNResults#0;class#SearchTask#0;class#Main#0" expanded="false" />
+            <element signature="method#getTextResults#0;class#SearchTask#0;class#Main#0" expanded="false" />
+            <element signature="method#getSSNResults#0;class#SearchTask#0;class#Main#0" expanded="false" />
+            <element signature="method#buildCSVResult#0;class#SearchTask#0;class#Main#0" expanded="false" />
+            <element signature="method#buildHtmlResult#0;class#SearchTask#0;class#Main#0" expanded="false" />
+            <element signature="method#doInBackground#0;class#SearchTask#0;class#Main#0" expanded="false" />
+            <element signature="method#process#0;class#SearchTask#0;class#Main#0" expanded="false" />
+            <element signature="method#getConfidenceTable#0;class#SearchTask#0;class#Main#0" expanded="false" />
+            <element signature="method#getExtensionTable#0;class#SearchTask#0;class#Main#0" expanded="false" />
+            <element signature="method#done#0;class#SearchTask#0;class#Main#0" expanded="false" />
+            <element signature="method#clearOldExport#0;class#Main#0" expanded="false" />
+            <element signature="method#clearOldSearch#0;class#Main#0" expanded="false" />
+            <element signature="method#calculateElapsedTime#0;class#Main#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -739,18 +827,41 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/NARA-GRIT.iml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="11" column="9" selection-start-line="11" selection-start-column="9" selection-end-line="11" selection-end-column="9" />
+        <state relative-caret-position="180">
+          <caret line="12" column="0" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/grit/Main.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1710">
-          <caret line="190" column="43" selection-start-line="190" selection-start-column="43" selection-end-line="190" selection-end-column="43" />
+        <state relative-caret-position="940">
+          <caret line="1220" column="13" selection-start-line="1220" selection-start-column="13" selection-end-line="1220" selection-end-column="13" />
           <folding>
             <element signature="docComment;class#Main#0" expanded="false" />
+            <element signature="method#getTutorial#0;class#Main#0" expanded="false" />
+            <element signature="class#CleanResultsListener#0;class#Main#0" expanded="false" />
+            <element signature="class#CheckAllOptionsListener#0;class#Main#0" expanded="false" />
+            <element signature="class#MyRunModeListener#0;class#Main#0" expanded="false" />
+            <element signature="class#MyIOListener#0;class#Main#0" expanded="false" />
+            <element signature="method#actionPerformed#0;class#MyIOListener#0;class#Main#0" expanded="false" />
+            <element signature="method#recursiveSearch#0;class#SearchTask#0;class#Main#0" expanded="false" />
+            <element signature="e#39915#39921#0" expanded="true" />
+            <element signature="method#getOtherResults#0;class#SearchTask#0;class#Main#0" expanded="false" />
+            <element signature="method#cleanTextResults#0;class#SearchTask#0;class#Main#0" expanded="false" />
+            <element signature="method#cleanSSNResults#0;class#SearchTask#0;class#Main#0" expanded="false" />
+            <element signature="method#getTextResults#0;class#SearchTask#0;class#Main#0" expanded="false" />
+            <element signature="method#getSSNResults#0;class#SearchTask#0;class#Main#0" expanded="false" />
+            <element signature="method#buildCSVResult#0;class#SearchTask#0;class#Main#0" expanded="false" />
+            <element signature="method#buildHtmlResult#0;class#SearchTask#0;class#Main#0" expanded="false" />
+            <element signature="method#doInBackground#0;class#SearchTask#0;class#Main#0" expanded="false" />
+            <element signature="method#process#0;class#SearchTask#0;class#Main#0" expanded="false" />
+            <element signature="method#getConfidenceTable#0;class#SearchTask#0;class#Main#0" expanded="false" />
+            <element signature="method#getExtensionTable#0;class#SearchTask#0;class#Main#0" expanded="false" />
+            <element signature="method#done#0;class#SearchTask#0;class#Main#0" expanded="false" />
+            <element signature="method#clearOldExport#0;class#Main#0" expanded="false" />
+            <element signature="method#clearOldSearch#0;class#Main#0" expanded="false" />
+            <element signature="method#calculateElapsedTime#0;class#Main#0" expanded="false" />
           </folding>
         </state>
       </provider>

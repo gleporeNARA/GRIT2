@@ -156,9 +156,8 @@ public class Main extends JFrame
     private JCheckBox JCBMaiden;
     private JCheckBox JCBAlien;
     
-    private JTextField JTField;
-    private JButton JBTextUpload;
-    
+    private JTextArea JTField;
+
     private JCheckBox JCBAutoParser;
 
     private JRadioButton JRBDirectory;	
@@ -371,9 +370,8 @@ public class Main extends JFrame
         JCBPoB = new JCheckBox();
         JCBAlien = new JCheckBox();
         
-        JTField = new JTextField();
-        JBTextUpload = new JButton();
-        
+        JTField = new JTextArea("Gautam, Mehta, Grand, Jury, Gautam, Mehta");
+
         JCBAutoParser = new JCheckBox();
 
         JRBDirectory = new JRadioButton();
@@ -405,10 +403,7 @@ public class Main extends JFrame
         JCBMaiden.setToolTipText("Matches terms related to maiden names.");
         JCBAlien.setText("Alien Registration Number");
         JCBAlien.setToolTipText("Matches terms to Alien Registration Numbers.");
-        
-        JBTextUpload.setText("Upload Regex");
-        JBTextUpload.setToolTipText("Upload Regex Patterns.");
-        
+
         JCBAutoParser.setText("Read Additional Formats");
         JCBAutoParser.setToolTipText("The program will attempt to read additional file formats.");
         
@@ -479,9 +474,7 @@ public class Main extends JFrame
         JPanel panel2 = new JPanel();
         panel2.setBorder(BorderFactory.createTitledBorder("Other Match Mode"));
         panel2.setLayout(new BoxLayout(panel2, BoxLayout.LINE_AXIS));
-        panel2.setLayout(new GridLayout(2, 2, 0, 0));
         panel2.add(JTField);
-        panel2.add(JBTextUpload);
 
         //Row1: Panel3: Elements Added
         JPanel panel3 = new JPanel();
@@ -590,7 +583,6 @@ public class Main extends JFrame
         
         JBRemoveDuplicates.addActionListener(new CleanResultsListener());
         
-        JBTextUpload.addActionListener(new MyIOTextListener());
         JBInput.addActionListener(new MyIOListener());
         JBRun.addActionListener(new MySearchTaskListener());
         JBCancel.addActionListener(new MySearchTaskListener());
@@ -743,31 +735,6 @@ public class Main extends JFrame
         }
     }
 
-    
-    /**
-     * This internal class listens for user's input/output
-     */
-    private class MyIOTextListener implements ActionListener
-    {
-        @Override
-        public void actionPerformed(ActionEvent event)
-        {
-            // INPUT BUTTON
-            if (event.getSource() == JBTextUpload) 
-            {
-                // open browse directory/file dialog
-                int userRespond = textFileChooser.showOpenDialog(Main.this);
- 
-                // user select a directory/file
-                if (userRespond == JFileChooser.APPROVE_OPTION)
-                {
-                	textFileInput = textFileChooser.getSelectedFile();
-                    JBTextUpload.setText("Input: "+textFileInput);
-                }
-            }
-        }
-    }
-    
     /**
      * This internal class listens for user's input/output
      */
@@ -911,7 +878,7 @@ public class Main extends JFrame
             if (event.getSource() == JBRun) 
             {
                 // check if a match mode is selected
-                if (!JCBSSN.isSelected() && !JCBPoB.isSelected() && !JCBDoB.isSelected() && !JCBMaiden.isSelected() && !JCBAlien.isSelected())
+                if (JTField.getText().isEmpty() && !JCBSSN.isSelected() && !JCBPoB.isSelected() && !JCBDoB.isSelected() && !JCBMaiden.isSelected() && !JCBAlien.isSelected())
                 {
                     JOptionPane.showMessageDialog(Main.this, "ERROR: No match mode is selected.");
                     return; // stop here
@@ -1228,9 +1195,7 @@ public class Main extends JFrame
             // init line counter
             int lineNum = 1;
             String lineA = "";
-            
-            regexText.clear();
-            
+
             addTextToRegex(JTField.getText());
             
             System.out.println(regexText);
@@ -1262,14 +1227,14 @@ public class Main extends JFrame
                 {
                     for (Pattern regexTexti : regexText)
                     {
-                        patternMatcher = regexTexti.matcher(line.toLowerCase());
+                        patternMatcher = regexTexti.matcher(line);
 	            		while (patternMatcher.find())
 	                    {
 	            			textCounter++;
-	                    	resultTextList.add(new Match(textCounter, "Text", JTField.getText(), line, fileExtension, file, lineNum));
-	                        resultTextListUnique.add(new Match(textCounter, "Text", JTField.getText(), line, fileExtension, file, lineNum));
+	                    	resultTextList.add(new Match(textCounter, "Text", patternMatcher.group(), line, fileExtension, file, lineNum));
+	                        resultTextListUnique.add(new Match(textCounter, "Text", patternMatcher.group(), line, fileExtension, file, lineNum));
 	                        
-	                        JBTableModel.addRow(new Object[]{textCounter, "Text", JTField.getText(), line, fileExtension, file, lineNum});
+	                        JBTableModel.addRow(new Object[]{textCounter, "Text", patternMatcher.group(), line, fileExtension, file, lineNum});
 	                    }	
                     }
                 }
@@ -1374,14 +1339,14 @@ public class Main extends JFrame
                 {
                     for (Pattern regexTexti : regexText)
                     {
-                        patternMatcher = regexTexti.matcher(lineA.toLowerCase());
+                        patternMatcher = regexTexti.matcher(lineA);
 	            		while (patternMatcher.find())
 	                    {
 	                    	textCounter++;
-	                    	resultTextList.add(new Match(textCounter, "Text", JTField.getText(), lineA, fileExtension, file, lineNum));
-	                        resultTextListUnique.add(new Match(textCounter, "Text", JTField.getText(), lineA, fileExtension, file, lineNum));
+	                    	resultTextList.add(new Match(textCounter, "Text", patternMatcher.group(), lineA, fileExtension, file, lineNum));
+	                        resultTextListUnique.add(new Match(textCounter, "Text", patternMatcher.group(), lineA, fileExtension, file, lineNum));
 	                        
-	                        JBTableModel.addRow(new Object[]{textCounter, "Text", JTField.getText(), lineA, fileExtension, file, lineNum});
+	                        JBTableModel.addRow(new Object[]{textCounter, "Text", patternMatcher.group(), lineA, fileExtension, file, lineNum});
 	                    }	
                     }
                 }
@@ -1541,7 +1506,7 @@ public class Main extends JFrame
             textCounter = resultTextListUniqueFinal.size();
             return resultTextListUniqueFinal;
         }
-        
+
         private ArrayList cleanSSNResults(HashSet<Match> elf)
         {            
             for(Match pr : elf)
@@ -1921,16 +1886,16 @@ public class Main extends JFrame
         Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
         regexList.add(pattern);
     }
-    
+
     private void addTextToRegex(String text)
     {
-    	ArrayList<String> tempTextList = new ArrayList<>();
+    	HashSet<String> tempTextList = new HashSet<>();
     	tempTextList.clear();
     	
-    	String[] tempText = text.split("(,)|(\\|)");
+    	String[] tempText = text.split("(,)|(\\|)|(\\s)");
     	for (int i = 0; i < tempText.length; i++)
 		{
-    		tempTextList.add(tempText[i].toLowerCase());
+    		tempTextList.add(tempText[i]);
 		}
     	System.out.println("List: "+tempTextList);
     	Pattern pattern = Pattern.compile("\\b("+StringUtils.join(tempTextList,"|")+")\\b");
