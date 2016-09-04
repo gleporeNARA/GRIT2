@@ -1892,7 +1892,7 @@ public class Main extends JFrame
     	HashSet<String> tempTextList = new HashSet<>();
     	tempTextList.clear();
     	
-    	String[] tempText = text.split("(,)|(\\|)|(\\s)");
+    	String[] tempText = text.split("(,)|(\\|)|(\\s)"); //split text entry on commas, pipes or blank spaces (including line breaks?)
     	for (int i = 0; i < tempText.length; i++)
 		{
     		tempTextList.add(tempText[i]);
