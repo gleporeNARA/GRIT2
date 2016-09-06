@@ -1898,7 +1898,7 @@ public class Main extends JFrame
     		tempTextList.add(tempText[i]);
 		}
     	System.out.println("List: "+tempTextList);
-    	Pattern pattern = Pattern.compile("\\b("+StringUtils.join(tempTextList,"|")+")\\b");
+    	Pattern pattern = Pattern.compile("\\b("+StringUtils.join(tempTextList,"|")+")\\b", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
         regexText.add(pattern);
     }
 
