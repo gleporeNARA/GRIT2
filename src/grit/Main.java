@@ -1197,8 +1197,9 @@ public class Main extends JFrame
             String lineA = "";
 
             addTextToRegex(JTField.getText());
-            
-            System.out.println(regexText);
+
+
+            //System.out.println("regextText list length is " + regexText.size()); //PRINTING ARRAY LENGTH TO SHOW RECURSION ERROR
 
             // check if file is readable
             if (fileReader.hasNext())
@@ -1898,7 +1899,7 @@ public class Main extends JFrame
     		tempTextList.add(tempText[i]);
 		}
     	System.out.println("List: "+tempTextList);
-    	Pattern pattern = Pattern.compile("\\b("+StringUtils.join(tempTextList,"|")+")\\b");
+    	Pattern pattern = Pattern.compile("("+StringUtils.join(tempTextList,"|")+")", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
         regexText.add(pattern);
     }
 
