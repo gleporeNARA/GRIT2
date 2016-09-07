@@ -1198,7 +1198,7 @@ public class Main extends JFrame
 
             addTextToRegex(JTField.getText());
             
-            System.out.println(regexText);
+            System.out.println("regexText is " + regexText);
 
             // check if file is readable
             if (fileReader.hasNext())
@@ -1892,13 +1892,17 @@ public class Main extends JFrame
     	HashSet<String> tempTextList = new HashSet<>();
     	tempTextList.clear();
     	
-    	String[] tempText = text.split("(,)|(\\|)|(\\s)"); //split text entry on commas, pipes or blank spaces (including line breaks?)
+    	String[] tempText = text.split("(,)|(\\|)|(\\s)"); //split text entry on commas, pipes or blank spaces (including line breaks)
     	for (int i = 0; i < tempText.length; i++)
 		{
-    		tempTextList.add(tempText[i]);
+		    System.out.println("tempText[i] is " + tempText[i]);
+		    if (!tempText[i].matches("")) {
+		        System.out.println("adding " + tempText[i]);
+            tempTextList.add(tempText[i]);
+        }
 		}
     	System.out.println("List: "+tempTextList);
-    	Pattern pattern = Pattern.compile("\\b("+StringUtils.join(tempTextList,"|")+")\\b", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+    	Pattern pattern = Pattern.compile("("+StringUtils.join(tempTextList,"|")+")", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
         regexText.add(pattern);
     }
 
