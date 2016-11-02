@@ -1905,7 +1905,8 @@ public class Main extends JFrame
         }
 		}
 
-    	Pattern pattern = Pattern.compile("\\b("+StringUtils.join(tempTextList,"|")+"\\b)", Pattern.DOTALL);
+    	Pattern pattern = Pattern.compile("\\b("+StringUtils.join(tempTextList,"|")+")\\b", Pattern.DOTALL);
+        //System.out.println("pattern is x" + pattern + " x");
         System.out.println("List: "+tempTextList);
         regexText.add(pattern);
     }
