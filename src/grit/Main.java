@@ -370,7 +370,9 @@ public class Main extends JFrame
         JCBPoB = new JCheckBox();
         JCBAlien = new JCheckBox();
         
-        JTField = new JTextArea("Gautam, Mehta, Grand, Jury, Gautam, Mehta");
+        JTField = new JTextArea("");
+        JTField.setLineWrap(true);
+        JTField.setWrapStyleWord(true);
 
         JCBAutoParser = new JCheckBox();
 
@@ -1892,17 +1894,19 @@ public class Main extends JFrame
     	HashSet<String> tempTextList = new HashSet<>();
     	tempTextList.clear();
     	
-    	String[] tempText = text.split("(,)|(\\|)|(\\s)"); //split text entry on commas, pipes or blank spaces (including line breaks)
+    	String[] tempText = text.split("(,)|(\\|)"); //split text entry on commas|(\\s), pipes or blank spaces (including line breaks)
     	for (int i = 0; i < tempText.length; i++)
 		{
 		    System.out.println("tempText[i] is " + tempText[i]);
 		    if (!tempText[i].matches("")) {
+                tempText[i] =tempText[i].trim();
 		        System.out.println("adding " + tempText[i]);
             tempTextList.add(tempText[i]);
         }
 		}
-    	System.out.println("List: "+tempTextList);
-    	Pattern pattern = Pattern.compile("("+StringUtils.join(tempTextList,"|")+")", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+
+    	Pattern pattern = Pattern.compile("\\b("+StringUtils.join(tempTextList,"|")+"\\b)", Pattern.DOTALL);
+        System.out.println("List: "+tempTextList);
         regexText.add(pattern);
     }
 
