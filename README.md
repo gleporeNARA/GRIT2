@@ -18,6 +18,6 @@ The program allows the user to export the results of the search as
 either an HTML file or a CSV file.
 
 There is also a free text field, which should allow the user to input
-a series of search terms (delimited by commas, blank spaces, or the
+a series of search terms (delimited by commas or the
 pipe (|) character. This functionality is currently mostly
 implemented.
