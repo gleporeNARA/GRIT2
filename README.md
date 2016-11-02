@@ -19,5 +19,7 @@ either an HTML file or a CSV file.
 
 There is also a free text field, which should allow the user to input
 a series of search terms (delimited by commas or the
-pipe (|) character. This functionality is currently mostly
+pipe (|)) character. This functionality is currently mostly
 implemented.
+
+See the sent_mail.zip file for sample files to test the code with.
