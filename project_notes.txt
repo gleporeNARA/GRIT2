@@ -1,0 +1,23 @@
+manual compile of grit project:
+the tika jar file will have to be extracted! unzip with your favorite zipping utility
+create a directory called \production and unzip all content of tika into this directory
+after extracting tika, using command line utility, cd into production\META-INF\ and modify
+the MANIFEST.MF file like this:
+
+echo Main-Class: grit.Main>MANIFEST.MF
+
+create a new directory in \production called grit, like this: production\grit
+
+current working directory should contain tika-app-1.13.jar, production directory, and
+	the'cloned' NARA-GRIT directory from github
+
+compile with
+	javac -cp tika-app-1.13.jar;. -sourcepath NARA-GRIT\src\grit -d production NARA-GRIT\src\grit\*.java
+
+
+create runnable jar with
+	jar cvfm GRIT.jar production\META-INF\MANIFEST.MF -C production/ .
+
+
+resources:
+https://ant.apache.org/manual/tutorial-HelloWorldWithAnt.html
