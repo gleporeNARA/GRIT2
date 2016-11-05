@@ -18,6 +18,25 @@ compile with
 create runnable jar with
 	jar cvfm GRIT.jar production\META-INF\MANIFEST.MF -C production/ .
 
+	
+update: 11/05/2016
+I just discovered a simpler way to produce the output jar file, rather than extracting
+and repackaging all the tika files just to include the grit files, we simply update
+the tika-app-1.13.jar file with the compiled grit classes and have manifest points to the
+grit.Main to run the grit application. the tika-app-1.13.jar can be rename to GRIT.jar
+and that will become the grit application.
+
+to do this, create a temporary directory and put the following items in it:
+\grit				--> the grit directory with all the compiled java classes, no sub-directories!
+MANIFEST.MF			--> the manifest file to points to the grit.Main to run the grit application
+tika-app-1.13.jar	--> this is the jar file that we will be updating
+
+now we just put the \grit directory and the manifest into the tika-app-1.13.jar, and rename
+tika-app-1.13.jar into GRIT.jar and we have our production application.
+cd into current directory with the above items and update the tika jar  like this:
+	jar ufm tika-app-1.13.jar MANIFEST.MF grit\* && rename tika-app-1.13 GRIT.jar
+	
+where u, f and m is flags for update files with manifest
 
 resources:
 https://ant.apache.org/manual/tutorial-HelloWorldWithAnt.html
