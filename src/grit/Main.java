@@ -1,6 +1,11 @@
 package grit;
 
 import javax.swing.*;
+import javax.swing.JTable;
+import javax.swing.border.TitledBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.plaf.basic.BasicProgressBarUI;
+import javax.swing.table.DefaultTableModel;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hsmf.MAPIMessage;
@@ -38,11 +43,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipException;
-import javax.swing.JTable;
-import javax.swing.border.TitledBorder;
-import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.plaf.basic.BasicProgressBarUI;
-import javax.swing.table.DefaultTableModel;
 import org.apache.tika.exception.TikaException;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.parser.AutoDetectParser;
@@ -61,7 +61,7 @@ import org.xml.sax.SAXException;
 /**
  * This program is used to find Generalized Retriever of Information Tool.
  * 
- * @author Gautam Mehta (gxmehta@gmail.com), Duy L Nguyen (duyl3nguy3n@gmail.com)
+ * @author Tam Tran (tranthientam@comcast.net), Gautam Mehta (gxmehta@gmail.com), Duy L Nguyen (duyl3nguy3n@gmail.com)
  * @version 0.0.4
  * Version 0.0.4
  * - Revised Input Regex boxes to ONE
@@ -80,8 +80,7 @@ import org.xml.sax.SAXException;
  * - Basic functionality.
  */
 
-public class Main extends JFrame
-{
+public class Main extends JFrame {
     public static final String PROGRAM_TITLE = "GRIT";
     public static final String PROGRAM_VERSION = "0.0.4a";
     public static final int WIN_WIDTH = 1200;
@@ -147,6 +146,10 @@ public class Main extends JFrame
     private List<Pattern> regexPoBs;
     private List<Pattern> regexMaidens;
     private List<Pattern> regexAliens;
+	private List<Pattern> regexFBIInfoFiles;	//<=========== declaring list of regex patterns for check boxes
+	private List<Pattern> regexGrandJury;
+	private List<Pattern> regexFBISources;
+	private List<Pattern> regexFBISourceCodes;
     
     // GUI COMPONENTS (visible interface)
     private JCheckBox JCBCheckAll;
@@ -155,6 +158,10 @@ public class Main extends JFrame
     private JCheckBox JCBDoB;
     private JCheckBox JCBMaiden;
     private JCheckBox JCBAlien;
+	private JCheckBox JCBGrandJury;		//<=========== declaring new check boxes
+	private JCheckBox JCBFBISources;
+	private JCheckBox JCBFBIInfoFiles;
+	private JCheckBox JCBFBISourceCodes;
     
     private JTextArea JTField;
 
@@ -195,14 +202,13 @@ public class Main extends JFrame
     private HashSet<String> skipExtensions;
     //private JButton JBClear;
 
-    public Main()
-    {
+	// the grit.Main class constructor 
+    public Main() {
         initSystemComponents();
         initGUIComponents();
     }
 
-    private void initSystemComponents()
-    {
+    private void initSystemComponents() {
         userInput = null;
         textFileInput = null;
         outputFileHTML = null;
@@ -217,8 +223,7 @@ public class Main extends JFrame
         htmlWriter = new HTMLWriter();
         csvWriter = new CSVWriter();
         
-        JBTableModel = new DefaultTableModel(TableWriter.table_data, TableWriter.table_header)
-        {
+        JBTableModel = new DefaultTableModel(TableWriter.table_data, TableWriter.table_header) {
             @Override
             public Class getColumnClass(int column) {
                 switch (column) {
@@ -241,7 +246,8 @@ public class Main extends JFrame
                 }
             }
         };
-        JBTFileExtModel = new DefaultTableModel(TableWriter.table_ext_data, TableWriter.table_ext_header);
+        
+		JBTFileExtModel = new DefaultTableModel(TableWriter.table_ext_data, TableWriter.table_ext_header);
         JBTCatModel = new DefaultTableModel(TableWriter.table_cat_data, TableWriter.table_cat_header);
 
         searchTask = null;
@@ -270,6 +276,10 @@ public class Main extends JFrame
         regexPoBs = new ArrayList<Pattern>();
         regexMaidens = new ArrayList<Pattern>();
         regexAliens = new ArrayList<Pattern>();
+		regexFBIInfoFiles = new ArrayList<Pattern>();	//<=========== create regex list for check box match pattern
+		regexGrandJury = new ArrayList<Pattern>();
+		regexFBISources = new ArrayList<Pattern>();
+		regexFBISourceCodes = new ArrayList<Pattern>();
                 
         resultTextList = new ArrayList<Match>();
         resultTextListUnique = new HashSet<Match>();        
@@ -301,8 +311,9 @@ public class Main extends JFrame
         skipExtensions.add("tif");
         skipExtensions.add("tiff");
         
-        // build regex lists
-        
+        /*
+		 * build regex lists
+		 */
         // perfect old format ssn with hyphens, followed by anything other than a number, dash, or slash
         addRegexToList("(\\b(?!000)(?!666)(?:[0-6]\\d{2}|7[0-2][0-9]|73[0-3]|7[5-6][0-9]|77[0-2]))-((?!00)\\d{2})-((?!0000)\\d{4})([^0-9-/]|)", regexSSN);
         // same as above but with a newline in front
@@ -332,7 +343,19 @@ public class Main extends JFrame
         
         //Alien number regex from healthcare.gov
         addRegexToList("(\\b|^)(A|a)(-?[0-9]){9}(\\b|$)|(\\b|^)(A|a)(-?[0-9]){7}(\\b|$)", regexAliens);
-
+		
+		//Grand Jury
+		addRegexToList("(Grand Jury)",regexGrandJury);
+		
+		//FBI Sources terms for protect identity, informant, psi, si, reliable, confidential
+		addRegexToList("(protect identity|informant|psi|si|reliable|confidential)", regexFBISources);
+		
+		//Find FBI information files beginning with numbers beginning on 134, 137, 170
+		addRegexToList("\\b134-\\d\\b|\\b137-\\d\\b|\\b170-\\d*\\b", regexFBIInfoFiles);
+		
+		//FBI source codes
+		addRegexToList("\\b(AL|AQ|AX|AN|AT|BA|BH|BS|BQ|BU|BT|CE|CG|CI|CV|CO|DL|DN|DE|EP|HN|HO|IP|JN|JK|KC|KX|LV|LR|LA|LS|ME|MM|MI|MP|MO|NK|NH|NO|NR|NY|NF|OC|OM|PH|PX|PG|PD|RH|SC|SL|SU|SA|SD|SF|SJ|SV|SE|SI|TP|WFO|BER|BOG|BON|HON|LON|MAN|MEX|OTT|PAN|PAR|ROM|TOK)\\s+\\b", regexFBISourceCodes);
+		
         // setting for file chooser
         textFileChooser = new JFileChooser();
         textFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);	// set default selection mode
@@ -358,17 +381,8 @@ public class Main extends JFrame
         //fileSaver.setFileFilter(csvFilter);
     }
     
-    private void initGUIComponents()
-    {
-        
+    private void initGUIComponents() {
         JPBStatus = new JProgressBar(0,100);
-        
-        JCBCheckAll = new JCheckBox();
-        JCBSSN = new JCheckBox();
-        JCBDoB = new JCheckBox();
-        JCBMaiden = new JCheckBox();
-        JCBPoB = new JCheckBox();
-        JCBAlien = new JCheckBox();
         
         JTField = new JTextArea("");
         JTField.setLineWrap(true);
@@ -391,20 +405,27 @@ public class Main extends JFrame
         JBTFileExt = new JTable();
         JBTCat = new JTable();
         
-        
         //Row1: Elements
-        JCBCheckAll.setText("Check All Options");
-        JCBCheckAll.setToolTipText("(All Options Activated)");
-        JCBSSN.setText("SSN Match"); JCBSSN.setSelected(true);
-        JCBSSN.setToolTipText("Matches (SSN#, SS#, SSN, 555-55-5555). Most likely to match SSNs. Fewest false positives.");
-        JCBDoB.setText("Date of Birth");
-        JCBDoB.setToolTipText("(Birth, Born, DOB with a date) Matches terms related to date of birth.");
-        JCBPoB.setText("Place of Birth");
-        JCBPoB.setToolTipText("(POB, Place of Birth, birth place, birthplace, born in, born at) Matches terms related to place of birth");
-        JCBMaiden.setText("Mother's Maiden Name or Nee");
-        JCBMaiden.setToolTipText("Matches terms related to maiden names.");
-        JCBAlien.setText("Alien Registration Number");
-        JCBAlien.setToolTipText("Matches terms to Alien Registration Numbers.");
+		JCBCheckAll = new JCheckBox("Check All Options");
+		JCBCheckAll.setToolTipText("(All Options Activated)");
+        JCBSSN = new JCheckBox("SSN Match"); JCBSSN.setSelected(true);
+		JCBSSN.setToolTipText("Matches (SSN#, SS#, SSN, 555-55-5555). Most likely to match SSNs. Fewest false positives.");
+        JCBDoB = new JCheckBox("Date of Birth");
+		JCBDoB.setToolTipText("(Birth, Born, DOB with a date) Matches terms related to date of birth.");
+        JCBMaiden = new JCheckBox("Mother's Maiden Name or Nee");
+		JCBMaiden.setToolTipText("Matches terms related to maiden names.");
+        JCBPoB = new JCheckBox("Place of Birth");
+		JCBPoB.setToolTipText("(POB, Place of Birth, birth place, birthplace, born in, born at) Matches terms related to place of birth");
+        JCBAlien = new JCheckBox("Alien Registration Number");
+		JCBAlien.setToolTipText("Matches terms to Alien Registration Numbers.");
+		JCBGrandJury = new JCheckBox("Grand Jury");		//<=========== initializing and defining new checkboxes and tool tip
+		JCBGrandJury.setToolTipText("Find all matches term Grand Jury");
+		JCBFBISources = new JCheckBox("FBI Sources");
+		JCBFBISources.setToolTipText("Find matches for protect identity, informant, psi, si, reliable, confidential");
+		JCBFBIInfoFiles = new JCheckBox("FBI Info Files");
+		JCBFBIInfoFiles.setToolTipText("Find FBI information files beginning with numbers beginning on 134, 137, 170");
+		JCBFBISourceCodes = new JCheckBox("FBI Source Codes");
+		JCBFBISourceCodes.setToolTipText("Finds all FBI source codes");
 
         JCBAutoParser.setText("Read Additional Formats");
         JCBAutoParser.setToolTipText("The program will attempt to read additional file formats.");
@@ -455,10 +476,15 @@ public class Main extends JFrame
         JPBStatus.setForeground(new Color(129,218,245));
 	
         JPBStatus.setUI(new BasicProgressBarUI() {
-              @Override
-	      protected Color getSelectionBackground() { return new Color(129,218,245); }
-              @Override
-	      protected Color getSelectionForeground() { return Color.black; }
+			@Override
+			protected Color getSelectionBackground() { 
+				return new Color(129,218,245);
+			}
+			
+			@Override
+			protected Color getSelectionForeground() { 
+				return Color.black;
+			}
         });
 
         //Row1: Panel1: Elements Added
@@ -471,13 +497,27 @@ public class Main extends JFrame
         panel1.add(JCBMaiden);
         panel1.add(JCBPoB);
         panel1.add(JCBAlien);
-
+		panel1.add(JCBFBIInfoFiles);	//<=========== FBI Info Files added here
+		
         //Row1: Panel2: Elements Added
         JPanel panel2 = new JPanel();
-        panel2.setBorder(BorderFactory.createTitledBorder("Other Match Mode"));
-        panel2.setLayout(new BoxLayout(panel2, BoxLayout.LINE_AXIS));
-        panel2.add(JTField);
-
+		JPanel panel2_sub1 = new JPanel();	//<=========== to get proper alignment of new check boxes above "Other Match mode"
+		JPanel panel2_sub2 = new JPanel();	// two sub panels are placed inside of panel2 using grid layout
+		
+		panel2_sub1.setBorder(BorderFactory.createTitledBorder("PII Match Modes"));
+        panel2_sub1.setLayout(new BoxLayout(panel2_sub1, BoxLayout.PAGE_AXIS));
+		panel2_sub1.add(JCBGrandJury);
+		panel2_sub1.add(JCBFBISources);
+		panel2_sub1.add(JCBFBISourceCodes);
+		
+		panel2_sub2.setBorder(BorderFactory.createTitledBorder("Other Match Mode"));
+		panel2_sub2.setLayout(new BoxLayout(panel2_sub2, BoxLayout.PAGE_AXIS));
+		panel2_sub2.add(JTField);
+		
+		panel2.setLayout(new GridLayout(0,1));
+		panel2.add(panel2_sub1);
+		panel2.add(panel2_sub2);
+		
         //Row1: Panel3: Elements Added
         JPanel panel3 = new JPanel();
         panel3.setBorder(BorderFactory.createTitledBorder("Read Mode"));
@@ -497,8 +537,18 @@ public class Main extends JFrame
         panel4.add(JBRun);
         panel4.add(JBCancel);
         panel4.add(JBExport);
-
-        //Row2: Panel5: Elements Added
+		
+        //Row1: Elements Populated
+        JPanel row1 = new JPanel();
+        row1.setMinimumSize(new Dimension(Integer.MAX_VALUE, 100));
+        row1.setMaximumSize(new Dimension(Integer.MAX_VALUE, 200));
+        row1.setLayout(new GridLayout(0, 4));
+        row1.add(panel1);
+        row1.add(panel2);
+        row1.add(panel3);
+        row1.add(panel4);
+		
+		//Row2: Panel5: Elements Added
         JPanel panel5 = new JPanel();
         panel5.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
         panel5.setLayout(new BoxLayout(panel5, BoxLayout.PAGE_AXIS));
@@ -506,16 +556,6 @@ public class Main extends JFrame
         panel5.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));
         panel5.add(JTAProgressLog);
         panel5.add(JPBStatus);
-        
-        //Row1: Elements Populated
-        JPanel row1 = new JPanel();
-        row1.setMinimumSize(new Dimension(Integer.MAX_VALUE, 100));
-        row1.setMaximumSize(new Dimension(Integer.MAX_VALUE, 120));
-        row1.setLayout(new GridLayout(0, 4));
-        row1.add(panel1);
-        row1.add(panel2);
-        row1.add(panel3);
-        row1.add(panel4);
         
         //Row2: Elements Populated
         JPanel row2 = new JPanel();
@@ -527,8 +567,7 @@ public class Main extends JFrame
         //Row3: Elements Populated
         row3 = new JScrollPane(JTAResultLog);
         row3.setPreferredSize(new Dimension(0, 400));
-        row3.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Result Set", 
-                TitledBorder.CENTER, TitledBorder.TOP));
+        row3.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Result Set", TitledBorder.CENTER, TitledBorder.TOP));
         
         //Row4: Elements Populated
         matchPane = new JScrollPane(JBTable);
@@ -559,15 +598,14 @@ public class Main extends JFrame
         row5.setLayout(new GridLayout(1, 2));
         row5.add(extPane);
         row5.add(catPane);
-        
+
         //Main: Setting Panel
         JPMain = new JPanel();
         JPMain.setLayout(new BoxLayout(JPMain, BoxLayout.PAGE_AXIS));
         JPMain.add(row1);
-        JPMain.add(row2);
-        JPMain.add(row3);
-       
-        
+		JPMain.add(row2);
+		JPMain.add(row3);
+		
         // setting for main frame
         this.setTitle(PROGRAM_TITLE + " " + PROGRAM_VERSION);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -575,8 +613,7 @@ public class Main extends JFrame
         this.setPreferredSize(new Dimension(WIN_WIDTH, WIN_HEIGHT));
         this.setMaximumSize(new Dimension(WIN_WIDTH,WIN_HEIGHT));
         this.setContentPane(JPMain);
-
-
+		
         // setup action listeners
         JCBCheckAll.addActionListener(new CheckAllOptionsListener());
         
@@ -592,8 +629,7 @@ public class Main extends JFrame
         pack();
     }
 
-    private String getTutorial()
-    {
+    private String getTutorial() {
         String tutorial = "";
         tutorial += "*** " + PROGRAM_TITLE + " version " + PROGRAM_VERSION + " ***" + NL;
         tutorial += NL;
@@ -663,13 +699,10 @@ public class Main extends JFrame
 
 //######################################## GUI ACTION LISTENERS SECTION ##########################################//
     
-    private class CleanResultsListener implements ActionListener
-    {
+    private class CleanResultsListener implements ActionListener {
         @Override
-        public void actionPerformed(ActionEvent event)
-        {
-            if (event.getSource() == JBRemoveDuplicates)
-            {
+        public void actionPerformed(ActionEvent event) {
+            if (event.getSource() == JBRemoveDuplicates) {
                 clearOldExport();
                 JBTableModel.setRowCount(0);
 
@@ -691,26 +724,31 @@ public class Main extends JFrame
     /**
      * This internal class listens for user's interaction with check all option.
      */
-    private class CheckAllOptionsListener implements ActionListener
-    {
+    private class CheckAllOptionsListener implements ActionListener {
         @Override
-        public void actionPerformed(ActionEvent event)
-        {
+        public void actionPerformed(ActionEvent event) {
             // DIRECTORY ONLY MODE
-            if (event.getSource() == JCBCheckAll)
-            {
+            if (event.getSource() == JCBCheckAll) {
                 if(JCBCheckAll.isSelected() == true) {
                     JCBSSN.setSelected(true);
                     JCBDoB.setSelected(true);
                     JCBMaiden.setSelected(true);
                     JCBPoB.setSelected(true);
                     JCBAlien.setSelected(true);
+					JCBFBIInfoFiles.setSelected(true);	//<=========== sets all checkbox to true
+					JCBGrandJury.setSelected(true);
+					JCBFBISources.setSelected(true);
+					JCBFBISourceCodes.setSelected(true);
                } else {
             	   	JCBSSN.setSelected(false);
                     JCBDoB.setSelected(false);
                     JCBMaiden.setSelected(false);
                     JCBPoB.setSelected(false);
                     JCBAlien.setSelected(false);
+					JCBFBIInfoFiles.setSelected(false);	//<=========== sets all check box to false
+					JCBGrandJury.setSelected(false);
+					JCBFBISources.setSelected(false);
+					JCBFBISourceCodes.setSelected(false);
                 }
             }
         }
@@ -718,20 +756,12 @@ public class Main extends JFrame
     /**
      * This internal class listens for user's interaction with run mode.
      */
-    private class MyRunModeListener implements ActionListener
-    {
+    private class MyRunModeListener implements ActionListener {
         @Override
-        public void actionPerformed(ActionEvent event)
-        {
-            // DIRECTORY ONLY MODE
-            if (event.getSource() == JRBDirectory)
-            {
+        public void actionPerformed(ActionEvent event) {
+            if (event.getSource() == JRBDirectory) {				// DIRECTORY ONLY MODE
                 fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-            }
-
-            // FILE ONLY MODE
-            else if (event.getSource() == JRBFile)
-            {
+            } else if (event.getSource() == JRBFile) { 				// FILE ONLY MODE
                 fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
             }
         }
@@ -740,29 +770,19 @@ public class Main extends JFrame
     /**
      * This internal class listens for user's input/output
      */
-    private class MyIOListener implements ActionListener
-    {
+    private class MyIOListener implements ActionListener {
         @Override
-        public void actionPerformed(ActionEvent event)
-        {
-            // INPUT BUTTON
-            if (event.getSource() == JBInput) 
-            {
+        public void actionPerformed(ActionEvent event) {
+            if (event.getSource() == JBInput) {					// INPUT BUTTON
                 // open browse directory/file dialog
                 int userRespond = fileChooser.showOpenDialog(Main.this);
- 
-                // user select a directory/file
-                if (userRespond == JFileChooser.APPROVE_OPTION)
-                {
+				
+                if (userRespond == JFileChooser.APPROVE_OPTION) {	// user select a directory/file
                     userInput = fileChooser.getSelectedFile();
                     String msg = "Input: " + userInput + NL;
                     printToProgress(msg);
                 }
-            }
- 
-            // HTML SAVE BUTTON
-            else if (event.getSource() == JBExport)
-            {
+            } else if (event.getSource() == JBExport) {				// HTML SAVE BUTTON
                 // get today date
                 Calendar cal = Calendar.getInstance();
                 String month = String.valueOf(cal.get(Calendar.MONTH)+1);
@@ -776,31 +796,26 @@ public class Main extends JFrame
                 int userRespond1 = fileSaver.showSaveDialog(Main.this);
  
                 // user enter a save file
-                if (userRespond1 == JFileChooser.APPROVE_OPTION)
-                {
-                    if (fileSaver.getFileFilter().equals(webpageFilter)) 
-                    {
+                if (userRespond1 == JFileChooser.APPROVE_OPTION) {
+                    if (fileSaver.getFileFilter().equals(webpageFilter)) {
                         outputFileHTML = new File(fileSaver.getSelectedFile()+".html");
-                        if (outputFileHTML != null && outputFileHTML.exists())
-                        {
+                        if (outputFileHTML != null && outputFileHTML.exists()) {
                             String msg = "The file " + outputFileHTML.getName() + " already exists. Do you want to replace the existing file?";
                             String title = "Ovewrite file?";
                             int userRespond2 = JOptionPane.showConfirmDialog(Main.this, msg, title, JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
  
                             // user choose NO
-                            if (userRespond2 != JOptionPane.YES_OPTION)
-                            {
+                            if (userRespond2 != JOptionPane.YES_OPTION) {
                                 return; // stop here
                             }
                         }
  
                         String path = fileSaver.getSelectedFile().toString();
-                        if (!path.endsWith(".html")) {
+                        
+						if (!path.endsWith(".html")) {
                             path = path + ".html";
- 
-                            // try to write text to file writer
-                            try
-                            {
+							
+                            try	{	// try to write text to file writer
                                 fileWriter = new FileWriter(path, false);
                                 bufferedWriter = new BufferedWriter(fileWriter);
                                 bufferedWriter.write(postHtmlResult);
@@ -810,25 +825,20 @@ public class Main extends JFrame
  
                                 printToProgress("Result has been saved: " + outputFileHTML + NL);
                                 printToLog("*Result has been saved: " + outputFileHTML + NL);
-                            } 
-                            catch (IOException e) 
-                            {
+                            } catch (IOException e) {
                                 JOptionPane.showMessageDialog(Main.this, "ERROR: Invalid output file.");
                             }
                         }
  
-                    } else if (fileSaver.getFileFilter().equals(csvFilter)) 
-                    {
+                    } else if (fileSaver.getFileFilter().equals(csvFilter)) {
                         outputFileCSV = new File(fileSaver.getSelectedFile()+".csv");
-                        if (outputFileCSV != null && outputFileCSV.exists()) 
-                        {
+                        if (outputFileCSV != null && outputFileCSV.exists()) {
                             String msg = "The file " + outputFileCSV.getName() + " already exists. Do you want to replace the existing file?";
                             String title = "Ovewrite file?";
                             int userRespond2 = JOptionPane.showConfirmDialog(Main.this, msg, title, JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
  
                             // user choose NO
-                            if (userRespond2 != JOptionPane.YES_OPTION)
-                            {
+                            if (userRespond2 != JOptionPane.YES_OPTION) {
                                 return; // stop here
                             }
  
@@ -837,10 +847,8 @@ public class Main extends JFrame
                         String path = fileSaver.getSelectedFile().toString();
                         if (!path.endsWith(".csv")) {
                             path = path + ".csv";
- 
-                            // try to write text to file writer
-                            try
-                            {
+							
+                            try { // try to write text to file writer
                                 fileWriter = new FileWriter(path, false);
                                 bufferedWriter = new BufferedWriter(fileWriter);
                                 bufferedWriter.write(postCSVResult);
@@ -850,17 +858,12 @@ public class Main extends JFrame
  
                                 printToProgress("Result has been saved: " + outputFileCSV + NL);
                                 printToLog("*Result has been saved: " + outputFileCSV + NL);
-                            } 
-                            catch (IOException e) 
-                            {
+                            } catch (IOException e) {
                                 JOptionPane.showMessageDialog(Main.this, "ERROR: Invalid output file.");
                             }
                         }
                     }
-                }
-                // user cancel save
-                else
-                {
+                } else {		// user cancel save
                     return; // stop here
                 }
             }
@@ -871,41 +874,28 @@ public class Main extends JFrame
     /**
      * This internal class listens for user's interaction with run button.
      */
-    private class MySearchTaskListener implements ActionListener
-    {
+    private class MySearchTaskListener implements ActionListener {
         @Override
-        public void actionPerformed(ActionEvent event)
-        {
-            // RUN BUTTON
-            if (event.getSource() == JBRun) 
-            {
+        public void actionPerformed(ActionEvent event) {
+            if (event.getSource() == JBRun) {		// RUN BUTTON
                 // check if a match mode is selected
-                if (JTField.getText().isEmpty() && !JCBSSN.isSelected() && !JCBPoB.isSelected() && !JCBDoB.isSelected() && !JCBMaiden.isSelected() && !JCBAlien.isSelected())
-                {
+                if (JTField.getText().isEmpty() && !JCBSSN.isSelected() && !JCBPoB.isSelected() && !JCBDoB.isSelected() && !JCBMaiden.isSelected() && !JCBAlien.isSelected()) {
                     JOptionPane.showMessageDialog(Main.this, "ERROR: No match mode is selected.");
                     return; // stop here
                 }
-
-                // check if there is an input file/directory
-                if (userInput == null)
-                {
+				
+                if (userInput == null) {		// check if there is an input file/directory
                     JOptionPane.showMessageDialog(Main.this, "ERROR: No input file/directory.");
                     return; // stop here
                 }
-
-                // read mode: directory only
-                if (fileChooser.getFileSelectionMode() == JFileChooser.DIRECTORIES_ONLY)
-                {
+				
+                if (fileChooser.getFileSelectionMode() == JFileChooser.DIRECTORIES_ONLY) {	// read mode: directory only
                     clearOldSearch();
                     searchTask = new SearchTask();
                     searchTask.execute();
                     JBRun.setEnabled(false);
                     JBCancel.setEnabled(true);
-                }
-
-                // read mode: file only
-                else if (fileChooser.getFileSelectionMode() == JFileChooser.FILES_ONLY)
-                {	
+                } else if (fileChooser.getFileSelectionMode() == JFileChooser.FILES_ONLY) {	// read mode: file only
                     clearOldSearch();
                     searchTask = new SearchTask();
                     searchTask.execute();
@@ -918,11 +908,7 @@ public class Main extends JFrame
                 JPMain.add(row5);
                 JPMain.validate();
                 JPMain.repaint();
-            }
-
-            // CANCEL BUTTON
-            else if (event.getSource() == JBCancel)
-            {
+            } else if (event.getSource() == JBCancel) {		// CANCEL BUTTON
                 searchTask.cancel(true);
                 //System.exit(0);
             }
@@ -932,58 +918,43 @@ public class Main extends JFrame
 
 //######################################## SEARCH TASK SECTION #################################################//
     
-    private class SearchTask extends SwingWorker<Void, String>
-    {
+    private class SearchTask extends SwingWorker<Void, String> {
         /**
          * This method takes a given directory and find SSNs for all the files reachable from that directory.
          * 
          * @param dir - directory that need to be processed
          */
-        public void recursiveSearch(File dir)
-        {
+        public void recursiveSearch(File dir) {
             // handle interrupted (cancel)
-            if (Thread.currentThread().isInterrupted())
-            {
+            if (Thread.currentThread().isInterrupted()) {
                 return;
             }
-
-            // build list of input files
-            List<File> inputFiles = new ArrayList<File>();
-            if (fileChooser.getFileSelectionMode() == JFileChooser.FILES_ONLY)
-            {
+			
+            List<File> inputFiles = new ArrayList<File>();		// build list of input files
+            if (fileChooser.getFileSelectionMode() == JFileChooser.FILES_ONLY) {
                 inputFiles.add(dir);
-            }
-            else {
+            } else {
                 inputFiles = Arrays.asList(dir.listFiles());
             }
-
-            // update counter
-            totalFiles += inputFiles.size();
-           
-            // process file by file
-            for (File file: inputFiles)
-            {
-                if (file.isDirectory())
-                {
+			
+            totalFiles += inputFiles.size();	// update counter
+			
+            for (File file: inputFiles) {		// process file by file
+                if (file.isDirectory()) {
                     totalFiles --;
                     recursiveSearch(file);
-                }
-                else {
-                    
+                } else {
                     InputStream input = null;
                     
-                    try 
-                    {
+                    try {
                         String fileName = file.getName();
                         String fileExtension = "txt";
                         int i = fileName.lastIndexOf(".");
-                        if (i > 0)
-                        {
+                        if (i > 0) {
                             fileExtension = fileName.substring(i+1);
                         }
                         
-                        if (fileExtension.equals("txt"))
-                        {
+                        if (fileExtension.equals("txt")) {
                             ContentHandler handler = new BodyContentHandler(-1);
                             input = new FileInputStream(file);
                             Metadata metadata = new Metadata();
@@ -993,24 +964,18 @@ public class Main extends JFrame
                             TXTParser.parse(input, handler, metadata, context);
 
                             fileReader = new Scanner(handler.toString());
-                        } 
-                        else if (fileExtension.equals("docx"))
-                        {
+                        } else if (fileExtension.equals("docx")) {
                             OPCPackage pkg = OPCPackage.open(file);
                             XWPFDocument docx = new XWPFDocument(OPCPackage.open(file));
                             XWPFWordExtractor extractor = new XWPFWordExtractor(docx);
                             fileReader = new Scanner(extractor.getText());
                             pkg.close();
-                        }
-                        else if (fileExtension.equals("doc"))
-                        {
+                        } else if (fileExtension.equals("doc")) {
                             NPOIFSFileSystem doc = new NPOIFSFileSystem(file);
                             WordExtractor extractor = new WordExtractor(doc.getRoot());
                             fileReader = new Scanner(WordExtractor.stripFields(extractor.getText()));
                             doc.close();
-                        }
-                        else if (fileExtension.equals("xlsx"))
-                        {
+                        } else if (fileExtension.equals("xlsx")) {
                             OPCPackage pkg = OPCPackage.open(file);
                             XSSFWorkbook wb = new XSSFWorkbook(pkg);
                             XSSFExcelExtractor extractor = new XSSFExcelExtractor(wb);
@@ -1018,9 +983,7 @@ public class Main extends JFrame
                             extractor.setIncludeSheetNames(false);
                             fileReader = new Scanner(extractor.getText());
                             pkg.close();
-                        }
-                        else if (fileExtension.equals("xls"))
-                        {
+                        } else if (fileExtension.equals("xls")) {
                             NPOIFSFileSystem xls = new NPOIFSFileSystem(file);
                             HSSFWorkbook wb = new HSSFWorkbook(xls.getRoot(), false);
                             ExcelExtractor extractor = new ExcelExtractor(wb);
@@ -1028,14 +991,10 @@ public class Main extends JFrame
                             extractor.setIncludeSheetNames(false);
                             fileReader = new Scanner(extractor.getText());
                             xls.close();
-                        }
-                        else if (fileExtension.equals("msg"))
-                        {
+                        } else if (fileExtension.equals("msg")) {
                             MAPIMessage msg = new MAPIMessage(file.getAbsolutePath());
                             fileReader = new Scanner(msg.getTextBody());
-                        }
-                        else if ((fileExtension.equals("htm"))||(fileExtension.equals("html")))
-                        {
+                        } else if ((fileExtension.equals("htm"))||(fileExtension.equals("html"))) {
                             ContentHandler handler = new BodyContentHandler(-1);
                             input = new FileInputStream(file);
                             Metadata metadata = new Metadata();
@@ -1045,9 +1004,7 @@ public class Main extends JFrame
                             HTMLParser.parse(input, handler, metadata, context);
 
                             fileReader = new Scanner(handler.toString());
-                        }
-                        else if (fileExtension.equals("rtf"))
-                        {
+                        } else if (fileExtension.equals("rtf")) {
                             ContentHandler handler = new BodyContentHandler(-1);
                             input = new FileInputStream(file);
                             Metadata metadata = new Metadata();
@@ -1057,9 +1014,7 @@ public class Main extends JFrame
                             RTFParser.parse(input, handler, metadata, context);
 
                             fileReader = new Scanner(handler.toString());
-                        }
-                        else if (fileExtension.equals("mbox"))
-                        {
+                        } else if (fileExtension.equals("mbox")) {
                             ContentHandler handler = new BodyContentHandler(-1);
                             input = new FileInputStream(file);
                             Metadata metadata = new Metadata();
@@ -1069,9 +1024,7 @@ public class Main extends JFrame
                             MBOXParser.parse(input, handler, metadata, context);
 
                             fileReader = new Scanner(handler.toString());
-                        }
-                        else if (fileExtension.equals("pst"))
-                        {
+                        } else if (fileExtension.equals("pst")) {
                             ContentHandler handler = new BodyContentHandler(-1);
                             input = new FileInputStream(file);
                             Metadata metadata = new Metadata();
@@ -1081,9 +1034,7 @@ public class Main extends JFrame
                             OutlookPSTParser.parse(input, handler, metadata, context);
 
                             fileReader = new Scanner(handler.toString());
-                        }
-                        else if (fileExtension.equals("mdb"))
-                        {
+                        } else if (fileExtension.equals("mdb")) {
                             ContentHandler handler = new BodyContentHandler(-1);
                             input = new FileInputStream(file);
                             Metadata metadata = new Metadata();
@@ -1093,9 +1044,7 @@ public class Main extends JFrame
                             JackcessParser.parse(input, handler, metadata, context);
 
                             fileReader = new Scanner(handler.toString());
-                        }
-                        else if (fileExtension.equals("pdf"))
-                        {
+                        } else if (fileExtension.equals("pdf")) {
                             ContentHandler handler = new BodyContentHandler(-1);
                             input = new FileInputStream(file);
                             Metadata metadata = new Metadata();
@@ -1105,17 +1054,11 @@ public class Main extends JFrame
                             PDFParser.parse(input, handler, metadata, context);
 
                             fileReader = new Scanner(handler.toString());
-                        }
-                        else if (fileExtension.isEmpty()) 
-                        {
+                        } else if (fileExtension.isEmpty()) {
                             fileReader = new Scanner(file);
-                        }
-                        else 
-                        {
-                            if (JCBAutoParser.isSelected())
-                            {
-                                if (skipExtensions.contains(fileExtension))
-                                {
+                        } else {
+                            if (JCBAutoParser.isSelected()) {
+                                if (skipExtensions.contains(fileExtension)) {
                                     System.out.println("Skipped");
                                     continue;
                                 } else {
@@ -1127,15 +1070,13 @@ public class Main extends JFrame
                                     parser.parse(input, handler, metadata);
 
                                     fileReader = new Scanner(handler.toString());
-                                }
-                                
+                                }    
                             } else {
                                 continue;
                             }
                         }
                         
-                        // find matching regex in current processing file
-                        matchRegex(file, fileExtension);
+                        matchRegex(file, fileExtension);	// find matching regex in current processing file
                         /*
                         throw new DataFormatException("DataFormatException");
                         
@@ -1192,19 +1133,15 @@ public class Main extends JFrame
          * 
          * @param file - file that will be processed
          */
-        private void matchRegex(File file, String fileExtension)
-        {
-            // init line counter
-            int lineNum = 1;
+        private void matchRegex(File file, String fileExtension) {
+            int lineNum = 1;		// init line counter
             String lineA = "";
 
             addTextToRegex(JTField.getText());
             
             System.out.println("regexText is " + regexText);
-
-            // check if file is readable
-            if (fileReader.hasNext())
-            {
+			
+            if (fileReader.hasNext()) {			// check if file is readable
                 readCounter ++;
                 extCounter.count(fileExtension);
                 lineA = fileReader.nextLine();				
@@ -1219,19 +1156,15 @@ public class Main extends JFrame
 //////IF THERE ARE MULTIPLE LINES IN THE FILE////////////IF THERE ARE MULTIPLE LINES IN THE FILE//////		
 			
             // use global file reader with file's text already loaded
-            while(fileReader.hasNext())
-            {
+            while(fileReader.hasNext()) {
                 String lineB = fileReader.nextLine();
                 String line = lineA + lineB;
                 Matcher patternMatcher = null;
                 
-                if (!(JTField.getText().isEmpty()))
-                {
-                    for (Pattern regexTexti : regexText)
-                    {
+                if (!(JTField.getText().isEmpty())) {
+                    for (Pattern regexTexti : regexText) {
                         patternMatcher = regexTexti.matcher(line);
-	            		while (patternMatcher.find())
-	                    {
+	            		while (patternMatcher.find()) {
 	            			textCounter++;
 	                    	resultTextList.add(new Match(textCounter, "Text", patternMatcher.group(), line, fileExtension, file, lineNum));
 	                        resultTextListUnique.add(new Match(textCounter, "Text", patternMatcher.group(), line, fileExtension, file, lineNum));
@@ -1241,13 +1174,10 @@ public class Main extends JFrame
                     }
                 }
 				
-                if (JCBSSN.isSelected())
-                {
-                    for (Pattern regexSSNi : regexSSN)
-                    {
+                if (JCBSSN.isSelected()) {
+                    for (Pattern regexSSNi : regexSSN) {
                         patternMatcher = regexSSNi.matcher(line);
-                        while (patternMatcher.find())
-                        {
+                        while (patternMatcher.find()) {
                             ssnCounter++;
                             resultSSNList.add(new Match(ssnCounter, "SSN", patternMatcher.group(), line, fileExtension, file, lineNum));
                             resultSSNListUnique.add(new Match(ssnCounter, "SSN", patternMatcher.group(), line, fileExtension, file, lineNum));
@@ -1257,13 +1187,10 @@ public class Main extends JFrame
                     }
                 }
 
-                if (JCBDoB.isSelected())
-                {
-                    for (Pattern regexDoB: regexDoBs)
-                    {
+                if (JCBDoB.isSelected()) {
+                    for (Pattern regexDoB: regexDoBs) {
                         patternMatcher = regexDoB.matcher(line);
-                        while (patternMatcher.find())
-                        {
+                        while (patternMatcher.find()) {
                             matchCounter ++;
                             dobCounter ++;
 
@@ -1274,13 +1201,10 @@ public class Main extends JFrame
                     }
                 }
 
-                if (JCBPoB.isSelected())
-                {
-                    for (Pattern regexPoB: regexPoBs)
-                    {
+                if (JCBPoB.isSelected()) {
+                    for (Pattern regexPoB: regexPoBs) {
                         patternMatcher = regexPoB.matcher(line);
-                        while (patternMatcher.find())
-                        {
+                        while (patternMatcher.find()) {
                             matchCounter ++;
                             pobCounter ++;
 
@@ -1291,13 +1215,10 @@ public class Main extends JFrame
                     }
                 }
 
-                if (JCBMaiden.isSelected())
-                {
-                    for (Pattern regexMaiden: regexMaidens)
-                    {
+                if (JCBMaiden.isSelected()) {
+                    for (Pattern regexMaiden: regexMaidens) {
                         patternMatcher = regexMaiden.matcher(line);
-                        while (patternMatcher.find())
-                        {
+                        while (patternMatcher.find()) {
                             matchCounter ++;
                             maidenCounter ++;
 
@@ -1308,13 +1229,10 @@ public class Main extends JFrame
                     }
                 }
                 
-                if (JCBAlien.isSelected())
-                {
-                    for (Pattern regexAlien: regexAliens)
-                    {
+                if (JCBAlien.isSelected()) {
+                    for (Pattern regexAlien: regexAliens) {
                         patternMatcher = regexAlien.matcher(line);
-                        while (patternMatcher.find())
-                        {
+                        while (patternMatcher.find()) {
                             matchCounter ++;
                             alienCounter ++;
 
@@ -1332,18 +1250,14 @@ public class Main extends JFrame
 //////IF MATCH ON LAST LINE OR ONLY ONE LINE////////////IF MATCH ON LAST LINE OR ONLY ONE LINE//////
 //////IF MATCH ON LAST LINE OR ONLY ONE LINE////////////IF MATCH ON LAST LINE OR ONLY ONE LINE//////			
 			
-            if( !(fileReader.hasNext()) )
-            {
+            if( !(fileReader.hasNext()) ) {
 
                 Matcher patternMatcher = null;
                 
-                if (!(JTField.getText().isEmpty()))
-                {
-                    for (Pattern regexTexti : regexText)
-                    {
+                if (!(JTField.getText().isEmpty())) {
+                    for (Pattern regexTexti : regexText) {
                         patternMatcher = regexTexti.matcher(lineA);
-	            		while (patternMatcher.find())
-	                    {
+	            		while (patternMatcher.find()) {
 	                    	textCounter++;
 	                    	resultTextList.add(new Match(textCounter, "Text", patternMatcher.group(), lineA, fileExtension, file, lineNum));
 	                        resultTextListUnique.add(new Match(textCounter, "Text", patternMatcher.group(), lineA, fileExtension, file, lineNum));
@@ -1353,13 +1267,10 @@ public class Main extends JFrame
                     }
                 }
 
-                if (JCBSSN.isSelected())
-                {
-                    for (Pattern regexSSNi : regexSSN)
-                    {
+                if (JCBSSN.isSelected()) {
+                    for (Pattern regexSSNi : regexSSN) {
                         patternMatcher = regexSSNi.matcher(lineA);
-                        while (patternMatcher.find())
-                        {
+                        while (patternMatcher.find()) {
                             ssnCounter++;
                             resultSSNList.add(new Match(ssnCounter, "SSN", patternMatcher.group(), lineA, fileExtension, file, lineNum));
                             resultSSNListUnique.add(new Match(ssnCounter, "SSN", patternMatcher.group(), lineA, fileExtension, file, lineNum));
@@ -1369,13 +1280,10 @@ public class Main extends JFrame
                     }
                 }
 
-                if (JCBDoB.isSelected())
-                {
-                    for (Pattern regexDoB: regexDoBs)
-                    {
+                if (JCBDoB.isSelected()) {
+                    for (Pattern regexDoB: regexDoBs) {
                         patternMatcher = regexDoB.matcher(lineA);
-                        while (patternMatcher.find())
-                        {
+                        while (patternMatcher.find()) {
                             matchCounter ++;
                             dobCounter ++;
 
@@ -1386,13 +1294,10 @@ public class Main extends JFrame
                     }
                 }
 
-                if (JCBPoB.isSelected())
-                {
-                    for (Pattern regexPoB: regexPoBs)
-                    {
+                if (JCBPoB.isSelected()) {
+                    for (Pattern regexPoB: regexPoBs) {
                         patternMatcher = regexPoB.matcher(lineA);
-                        while (patternMatcher.find())
-                        {
+                        while (patternMatcher.find()) {
                             matchCounter ++;
                             pobCounter ++;
 
@@ -1403,13 +1308,10 @@ public class Main extends JFrame
                     }
                 }
 
-                if (JCBMaiden.isSelected())
-                {
-                    for (Pattern regexMaiden: regexMaidens)
-                    {
+                if (JCBMaiden.isSelected()) {
+                    for (Pattern regexMaiden: regexMaidens) {
                         patternMatcher = regexMaiden.matcher(lineA);
-                        while (patternMatcher.find())
-                        {
+                        while (patternMatcher.find()) {
                             matchCounter ++;
                             maidenCounter ++;
 
@@ -1419,13 +1321,11 @@ public class Main extends JFrame
                         }
                     }
                 }
-                if (JCBAlien.isSelected())
-                {
-                    for (Pattern regexAlien: regexAliens)
-                    {
+				
+                if (JCBAlien.isSelected()) {
+                    for (Pattern regexAlien: regexAliens) {
                         patternMatcher = regexAlien.matcher(lineA);
-                        while (patternMatcher.find())
-                        {
+                        while (patternMatcher.find()) {
                             matchCounter ++;
                             alienCounter ++;
 
@@ -1437,9 +1337,8 @@ public class Main extends JFrame
                 }
                 lineNum ++;
             }
-
-            // tidy up and update progress
-            fileReader.close();
+			
+            fileReader.close();		// tidy up and update progress
             publish("printCurrentProgress");
             fileCounter ++;
             //System.out.println("Search Ended");
@@ -1447,50 +1346,48 @@ public class Main extends JFrame
         }
         
         
-        private ArrayList getOtherResults(ArrayList<Match> elf)
-        {
-            for (Match pr : resultOtherMatchList)
-            {
+        private ArrayList getOtherResults(ArrayList<Match> elf) {
+            for (Match pr : resultOtherMatchList) {
                 JBTableModel.addRow(new Object[]{pr.getID(), pr.getConfidence(), pr.getText(), pr.getLine(), pr.getType(), pr.getFile(), pr.getLineNum()});
                 if(pr.getConfidence().matches("Text")){
                     textHTML += htmlWriter.addTableRow(pr.getID(), pr.getConfidence(), pr.getText(), pr.getLine(), pr.getType(), pr.getFile(), pr.getLineNum());
                     textCSV += csvWriter.addTableRow(pr.getID(), pr.getConfidence(), pr.getText(), pr.getLine(), pr.getType(), pr.getFile(), pr.getLineNum());
                 }
+				
                 if(pr.getConfidence().matches("PoB")){
                     pobHTML += htmlWriter.addTableRow(pr.getID(), pr.getConfidence(), pr.getText(), pr.getLine(), pr.getType(), pr.getFile(), pr.getLineNum());
                     pobCSV += csvWriter.addTableRow(pr.getID(), pr.getConfidence(), pr.getText(), pr.getLine(), pr.getType(), pr.getFile(), pr.getLineNum());
-                }    
+                } 
+				
                 if(pr.getConfidence().matches("DoB")){
                     dobHTML += htmlWriter.addTableRow(pr.getID(), pr.getConfidence(), pr.getText(), pr.getLine(), pr.getType(), pr.getFile(), pr.getLineNum());
                     dobCSV += csvWriter.addTableRow(pr.getID(), pr.getConfidence(), pr.getText(), pr.getLine(), pr.getType(), pr.getFile(), pr.getLineNum());
                 }
+				
                 if(pr.getConfidence().matches("Maiden")){
                     maidenHTML += htmlWriter.addTableRow(pr.getID(), pr.getConfidence(), pr.getText(), pr.getLine(), pr.getType(), pr.getFile(), pr.getLineNum());
                     maidenCSV += csvWriter.addTableRow(pr.getID(), pr.getConfidence(), pr.getText(), pr.getLine(), pr.getType(), pr.getFile(), pr.getLineNum());
                 }
+				
                 if(pr.getConfidence().matches("Alien")){
                     alienHTML += htmlWriter.addTableRow(pr.getID(), pr.getConfidence(), pr.getText(), pr.getLine(), pr.getType(), pr.getFile(), pr.getLineNum());
                     alienCSV += csvWriter.addTableRow(pr.getID(), pr.getConfidence(), pr.getText(), pr.getLine(), pr.getType(), pr.getFile(), pr.getLineNum());
                 }
             }
+			
             return resultOtherMatchList;
         }
         
-        private ArrayList cleanTextResults(HashSet<Match> elf)
-        {            
-            for(Match pr : elf)
-            {
-                if(elf.contains(pr))
-                {
+        private ArrayList cleanTextResults(HashSet<Match> elf) {            
+            for(Match pr : elf) {
+                if(elf.contains(pr)) {
                     resultTextListUniqueFinal.add(pr);
                 }
             }
             
-            Collections.sort(resultTextListUniqueFinal, new Comparator<Match>() 
-            {
+            Collections.sort(resultTextListUniqueFinal, new Comparator<Match>() {
                 @Override
-                public int compare(Match z1, Match z2) 
-                {
+                public int compare(Match z1, Match z2) {
                     if (z1.getID() > z2.getID()) { return 1; }
                     if (z1.getID() < z2.getID()) { return -1; }
                     return 0;
@@ -1498,32 +1395,28 @@ public class Main extends JFrame
             });
             
             int i = 1;
-            for (Match pr : resultTextListUniqueFinal)
-            {
+            for (Match pr : resultTextListUniqueFinal) {
                 JBTableModel.addRow(new Object[]{ pr.setID(i), pr.getConfidence(), pr.getText(), pr.getLine(), pr.getType(), pr.getFile(), pr.getLineNum() });
                 textHTML += htmlWriter.addTableRow( pr.setID(i), pr.getConfidence(), pr.getText(), pr.getLine(), pr.getType(), pr.getFile(), pr.getLineNum() );
                 textCSV += csvWriter.addTableRow( pr.setID(i), pr.getConfidence(), pr.getText(), pr.getLine(), pr.getType(), pr.getFile(), pr.getLineNum() );
                 i++;
             }
+			
             textCounter = resultTextListUniqueFinal.size();
-            return resultTextListUniqueFinal;
+			
+			return resultTextListUniqueFinal;
         }
 
-        private ArrayList cleanSSNResults(HashSet<Match> elf)
-        {            
-            for(Match pr : elf)
-            {
-                if(elf.contains(pr))
-                {
+        private ArrayList cleanSSNResults(HashSet<Match> elf) {            
+            for(Match pr : elf) {
+                if(elf.contains(pr)) {
                     resultSSNListUniqueFinal.add(pr);
                 }
             }
             
-            Collections.sort(resultSSNListUniqueFinal, new Comparator<Match>() 
-            {
+            Collections.sort(resultSSNListUniqueFinal, new Comparator<Match>() {
                 @Override
-                public int compare(Match z1, Match z2) 
-                {
+                public int compare(Match z1, Match z2) {
                     if (z1.getID() > z2.getID()) { return 1; }
                     if (z1.getID() < z2.getID()) { return -1; }
                     return 0;
@@ -1531,71 +1424,70 @@ public class Main extends JFrame
             });
             
             int i = 1;
-            for (Match pr : resultSSNListUniqueFinal)
-            {
+            for (Match pr : resultSSNListUniqueFinal) {
                 JBTableModel.addRow(new Object[]{ pr.setID(i), pr.getConfidence(), pr.getText(), pr.getLine(), pr.getType(), pr.getFile(), pr.getLineNum() });
                 ssnHTML += htmlWriter.addTableRow( pr.setID(i), pr.getConfidence(), pr.getText(), pr.getLine(), pr.getType(), pr.getFile(), pr.getLineNum() );
                 ssnCSV += csvWriter.addTableRow( pr.setID(i), pr.getConfidence(), pr.getText(), pr.getLine(), pr.getType(), pr.getFile(), pr.getLineNum() );
                 i++;
             }
+			
             ssnCounter = resultSSNListUniqueFinal.size();
-            return resultSSNListUniqueFinal;
+			
+			return resultSSNListUniqueFinal;
         }
         
         
-        private ArrayList<Match> getTextResults(ArrayList<Match> elf)
-        {
+        private ArrayList<Match> getTextResults(ArrayList<Match> elf) {
             int i = 1;
-            for (Match pr : elf)
-            {
+            for (Match pr : elf) {
                 JBTableModel.addRow(new Object[]{ pr.setID(i), pr.getConfidence(), pr.getText(), pr.getLine(), pr.getType(), pr.getFile(), pr.getLineNum() });
                 textHTML += htmlWriter.addTableRow( pr.setID(i), pr.getConfidence(), pr.getText(), pr.getLine(), pr.getType(), pr.getFile(), pr.getLineNum() );
                 textCSV += csvWriter.addTableRow( pr.setID(i), pr.getConfidence(), pr.getText(), pr.getLine(), pr.getType(), pr.getFile(), pr.getLineNum() );
                 i++;
             }
+			
             textCounter = resultTextList.size();
-            return resultTextList;
+            
+			return resultTextList;
         }
         
-        private ArrayList<Match> getSSNResults(ArrayList<Match> elf)
-        {
+        private ArrayList<Match> getSSNResults(ArrayList<Match> elf) {
             int i = 1;
-            for (Match pr : elf)
-            {
+            for (Match pr : elf) {
                 JBTableModel.addRow(new Object[]{ pr.setID(i), pr.getConfidence(), pr.getText(), pr.getLine(), pr.getType(), pr.getFile(), pr.getLineNum() });
                 ssnHTML += htmlWriter.addTableRow( pr.setID(i), pr.getConfidence(), pr.getText(), pr.getLine(), pr.getType(), pr.getFile(), pr.getLineNum() );
                 ssnCSV += csvWriter.addTableRow( pr.setID(i), pr.getConfidence(), pr.getText(), pr.getLine(), pr.getType(), pr.getFile(), pr.getLineNum() );
                 i++;
             }
+			
             ssnCounter = resultSSNList.size();
-            return resultSSNList;
+			
+			return resultSSNList;
         }
         
-        private void buildCSVResult()
-        {
+        private void buildCSVResult() {
             postCSVResult += csvWriter.addTableHeader();
-            if (!(JTField.getText().isEmpty()))
-            {
+            if (!(JTField.getText().isEmpty())) {
                 postCSVResult += textCSV;
             }
-            if (JCBSSN.isSelected())
-            {
+			
+            if (JCBSSN.isSelected()) {
                 postCSVResult += ssnCSV;
             }
-            if (JCBDoB.isSelected())
-            {
+			
+            if (JCBDoB.isSelected()) {
                 postCSVResult += dobCSV;
             }
-            if (JCBPoB.isSelected())
-            {
+			
+            if (JCBPoB.isSelected()) {
                 postCSVResult += pobCSV;
-            }			
-            if (JCBMaiden.isSelected())
-            {
+            }
+			
+            if (JCBMaiden.isSelected()) {
                 postCSVResult += maidenCSV;
             }
-            if (JCBAlien.isSelected())
-            {
+			
+            if (JCBAlien.isSelected()) {
                 postCSVResult += alienCSV;
             }
         }
@@ -1603,8 +1495,7 @@ public class Main extends JFrame
         /**
          * This method prepares search results in html format which can be saved later.
          */
-        private void buildHtmlResult()
-        {
+        private void buildHtmlResult() {
             postHtmlResult += htmlWriter.addOpenHTMLTag();
             postHtmlResult += htmlWriter.addStyleSection();
 
@@ -1615,48 +1506,48 @@ public class Main extends JFrame
             postHtmlResult += htmlWriter.addOpenNavTag();
             postHtmlResult += htmlWriter.addOpenNavULTag();
             
-            if (!(JTField.getText().isEmpty()))
-            {
+            if (!(JTField.getText().isEmpty())) {
                 postHtmlResult += htmlWriter.addOpenNavLITag();
                 postHtmlResult += htmlWriter.addCounter(textCounter);
                 postHtmlResult += htmlWriter.addTextLink("textResults", "Text Matches") + "";
                 postHtmlResult += htmlWriter.addCloseNavLITag();
             }
-            if (JCBSSN.isSelected())
-            {
+			
+            if (JCBSSN.isSelected()) {
                 postHtmlResult += htmlWriter.addOpenNavLITag();
                 postHtmlResult += htmlWriter.addCounter(ssnCounter);
                 postHtmlResult += htmlWriter.addTextLink("ssnResults", "SSN Matches") + "";
                 postHtmlResult += htmlWriter.addCloseNavLITag();
             }
-            if (JCBDoB.isSelected())
-            {
+			
+            if (JCBDoB.isSelected()) {
                 postHtmlResult += htmlWriter.addOpenNavLITag();
                 postHtmlResult += htmlWriter.addCounter(dobCounter);
                 postHtmlResult += htmlWriter.addTextLink("dobResults", "DoB Matches") + "";
                 postHtmlResult += htmlWriter.addCloseNavLITag();
             }
-            if (JCBPoB.isSelected())
-            {
+			
+            if (JCBPoB.isSelected()) {
                 postHtmlResult += htmlWriter.addOpenNavLITag();
                 postHtmlResult += htmlWriter.addCounter(pobCounter);
                 postHtmlResult += htmlWriter.addTextLink("pobResults", "PoB Matches") + "";
                 postHtmlResult += htmlWriter.addCloseNavLITag();
-            }			
-            if (JCBMaiden.isSelected())
-            {
+            }
+			
+            if (JCBMaiden.isSelected()) {
                 postHtmlResult += htmlWriter.addOpenNavLITag();
                 postHtmlResult += htmlWriter.addCounter(maidenCounter);
                 postHtmlResult += htmlWriter.addTextLink("maidenResults", "Maiden Matches") + "";
                 postHtmlResult += htmlWriter.addCloseNavLITag();
             }
-            if (JCBAlien.isSelected())
-            {
+			
+            if (JCBAlien.isSelected()) {
                 postHtmlResult += htmlWriter.addOpenNavLITag();
                 postHtmlResult += htmlWriter.addCounter(alienCounter);
                 postHtmlResult += htmlWriter.addTextLink("alienResults", "Alien Matches") + "";
                 postHtmlResult += htmlWriter.addCloseNavLITag();
             }
+			
             postHtmlResult += htmlWriter.addCloseNavULTag();
             postHtmlResult += htmlWriter.addCloseNavTag();
             postHtmlResult += htmlWriter.addCloseCenterTag();
@@ -1670,8 +1561,7 @@ public class Main extends JFrame
             postHtmlResult += htmlWriter.addCloseNavTag();
             postHtmlResult += htmlWriter.addCloseCenterTag();
 
-            if ((!(JTField.getText().isEmpty())) && (textCounter > 0))
-            {
+            if ((!(JTField.getText().isEmpty())) && (textCounter > 0)) {
                 postHtmlResult += htmlWriter.addOpenPanelTag();
                 postHtmlResult += htmlWriter.addAnchorLink("textResults", "Text Found Results");
                 postHtmlResult += htmlWriter.addOpenTableTag("textResultTable");
@@ -1682,8 +1572,7 @@ public class Main extends JFrame
                 postHtmlResult += htmlWriter.addClosePanelTag();
             }
             
-            if (JCBSSN.isSelected() && (ssnCounter > 0))
-            {
+            if (JCBSSN.isSelected() && (ssnCounter > 0)) {
                 postHtmlResult += htmlWriter.addOpenPanelTag();
                 postHtmlResult += htmlWriter.addAnchorLink("ssnResults", "SSN Found Results");
                 postHtmlResult += htmlWriter.addOpenTableTag("ssnResultTable");
@@ -1694,8 +1583,7 @@ public class Main extends JFrame
                 postHtmlResult += htmlWriter.addClosePanelTag();
             }
 
-            if (JCBDoB.isSelected() && (dobCounter > 0))
-            {
+            if (JCBDoB.isSelected() && (dobCounter > 0)) {
                 postHtmlResult += htmlWriter.addOpenPanelTag();
                 postHtmlResult += htmlWriter.addAnchorLink("dobResults", "DoB Found Results");
                 postHtmlResult += htmlWriter.addOpenTableTag("dobResultTable");
@@ -1707,8 +1595,7 @@ public class Main extends JFrame
                 postHtmlResult += htmlWriter.addClosePanelTag();
             }
 
-            if (JCBPoB.isSelected() && (pobCounter > 0))
-            {
+            if (JCBPoB.isSelected() && (pobCounter > 0)) {
                 postHtmlResult += htmlWriter.addOpenPanelTag();
                 postHtmlResult += htmlWriter.addAnchorLink("pobResults", "PoB Found Results");
                 postHtmlResult += htmlWriter.addOpenTableTag("pobResultTable");
@@ -1720,8 +1607,7 @@ public class Main extends JFrame
                 postHtmlResult += htmlWriter.addClosePanelTag();
             }
 
-            if (JCBMaiden.isSelected() && (maidenCounter > 0))
-            {
+            if (JCBMaiden.isSelected() && (maidenCounter > 0)) {
                 postHtmlResult += htmlWriter.addOpenPanelTag();
                 postHtmlResult += htmlWriter.addAnchorLink("maidenResults", "Maiden Name Found Results");
                 postHtmlResult += htmlWriter.addOpenTableTag("maidenResultTable");
@@ -1732,8 +1618,7 @@ public class Main extends JFrame
                 postHtmlResult += htmlWriter.addClosePanelTag();
             }
             
-            if (JCBAlien.isSelected() && (alienCounter > 0))
-            {
+            if (JCBAlien.isSelected() && (alienCounter > 0)) {
                 postHtmlResult += htmlWriter.addOpenPanelTag();
                 postHtmlResult += htmlWriter.addAnchorLink("alienResults", "Alien Found Results");
                 postHtmlResult += htmlWriter.addOpenTableTag("alienResultTable");
@@ -1744,16 +1629,16 @@ public class Main extends JFrame
                 postHtmlResult += htmlWriter.addClosePanelTag();
             }
             
-            if(skipFiles.size() > 0)
-            {
+            if(skipFiles.size() > 0) {
                 postHtmlResult += htmlWriter.addOpenPanelTag();
                 postHtmlResult += htmlWriter.addAnchorLink("skippedResults", "Unread Files");
                 postHtmlResult += htmlWriter.addOpenTableTag("unreadFilesTable");
                 postHtmlResult += htmlWriter.addAltTableHeader();
-                for (File f : skipFiles)
-                {
+                
+				for (File f : skipFiles) {
                     postHtmlResult += htmlWriter.addAltTableRow(f.toString());
                 }
+				
                 postHtmlResult += htmlWriter.addCloseTableTag();
                 postHtmlResult += htmlWriter.addBackToTopLink("top", "Back to Top");
                 postHtmlResult += htmlWriter.addClosePanelTag();
@@ -1764,10 +1649,8 @@ public class Main extends JFrame
 
 
         @Override
-        protected Void doInBackground() throws Exception
-        {
+        protected Void doInBackground() throws Exception {
             startSearch = new Date();
-
             recursiveSearch(userInput);
             
             return null;
@@ -1775,30 +1658,22 @@ public class Main extends JFrame
 
 
         @Override
-        protected void process(List<String> msgList)
-        {
-            if (isCancelled())
-            {
+        protected void process(List<String> msgList) {
+            if (isCancelled()) {
                 return;
             }
 
-            for (String msg : msgList)
-            {
-                if (msg.equals("printCurrentProgress"))
-                {
+            for (String msg : msgList) {
+                if (msg.equals("printCurrentProgress")) {
                     JPBStatus.setVisible(true);
                     printToProgress("Completed " + fileCounter + " / " + totalFiles + " files." + " Results: " + (textCounter + ssnCounter + matchCounter) );
-                }
-                else
-                {
+                } else {
                     printToLog(msg);
                 }
             }
-            
         }
         
-        private void getConfidenceTable()
-        {
+        private void getConfidenceTable() {
             JBTCatModel.setRowCount(0);
             JBTCatModel.addRow(new Object[]{"Text Matches",textCounter});
             JBTCatModel.addRow(new Object[]{"SSN Matches",ssnCounter});
@@ -1809,9 +1684,8 @@ public class Main extends JFrame
             JBTCatModel.addRow(new Object[]{"Total Matches",textCounter + ssnCounter + matchCounter});
         }
         
-        private void getExtensionTable()
-        {
-            for (String s : extCounter.extList){
+        private void getExtensionTable() {
+            for (String s : extCounter.extList) {
                 int i = extCounter.extList.indexOf(s);
                 int c = extCounter.extCount.get(i);
                 JBTFileExtModel.addRow(new Object[]{s,c});
@@ -1819,16 +1693,14 @@ public class Main extends JFrame
         }
         
         @Override
-        protected void done()
-        {            
+        protected void done() {            
             System.out.println(skipFiles.toString());
-            // notify
-            Toolkit.getDefaultToolkit().beep();
+            
+            Toolkit.getDefaultToolkit().beep();		// notify
             JPBStatus.setVisible(false);
             JPBStatus.setValue(0);
-
-            // update
-            getTextResults(resultTextList);
+			
+            getTextResults(resultTextList);		// update
             getSSNResults(resultSSNList);
             getOtherResults(resultOtherMatchList);
             getExtensionTable();
@@ -1848,16 +1720,13 @@ public class Main extends JFrame
             msg += "*Found: " + (textCounter + ssnCounter + matchCounter) + " matches." + NL;
             msg += "*Elapsed Time: " + calculateElapsedTime() + NL;
 
-            if (isCancelled())
-            {
+            if (isCancelled()) {
                 String title = "Search is cancelled." + NL;
                 printToProgress(title);
                 printToLog("*" + title);
                 printToLog(msg);
                 JOptionPane.showMessageDialog(Main.this, msg, title, JOptionPane.INFORMATION_MESSAGE);
-            }
-            else if (isDone())
-            {
+            } else if (isDone()) {
                 String title = "Search is done." + NL;
                 printToProgress(title);
                 printToLog("*" + title);
@@ -1883,26 +1752,24 @@ public class Main extends JFrame
      * @param regex - regex in string form
      * @param regexList - pattern list where regex will be added to
      */
-    private void addRegexToList(String regex, List<Pattern> regexList)
-    {
+    private void addRegexToList(String regex, List<Pattern> regexList) {
         Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
         regexList.add(pattern);
     }
 
-    private void addTextToRegex(String text)
-    {
+    private void addTextToRegex(String text) {
     	HashSet<String> tempTextList = new HashSet<>();
     	tempTextList.clear();
     	
     	String[] tempText = text.split("(,)|(\\|)"); //split text entry on commas|(\\s), pipes or blank spaces (including line breaks)
-    	for (int i = 0; i < tempText.length; i++)
-		{
+    	for (int i = 0; i < tempText.length; i++) {
 		    System.out.println("tempText[i] is " + tempText[i]);
-		    if (!tempText[i].matches("")) {
+		    
+			if (!tempText[i].matches("")) {
                 tempText[i] =tempText[i].trim();
 		        System.out.println("adding " + tempText[i]);
-            tempTextList.add(tempText[i]);
-        }
+				tempTextList.add(tempText[i]);
+			}
 		}
 
     	Pattern pattern = Pattern.compile("\\b("+StringUtils.join(tempTextList,"|")+")\\b", Pattern.DOTALL);
@@ -1911,8 +1778,7 @@ public class Main extends JFrame
         regexText.add(pattern);
     }
 
-    private void clearOldExport()
-    {
+    private void clearOldExport() {
         textHTML = "";
         ssnHTML = "";
         dobHTML = "";
@@ -1928,11 +1794,11 @@ public class Main extends JFrame
         alienCSV = "";
         postCSVResult = "";
     }
+	
     /**
      * This method resets all system components that is used for search.
      */
-    private void clearOldSearch()
-    {
+    private void clearOldSearch() {
         //JTAResultLog.setText("*Input: " + userInput + NL);
         JBTableModel.setNumRows(0);
         JBTFileExtModel.setNumRows(0);
@@ -1968,8 +1834,7 @@ public class Main extends JFrame
      * 
      * @return elapsedTime - string presentation of elapsed time. 
      */
-    private String calculateElapsedTime()
-    {
+    private String calculateElapsedTime() {
         long start = startSearch.getTime();
         long end = endSearch.getTime();
         long diff = end - start;
@@ -1998,8 +1863,7 @@ public class Main extends JFrame
      * 
      * @param msg - message that need to be displayed.
      */
-    private void printToProgress(String msg)
-    {
+    private void printToProgress(String msg) {
         JTAProgressLog.setText(msg.trim());
     }
 
@@ -2009,8 +1873,7 @@ public class Main extends JFrame
      * 
      * @param msg - message that need to be displayed.
      */
-    private void printToLog(String msg)
-    {
+    private void printToLog(String msg) {
         //JTAResultLog.append(msg);
         //JTAResultLog.setCaretPosition(JTAResultLog.getDocument().getLength());
     }
@@ -2020,12 +1883,9 @@ public class Main extends JFrame
     /**
      * This is the main function that run this program/main class.
      */
-    public static void main(String args[])
-    {
-        EventQueue.invokeLater(new Runnable() 
-        {
-            public void run()
-            {
+    public static void main(String args[]) {
+        EventQueue.invokeLater(new Runnable() {
+            public void run() {
                 new Main().setVisible(true);                
             }
         });
