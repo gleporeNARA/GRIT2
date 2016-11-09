@@ -120,6 +120,10 @@ public class Main extends JFrame {
     private int pobCounter;
     private int maidenCounter;
     private int alienCounter;
+	private int grandJuryCounter;
+	private int FBIInfoFileCounter;
+	private int FBISourceCounter;
+	private int FBISourceCodeCounter;
     private ExtensionCounter extCounter;
     private Date startSearch;
     private Date endSearch;
@@ -130,6 +134,10 @@ public class Main extends JFrame {
     private String pobHTML;
     private String maidenHTML;
     private String alienHTML;
+	private String grandJuryHTML;
+	private String FBIInfoFileHTML;
+	private String FBISourceHTML;
+	private String FBISourceCodeHTML;
     private String postHtmlResult;
     
     private String textCSV;
@@ -138,6 +146,10 @@ public class Main extends JFrame {
     private String pobCSV;
     private String maidenCSV;
     private String alienCSV;
+	private String grandJuryCSV;
+	private String FBIInfoFileCSV;
+	private String FBISourceCSV;
+	private String FBISourceCodeCSV;
     private String postCSVResult;
 
     private List<Pattern> regexText;
@@ -146,8 +158,8 @@ public class Main extends JFrame {
     private List<Pattern> regexPoBs;
     private List<Pattern> regexMaidens;
     private List<Pattern> regexAliens;
-	private List<Pattern> regexFBIInfoFiles;	//<=========== declaring list of regex patterns for check boxes
-	private List<Pattern> regexGrandJury;
+	private List<Pattern> regexGrandJuries;		//<=========== declaring list of regex patterns for check boxes
+	private List<Pattern> regexFBIInfoFiles;
 	private List<Pattern> regexFBISources;
 	private List<Pattern> regexFBISourceCodes;
     
@@ -260,6 +272,10 @@ public class Main extends JFrame {
         dobCounter = 0;
         maidenCounter = 0;
         alienCounter = 0;
+		grandJuryCounter = 0;
+		FBIInfoFileCounter = 0;
+		FBISourceCounter = 0;
+		FBISourceCodeCounter = 0;
         extCounter = new ExtensionCounter();
         startSearch = null;
         endSearch = null;
@@ -269,6 +285,21 @@ public class Main extends JFrame {
         pobHTML = "";
         maidenHTML = "";
         alienHTML = "";
+		grandJuryHTML = "";
+		FBIInfoFileHTML = "";
+		FBISourceHTML = "";
+		FBISourceCodeHTML = "";
+		textCSV = "";
+        ssnCSV = "";
+        dobCSV = "";
+        pobCSV = "";
+        maidenCSV = "";
+        alienCSV = "";
+		grandJuryCSV = "";
+		FBIInfoFileCSV = "";
+		FBISourceCSV = "";
+		FBISourceCodeCSV = "";
+        postCSVResult = "";
 
         regexText = new ArrayList<Pattern>();
         regexSSN = new ArrayList<Pattern>();
@@ -276,8 +307,8 @@ public class Main extends JFrame {
         regexPoBs = new ArrayList<Pattern>();
         regexMaidens = new ArrayList<Pattern>();
         regexAliens = new ArrayList<Pattern>();
-		regexFBIInfoFiles = new ArrayList<Pattern>();	//<=========== create regex list for check box match pattern
-		regexGrandJury = new ArrayList<Pattern>();
+		regexGrandJuries = new ArrayList<Pattern>();		//<=========== create regex list for check box match pattern
+		regexFBIInfoFiles = new ArrayList<Pattern>();
 		regexFBISources = new ArrayList<Pattern>();
 		regexFBISourceCodes = new ArrayList<Pattern>();
                 
@@ -311,7 +342,7 @@ public class Main extends JFrame {
         skipExtensions.add("tif");
         skipExtensions.add("tiff");
         
-        /*
+        /**
 		 * build regex lists
 		 */
         // perfect old format ssn with hyphens, followed by anything other than a number, dash, or slash
@@ -345,7 +376,7 @@ public class Main extends JFrame {
         addRegexToList("(\\b|^)(A|a)(-?[0-9]){9}(\\b|$)|(\\b|^)(A|a)(-?[0-9]){7}(\\b|$)", regexAliens);
 		
 		//Grand Jury
-		addRegexToList("(Grand Jury)",regexGrandJury);
+		addRegexToList("(Grand Jury)",regexGrandJuries);
 		
 		//FBI Sources terms for protect identity, informant, psi, si, reliable, confidential
 		addRegexToList("(protect identity|informant|psi|si|reliable|confidential)", regexFBISources);
@@ -381,6 +412,10 @@ public class Main extends JFrame {
         //fileSaver.setFileFilter(csvFilter);
     }
     
+	/**
+	 * setting up the visual components for the application.
+	 * note: this could potentially be the view component for mvc
+	 */
     private void initGUIComponents() {
         JPBStatus = new JProgressBar(0,100);
         
@@ -420,12 +455,12 @@ public class Main extends JFrame {
 		JCBAlien.setToolTipText("Matches terms to Alien Registration Numbers.");
 		JCBGrandJury = new JCheckBox("Grand Jury");		//<=========== initializing and defining new checkboxes and tool tip
 		JCBGrandJury.setToolTipText("Find all matches term Grand Jury");
+		JCBFBIInfoFiles = new JCheckBox("FBI Info Files");
+		JCBFBIInfoFiles.setToolTipText("FBI information files beginning with numbers beginning on 134, 137, 170");
 		JCBFBISources = new JCheckBox("FBI Sources");
 		JCBFBISources.setToolTipText("Find matches for protect identity, informant, psi, si, reliable, confidential");
-		JCBFBIInfoFiles = new JCheckBox("FBI Info Files");
-		JCBFBIInfoFiles.setToolTipText("Find FBI information files beginning with numbers beginning on 134, 137, 170");
 		JCBFBISourceCodes = new JCheckBox("FBI Source Codes");
-		JCBFBISourceCodes.setToolTipText("Finds all FBI source codes");
+		JCBFBISourceCodes.setToolTipText("AL,AQ,AX,AN,AT,BA,BH,BS,BQ,BU,BT,CE,CG,CI,CV,CO,DL,DN,DE,EP,HN,HO,IP,JN,JK,KC,KX,LV,LR,LA,LS,ME,MM,MI,MP,MO,NK,NH,NO,NR,NY,NF,OC,OM,PH,PX,PG,PD,RH,SC,SL,SU,SA,SD,SF,SJ,SV,SE,SI,TP,WFO,BER,BOG,BON,HON,LON,MAN,MEX,OTT,PAN,PAR,ROM,TOK");
 
         JCBAutoParser.setText("Read Additional Formats");
         JCBAutoParser.setToolTipText("The program will attempt to read additional file formats.");
@@ -446,7 +481,7 @@ public class Main extends JFrame {
         JBInput.setText(" Input ");
         JBInput.setToolTipText("Browses for directory or file to search.");
         JBRun.setText("  Run  ");
-        JBRun.setToolTipText("Starts search.");
+        JBRun.setToolTipText("Starts search");
         JBCancel.setText("Cancel Search");  JBCancel.setEnabled(false);
         JBCancel.setToolTipText("Cancels running search. Results can still be saved.");
         JBExport.setText("Export Result");  JBExport.setEnabled(false);
@@ -497,23 +532,24 @@ public class Main extends JFrame {
         panel1.add(JCBMaiden);
         panel1.add(JCBPoB);
         panel1.add(JCBAlien);
-		panel1.add(JCBFBIInfoFiles);	//<=========== FBI Info Files added here
 		
         //Row1: Panel2: Elements Added
-        JPanel panel2 = new JPanel();
 		JPanel panel2_sub1 = new JPanel();	//<=========== to get proper alignment of new check boxes above "Other Match mode"
 		JPanel panel2_sub2 = new JPanel();	// two sub panels are placed inside of panel2 using grid layout
 		
 		panel2_sub1.setBorder(BorderFactory.createTitledBorder("PII Match Modes"));
         panel2_sub1.setLayout(new BoxLayout(panel2_sub1, BoxLayout.PAGE_AXIS));
 		panel2_sub1.add(JCBGrandJury);
+		panel2_sub1.add(JCBFBIInfoFiles);
 		panel2_sub1.add(JCBFBISources);
 		panel2_sub1.add(JCBFBISourceCodes);
+		
 		
 		panel2_sub2.setBorder(BorderFactory.createTitledBorder("Other Match Mode"));
 		panel2_sub2.setLayout(new BoxLayout(panel2_sub2, BoxLayout.PAGE_AXIS));
 		panel2_sub2.add(JTField);
 		
+		JPanel panel2 = new JPanel();
 		panel2.setLayout(new GridLayout(0,1));
 		panel2.add(panel2_sub1);
 		panel2.add(panel2_sub2);
@@ -628,73 +664,13 @@ public class Main extends JFrame {
         JBExport.addActionListener(new MyIOListener());
         pack();
     }
-
+	
+	/**
+	 * the help tutorial method, this is the information 
+	 * text that is displayed in the result set window when the app starts up
+	 */
     private String getTutorial() {
-        String tutorial = "";
-        tutorial += "*** " + PROGRAM_TITLE + " version " + PROGRAM_VERSION + " ***" + NL;
-        tutorial += NL;
-        tutorial += "THIS PROGRAM MAINLY SUPPORTS THE FOLLOWING FILE FORMATS:" + NL;
-        tutorial += "1. TXT: plain text file." + NL;
-        tutorial += "2. DOC: old Microsoft Word format." + NL;
-        tutorial += "3. DOCX: new Microsoft Word format." + NL;
-        tutorial += "4. XLS: old Microsoft Excel format." + NL;
-        tutorial += "5. XLSX: new Microsoft Excel format." + NL;
-        tutorial += "6. MSG: Microsoft Outlook format." + NL;
-        tutorial += "7. HTML: standard web page format." + NL;
-        tutorial += "8. XML: extensible web page format" + NL;
-        tutorial += "9. RTF: rich text format" + NL;
-        tutorial += "10. MBOX: Apple Mail format" + NL;
-        tutorial += "11. PST: Microsoft Outlook format" + NL;
-        tutorial += "12. MDB: Microsoft Access format" + NL;
-        tutorial += "13. PDF: Portable Document format" + NL;
-        tutorial += NL;
-        tutorial += "HOW TO USE:" + NL;
-        tutorial += "1. Select the approriate match mode(s). See below for detailed descriptions of matching algorithms." + NL;
-        tutorial += "2. Select the approriate read mode." + NL;
-        tutorial += "3. Browse to the directory/file you want to search by clicking Input." + NL;
-        tutorial += "4. Hit Run to start the search." + NL;
-        tutorial += "5. Once the search is done, you can save search results by clicking Save Results as HTML or CSV." + NL;
-        tutorial += "   (search results are discarded if they are not saved upon exit for secure reasons.)" + NL;
-        tutorial += NL;
-        tutorial += "DETAILED DESCRIPTION OF REGULAR EXPRESSIONS:" + NL;
-        tutorial += "   (all searches are case insensitive)" + NL;
-        tutorial += NL;
-        tutorial += "1. High Probability matches match perfectly formatted Social Security Numbers (555-55-5555) with the traditional numbering rules." + NL;
-        tutorial += "In addition, the following formats are matched:" + NL;
-        tutorial += "    a. SSN# and SSN # and SS # and SS# followed by a number" + NL;
-        tutorial += "    b. a space, the letters SSN, a possible space, and a number" + NL;
-        tutorial += "    c. group of 3, 2, 4 numbers separated by a space, bounded by a word boundary (non-alpha character)" + NL;
-        tutorial += "    d. the letters SSN or SSA plus the letters NO, plus a number within 5 spaces" + NL;
-        tutorial += NL;
-        tutorial += "2. Medium probability matches searches for:" + NL;
-        tutorial += "    a. # sign, three numbers matching rules, anything, then 6 more numbers" + NL;
-        tutorial += "    b. three numbers matching rules, anything, then 6 more numbers WITH word boundaries, started by newline" + NL;
-        tutorial += "    c. the phrase 'social security n' plus three numbers" + NL;
-        tutorial += "    d. the letters ' SSA ' (with spaces around them) plus a number within 5 spaces" + NL;
-        tutorial += NL;
-        tutorial += "3. Low probability matches searches for:" + NL;
-        tutorial += "    a. all rules but with forward slashes (also matches a lot of dates)" + NL;
-        tutorial += "    b. any nine numbers bracketed by something other than a number, hyphen or slash" + NL;
-        tutorial += "    c. group of 3, 2, 4 separated by a / or - bounded by something other than a number, hyphen or slash" + NL;
-        tutorial += "    d. group of 3, 2, 4 separated by a period, bounded by something other than a number, hyphen or slash" + NL;
-        tutorial += NL;
-        tutorial += "4. Date of birth search matches:" + NL;
-        tutorial += "    a. the words 'birth', 'born', 'DPOB', 'PDOB' or 'DOB' within 6 words of a date" + NL;
-        tutorial += "    b. the word 'Date' within 1 to 6 words of 'Birth' or vice versa." + NL;
-        tutorial += NL;
-        tutorial += "5. Maiden name search matches:" + NL;
-        tutorial += "    a. The phrase 'Mother's maiden name' with or without the apostrophe and the 's'" + NL;
-        tutorial += "    b. The word 'nee'" + NL;
-        tutorial += NL;
-        tutorial += "6. Alien Registration Number matches:" + NL;
-        tutorial += "    a. matches either a word boundary or the start of a line, then a capital A or lowercase a, " + NL;
-        tutorial += "       then an optional dash, then either 9 or 7 numbers in a row, with any amount of other dashes " + NL;
-        tutorial += "       in between, followed by a word boundary or the end of the line." + NL;
-        tutorial += NL;
-        tutorial += "NOTES:" + NL;
-        tutorial += "This PIIFinder does not search for Social Security Numbers which follow the new formatting rules introduced in 2011." + NL;
-
-        return tutorial;
+        return "*** " + PROGRAM_TITLE + " version " + PROGRAM_VERSION + " ***\n\n" + Help.showHelp ();		
     }
 
 //######################################## GUI ACTION LISTENERS SECTION ##########################################//
@@ -753,6 +729,7 @@ public class Main extends JFrame {
             }
         }
     }
+	
     /**
      * This internal class listens for user's interaction with run mode.
      */
@@ -869,19 +846,18 @@ public class Main extends JFrame {
             }
         }
     }
-
-
+	
     /**
      * This internal class listens for user's interaction with run button.
      */
     private class MySearchTaskListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent event) {
-            if (event.getSource() == JBRun) {		// RUN BUTTON
+            if (event.getSource() == JBRun) {			// RUN BUTTON
                 // check if a match mode is selected
-                if (JTField.getText().isEmpty() && !JCBSSN.isSelected() && !JCBPoB.isSelected() && !JCBDoB.isSelected() && !JCBMaiden.isSelected() && !JCBAlien.isSelected()) {
+                if (JTField.getText().isEmpty() && !JCBSSN.isSelected() && !JCBPoB.isSelected() && !JCBDoB.isSelected() && !JCBMaiden.isSelected() && !JCBAlien.isSelected() && !JCBGrandJury.isSelected() && !JCBFBISources.isSelected() && !JCBFBISourceCodes.isSelected() && !JCBFBIInfoFiles.isSelected()) {
                     JOptionPane.showMessageDialog(Main.this, "ERROR: No match mode is selected.");
-                    return; // stop here
+                    return; // stop here	
                 }
 				
                 if (userInput == null) {		// check if there is an input file/directory
@@ -1125,8 +1101,7 @@ public class Main extends JFrame {
                 }
             }
         }
-
-
+		
         /**
          * This method does the regular expression matching.
          * Results will be output to the GUI and save in HTML format.
@@ -1144,11 +1119,9 @@ public class Main extends JFrame {
             if (fileReader.hasNext()) {			// check if file is readable
                 readCounter ++;
                 extCounter.count(fileExtension);
-                lineA = fileReader.nextLine();				
-
-            } 
-            else {
-                System.out.println(file.getName() + " ext: "+fileExtension);
+                lineA = fileReader.nextLine();
+            } else {
+                System.out.println(file.getName() + " ext: " + fileExtension);
             }
 
 //////IF THERE ARE MULTIPLE LINES IN THE FILE////////////IF THERE ARE MULTIPLE LINES IN THE FILE//////
@@ -1242,6 +1215,63 @@ public class Main extends JFrame {
                         }
                     }
                 }
+				
+				if (JCBGrandJury.isSelected()) {		//<==================== check box active varified here !!
+					for (Pattern regexGrandJury: regexGrandJuries) {
+                        patternMatcher = regexGrandJury.matcher(line);
+                        while (patternMatcher.find()) {
+                            matchCounter ++;
+                            grandJuryCounter ++;
+
+                            resultOtherMatchList.add(new Match(grandJuryCounter, "Grand Jury", patternMatcher.group(), line, fileExtension, file, lineNum));
+
+                            JBTableModel.addRow(new Object[]{grandJuryCounter, "Grand Jury", patternMatcher.group(), line, fileExtension, file, lineNum});
+                        }
+                    }
+				}
+				
+				if (JCBFBIInfoFiles.isSelected()) {
+					for (Pattern regexFBIInfoFile: regexFBIInfoFiles) {
+                        patternMatcher = regexFBIInfoFile.matcher(line);
+                        while (patternMatcher.find()) {
+                            matchCounter ++;
+                            FBIInfoFileCounter ++;
+
+                            resultOtherMatchList.add(new Match(FBIInfoFileCounter, "FBI Information File", patternMatcher.group(), line, fileExtension, file, lineNum));
+
+                            JBTableModel.addRow(new Object[]{FBIInfoFileCounter, "FBI Information File", patternMatcher.group(), line, fileExtension, file, lineNum});
+                        }
+                    }
+				}
+				
+				if (JCBFBISources.isSelected()) {
+					for (Pattern regexFBISource: regexFBISources) {
+                        patternMatcher = regexFBISource.matcher(line);
+                        while (patternMatcher.find()) {
+                            matchCounter ++;
+                            FBISourceCounter ++;
+
+                            resultOtherMatchList.add(new Match(FBISourceCounter, "FBI Source", patternMatcher.group(), line, fileExtension, file, lineNum));
+
+                            JBTableModel.addRow(new Object[]{FBISourceCounter, "FBI Source", patternMatcher.group(), line, fileExtension, file, lineNum});
+                        }
+                    }
+				}
+				
+				if (JCBFBISourceCodes.isSelected()) {
+					for (Pattern regexFBISourceCode: regexFBISourceCodes) {
+                        patternMatcher = regexFBISourceCode.matcher(line);
+                        while (patternMatcher.find()) {
+                            matchCounter ++;
+                            FBISourceCodeCounter ++;
+
+                            resultOtherMatchList.add(new Match(FBISourceCodeCounter, "FBI Source Code", patternMatcher.group(), line, fileExtension, file, lineNum));
+
+                            JBTableModel.addRow(new Object[]{FBISourceCodeCounter, "FBI Source Code", patternMatcher.group(), line, fileExtension, file, lineNum});
+                        }
+                    }
+				}
+				
                 lineNum ++;
                 lineA = lineB;
             }
@@ -1335,6 +1365,63 @@ public class Main extends JFrame {
                         }
                     }
                 }
+				
+				if (JCBGrandJury.isSelected()) {		//<==================== check box active varified here !!
+					for (Pattern regexGrandJury: regexGrandJuries) {
+                        patternMatcher = regexGrandJury.matcher(lineA);
+                        while (patternMatcher.find()) {
+                            matchCounter ++;
+                            grandJuryCounter ++;
+
+                            resultOtherMatchList.add(new Match(grandJuryCounter, "Grand Jury", patternMatcher.group(), lineA, fileExtension, file, lineNum));
+
+                            JBTableModel.addRow(new Object[]{grandJuryCounter, "Grand Jury", patternMatcher.group(), lineA, fileExtension, file, lineNum});
+                        }
+                    }
+				}
+				
+				if (JCBFBIInfoFiles.isSelected()) {
+					for (Pattern regexFBIInfoFile: regexFBIInfoFiles) {
+                        patternMatcher = regexFBIInfoFile.matcher(lineA);
+                        while (patternMatcher.find()) {
+                            matchCounter ++;
+                            FBIInfoFileCounter ++;
+
+                            resultOtherMatchList.add(new Match(FBIInfoFileCounter, "FBI Information File", patternMatcher.group(), lineA, fileExtension, file, lineNum));
+
+                            JBTableModel.addRow(new Object[]{FBIInfoFileCounter, "FBI Information File", patternMatcher.group(), lineA, fileExtension, file, lineNum});
+                        }
+                    }
+				}
+				
+				if (JCBFBISources.isSelected()) {
+					for (Pattern regexFBISource: regexFBISources) {
+                        patternMatcher = regexFBISource.matcher(lineA);
+                        while (patternMatcher.find()) {
+                            matchCounter ++;
+                            FBISourceCounter ++;
+
+                            resultOtherMatchList.add(new Match(FBISourceCounter, "FBI Source", patternMatcher.group(), lineA, fileExtension, file, lineNum));
+
+                            JBTableModel.addRow(new Object[]{FBISourceCounter, "FBI Source", patternMatcher.group(), lineA, fileExtension, file, lineNum});
+                        }
+                    }
+				}
+				
+				if (JCBFBISourceCodes.isSelected()) {
+					for (Pattern regexFBISourceCode: regexFBISourceCodes) {
+                        patternMatcher = regexFBISourceCode.matcher(lineA);
+                        while (patternMatcher.find()) {
+                            matchCounter ++;
+                            FBISourceCodeCounter ++;
+
+                            resultOtherMatchList.add(new Match(FBISourceCodeCounter, "FBI Source Code", patternMatcher.group(), lineA, fileExtension, file, lineNum));
+
+                            JBTableModel.addRow(new Object[]{FBISourceCodeCounter, "FBI Source Code", patternMatcher.group(), lineA, fileExtension, file, lineNum});
+                        }
+                    }
+				}
+				
                 lineNum ++;
             }
 			
@@ -1344,8 +1431,7 @@ public class Main extends JFrame {
             //System.out.println("Search Ended");
             
         }
-        
-        
+		
         private ArrayList getOtherResults(ArrayList<Match> elf) {
             for (Match pr : resultOtherMatchList) {
                 JBTableModel.addRow(new Object[]{pr.getID(), pr.getConfidence(), pr.getText(), pr.getLine(), pr.getType(), pr.getFile(), pr.getLineNum()});
@@ -1372,6 +1458,26 @@ public class Main extends JFrame {
                 if(pr.getConfidence().matches("Alien")){
                     alienHTML += htmlWriter.addTableRow(pr.getID(), pr.getConfidence(), pr.getText(), pr.getLine(), pr.getType(), pr.getFile(), pr.getLineNum());
                     alienCSV += csvWriter.addTableRow(pr.getID(), pr.getConfidence(), pr.getText(), pr.getLine(), pr.getType(), pr.getFile(), pr.getLineNum());
+                }
+				
+				if(pr.getConfidence().matches("Grand Jury")){		// <============ not sure about this match !! potential bug !!!
+                    grandJuryHTML += htmlWriter.addTableRow(pr.getID(), pr.getConfidence(), pr.getText(), pr.getLine(), pr.getType(), pr.getFile(), pr.getLineNum());
+                    grandJuryCSV += csvWriter.addTableRow(pr.getID(), pr.getConfidence(), pr.getText(), pr.getLine(), pr.getType(), pr.getFile(), pr.getLineNum());
+                }
+				
+				if(pr.getConfidence().matches("FBI Information File")){
+                    FBIInfoFileHTML += htmlWriter.addTableRow(pr.getID(), pr.getConfidence(), pr.getText(), pr.getLine(), pr.getType(), pr.getFile(), pr.getLineNum());
+                    FBIInfoFileCSV += csvWriter.addTableRow(pr.getID(), pr.getConfidence(), pr.getText(), pr.getLine(), pr.getType(), pr.getFile(), pr.getLineNum());
+                }
+				
+				if(pr.getConfidence().matches("FBI Source")){
+                    FBISourceHTML += htmlWriter.addTableRow(pr.getID(), pr.getConfidence(), pr.getText(), pr.getLine(), pr.getType(), pr.getFile(), pr.getLineNum());
+                    FBISourceCSV += csvWriter.addTableRow(pr.getID(), pr.getConfidence(), pr.getText(), pr.getLine(), pr.getType(), pr.getFile(), pr.getLineNum());
+                }
+				
+				if(pr.getConfidence().matches("FBI Source Code")){
+                    FBISourceCodeHTML += htmlWriter.addTableRow(pr.getID(), pr.getConfidence(), pr.getText(), pr.getLine(), pr.getType(), pr.getFile(), pr.getLineNum());
+                    FBISourceCodeCSV += csvWriter.addTableRow(pr.getID(), pr.getConfidence(), pr.getText(), pr.getLine(), pr.getType(), pr.getFile(), pr.getLineNum());
                 }
             }
 			
@@ -1436,7 +1542,6 @@ public class Main extends JFrame {
 			return resultSSNListUniqueFinal;
         }
         
-        
         private ArrayList<Match> getTextResults(ArrayList<Match> elf) {
             int i = 1;
             for (Match pr : elf) {
@@ -1489,6 +1594,22 @@ public class Main extends JFrame {
 			
             if (JCBAlien.isSelected()) {
                 postCSVResult += alienCSV;
+            }
+			
+			if (JCBGrandJury.isSelected()) {
+                postCSVResult += grandJuryCSV;
+            }
+			
+			if (JCBFBIInfoFiles.isSelected()) {
+                postCSVResult += FBIInfoFileCSV;
+            }
+			
+			if (JCBFBISources.isSelected()) {
+                postCSVResult += FBISourceCSV;
+            }
+			
+			if (JCBFBISourceCodes.isSelected()) {
+                postCSVResult += FBISourceCodeCSV;
             }
         }
 
@@ -1545,6 +1666,34 @@ public class Main extends JFrame {
                 postHtmlResult += htmlWriter.addOpenNavLITag();
                 postHtmlResult += htmlWriter.addCounter(alienCounter);
                 postHtmlResult += htmlWriter.addTextLink("alienResults", "Alien Matches") + "";
+                postHtmlResult += htmlWriter.addCloseNavLITag();
+            }
+			
+			if (JCBGrandJury.isSelected()) {
+                postHtmlResult += htmlWriter.addOpenNavLITag();
+                postHtmlResult += htmlWriter.addCounter(grandJuryCounter);
+                postHtmlResult += htmlWriter.addTextLink("grandJuryResults", "Grand Jury Matches") + "";
+                postHtmlResult += htmlWriter.addCloseNavLITag();
+            }
+			
+			if (JCBFBIInfoFiles.isSelected()) {
+                postHtmlResult += htmlWriter.addOpenNavLITag();
+                postHtmlResult += htmlWriter.addCounter(FBIInfoFileCounter);
+                postHtmlResult += htmlWriter.addTextLink("FBIInfoFilesResults", "FBI Information Files Matches") + "";
+                postHtmlResult += htmlWriter.addCloseNavLITag();
+            }
+			
+			if (JCBFBISources.isSelected()) {
+                postHtmlResult += htmlWriter.addOpenNavLITag();
+                postHtmlResult += htmlWriter.addCounter(FBISourceCounter);
+                postHtmlResult += htmlWriter.addTextLink("FBISourceResults", "FBI Source Matches") + "";
+                postHtmlResult += htmlWriter.addCloseNavLITag();
+            }
+			
+			if (JCBFBISourceCodes.isSelected()) {
+                postHtmlResult += htmlWriter.addOpenNavLITag();
+                postHtmlResult += htmlWriter.addCounter(FBISourceCodeCounter);
+                postHtmlResult += htmlWriter.addTextLink("FBISourceCodeResults", "FBI Source Code Matches") + "";
                 postHtmlResult += htmlWriter.addCloseNavLITag();
             }
 			
@@ -1628,6 +1777,50 @@ public class Main extends JFrame {
                 postHtmlResult += htmlWriter.addBackToTopLink("top", "Back to Top");
                 postHtmlResult += htmlWriter.addClosePanelTag();
             }
+			
+			if (JCBGrandJury.isSelected() && (grandJuryCounter > 0)) {
+                postHtmlResult += htmlWriter.addOpenPanelTag();
+                postHtmlResult += htmlWriter.addAnchorLink("grandJuryResults", "Grand Jury Found Results");
+                postHtmlResult += htmlWriter.addOpenTableTag("grandJuryResultTable");
+                postHtmlResult += htmlWriter.addTableHeader();
+                postHtmlResult += grandJuryHTML;
+                postHtmlResult += htmlWriter.addCloseTableTag();
+                postHtmlResult += htmlWriter.addBackToTopLink("top", "Back to Top");
+                postHtmlResult += htmlWriter.addClosePanelTag();
+            }
+			
+			if (JCBFBISources.isSelected() && (FBISourceCounter > 0)) {
+                postHtmlResult += htmlWriter.addOpenPanelTag();
+                postHtmlResult += htmlWriter.addAnchorLink("FBISourceResults", "FBI Source Found Results");
+                postHtmlResult += htmlWriter.addOpenTableTag("FBISourceResultTable");
+                postHtmlResult += htmlWriter.addTableHeader();
+                postHtmlResult += FBISourceHTML;
+                postHtmlResult += htmlWriter.addCloseTableTag();
+                postHtmlResult += htmlWriter.addBackToTopLink("top", "Back to Top");
+                postHtmlResult += htmlWriter.addClosePanelTag();
+            }
+			
+			if (JCBFBIInfoFiles.isSelected() && (FBIInfoFileCounter > 0)) {
+                postHtmlResult += htmlWriter.addOpenPanelTag();
+                postHtmlResult += htmlWriter.addAnchorLink("FBIInfoFileResults", "FBI Information File Found Results");
+                postHtmlResult += htmlWriter.addOpenTableTag("FBIInfoFileResultTable");
+                postHtmlResult += htmlWriter.addTableHeader();
+                postHtmlResult += FBIInfoFileHTML;
+                postHtmlResult += htmlWriter.addCloseTableTag();
+                postHtmlResult += htmlWriter.addBackToTopLink("top", "Back to Top");
+                postHtmlResult += htmlWriter.addClosePanelTag();
+            }
+			
+			if (JCBFBISourceCodes.isSelected() && (FBISourceCodeCounter > 0)) {
+                postHtmlResult += htmlWriter.addOpenPanelTag();
+                postHtmlResult += htmlWriter.addAnchorLink("FBISourceCodeResults", "FBI Source Code Found Results");
+                postHtmlResult += htmlWriter.addOpenTableTag("FBISourceCodeResultTable");
+                postHtmlResult += htmlWriter.addTableHeader();
+                postHtmlResult += FBISourceCodeHTML;
+                postHtmlResult += htmlWriter.addCloseTableTag();
+                postHtmlResult += htmlWriter.addBackToTopLink("top", "Back to Top");
+                postHtmlResult += htmlWriter.addClosePanelTag();
+            }
             
             if(skipFiles.size() > 0) {
                 postHtmlResult += htmlWriter.addOpenPanelTag();
@@ -1646,8 +1839,7 @@ public class Main extends JFrame {
 
             postHtmlResult += htmlWriter.addCloseHTMLTag();
         }
-
-
+		
         @Override
         protected Void doInBackground() throws Exception {
             startSearch = new Date();
@@ -1655,8 +1847,7 @@ public class Main extends JFrame {
             
             return null;
         }
-
-
+		
         @Override
         protected void process(List<String> msgList) {
             if (isCancelled()) {
@@ -1785,6 +1976,10 @@ public class Main extends JFrame {
         pobHTML = "";
         maidenHTML = "";
         alienHTML = "";
+		grandJuryHTML = "";
+		FBIInfoFileHTML = "";
+		FBISourceHTML = "";
+		FBISourceCodeHTML = "";
         postHtmlResult = "";
         textCSV = "";
         ssnCSV = "";
@@ -1792,6 +1987,10 @@ public class Main extends JFrame {
         pobCSV = "";
         maidenCSV = "";
         alienCSV = "";
+		grandJuryCSV = "";
+		FBIInfoFileCSV = "";
+		FBISourceCSV = "";
+		FBISourceCodeCSV = "";
         postCSVResult = "";
     }
 	
@@ -1822,6 +2021,11 @@ public class Main extends JFrame {
         pobCounter = 0;
         maidenCounter = 0;
         alienCounter = 0;
+		grandJuryCounter = 0;
+		FBIInfoFileCounter = 0;
+		FBISourceCounter = 0;
+		FBISourceCodeCounter = 0;
+		
         extCounter = new ExtensionCounter();
         startSearch = null;
         endSearch = null;
