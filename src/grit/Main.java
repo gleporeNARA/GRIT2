@@ -118,84 +118,22 @@ public class Main extends JFrame {
 	private int fileCounter;
 	private int readCounter;
 	private int matchCounter;
-	/*
-	private int textCounter;	//## remove ##
-	private int ssnCounter;	//## remove ##
-	private int dobCounter;	//## remove ##
-	private int pobCounter;	//## remove ##
-	private int maidenCounter;	//## remove ##
-	private int alienCounter;	//## remove ##
-	private int grandJuryCounter;	//## remove ##
-	private int FBIInfoFileCounter;	//## remove ##
-	private int FBISourceCounter;	//## remove ##
-	private int FBISourceCodeCounter;	//## remove ##
-	*/
+	
 	private ExtensionCounter extCounter;
 	private Date startSearch;
 	private Date endSearch;
 	
-	/*
-	private StringBuilder textHTML;	//## remove ##
-	private StringBuilder ssnHTML;	//## remove ##
-	private StringBuilder dobHTML;	//## remove ##
-	private StringBuilder pobHTML;	//## remove ##
-	private StringBuilder maidenHTML;	//## remove ##
-	private StringBuilder alienHTML;	//## remove ##
-	private StringBuilder grandJuryHTML;	//## remove ##
-	private StringBuilder FBIInfoFileHTML;	//## remove ##
-	private StringBuilder FBISourceHTML;	//## remove ##
-	private StringBuilder FBISourceCodeHTML;	//## remove ##
-	*/
 	private StringBuilder postHtmlResult;
-	
-	/*
-	private StringBuilder textCSV;	//## remove ##
-	private StringBuilder ssnCSV;	//## remove ##
-	private StringBuilder dobCSV;	//## remove ##
-	private StringBuilder pobCSV;	//## remove ##
-	private StringBuilder maidenCSV;	//## remove ##
-	private StringBuilder alienCSV;	//## remove ##
-	private StringBuilder grandJuryCSV;	//## remove ##
-	private StringBuilder FBIInfoFileCSV;	//## remove ##
-	private StringBuilder FBISourceCSV;	//## remove ##
-	private StringBuilder FBISourceCodeCSV;	//## remove ##
-	*/
 	private StringBuilder postCSVResult;
-	
-	/*
-	private List<Pattern> regexText;	//## remove ##		// only this list should be clear on each new search
-	private List<Pattern> regexSSN;	//## remove ##				//<=========== declaring list of regex patterns for check boxes
-	private List<Pattern> regexDoBs;	//## remove ##
-	private List<Pattern> regexPoBs;	//## remove ##
-	private List<Pattern> regexMaidens;	//## remove ##
-	private List<Pattern> regexAliens;	//## remove ##
-	private List<Pattern> regexGrandJuries;	//## remove ##
-	private List<Pattern> regexFBIInfoFiles;	//## remove ##
-	private List<Pattern> regexFBISources;	//## remove ##
-	private List<Pattern> regexFBISourceCodes;	//## remove ##
-	*/
 	
 	// GUI COMPONENTS (visible interface)
 	private JCheckBox JCBCheckAll;
-	/*
-	private JTextArea JTField;	//## remove ##			// user input regex. should be clear on every new search
-	private JCheckBox JCBSSN;	//## remove ##
-	private JCheckBox JCBPoB; 	//## remove ##
-	private JCheckBox JCBDoB;	//## remove ##
-	private JCheckBox JCBMaiden;	//## remove ##
-	private JCheckBox JCBAlien;	//## remove ##
-	private JCheckBox JCBGrandJury;	//## remove ##
-	private JCheckBox JCBFBISources;	//## remove ##
-	private JCheckBox JCBFBIInfoFiles;	//## remove ##
-	private JCheckBox JCBFBISourceCodes;	//## remove ##
-	*/
 	private JCheckBox JCBAutoParser;
 
 	private JRadioButton JRBDirectory;	
 	private JRadioButton JRBFile;
 	
 	private JButton JBRemoveDuplicates;
-
 	private JButton JBInput;
 	private JButton JBRun;
 	private JTextField JTAProgressLog;
@@ -215,19 +153,10 @@ public class Main extends JFrame {
 	private JScrollPane extPane;
 	private JScrollPane catPane;
 	
-	/*
-	private ArrayList<Match> resultTextList;	//## remove ##
-	private HashSet<Match> resultTextListUnique;	//## remove ##
-	private ArrayList<Match> resultTextListUniqueFinal;	//## remove ##
-	private ArrayList<Match> resultSSNList;	//## remove ##
-	private HashSet<Match> resultSSNListUnique;	//## remove ##
-	private ArrayList<Match> resultSSNListUniqueFinal;	//## remove ##
-	*/
 	private ArrayList <Match> resultOtherMatchList;
 	private ArrayList <File> skipFiles;
 	private HashSet <String> skipExtensions;
 	private HashMap <String, Component> HMComponents;
-	
 	//private JButton JBClear;
 	
 	/**
@@ -236,7 +165,6 @@ public class Main extends JFrame {
 	public Main() {
 		initSystemComponents();
 		initGUIComponents();
-		//System.exit(0);			//<=============== for debug 
 	}
 
 	private void initSystemComponents() {
@@ -302,31 +230,6 @@ public class Main extends JFrame {
 																				   "NH,NO,NR,NY,NF,OC,OM,PH,PX,PG,PD,RH,SC,SL,SU,SA,SD,SF,SJ,SV," +
 																				   "SE,SI,TP,WFO,BER,BOG,BON,HON,LON,MAN,MEX,OTT,PAN,PAR,ROM,TOK"));
 		
-		
-		/*
-		resultTextList = new ArrayList<Match>();	//## remove ##
-		resultTextListUnique = new HashSet<Match>();	//## remove ##
-		resultTextListUniqueFinal = new ArrayList<Match>();	//## remove ##
-		
-		resultSSNList = new ArrayList<Match>();	//## remove ##
-		resultSSNListUnique = new HashSet<Match>();	//## remove ##
-		resultSSNListUniqueFinal = new ArrayList<Match>();	//## remove ##
-		*/
-		
-		// these lists below used for searches and should not get cleared after each use
-		/*
-		regexText = new ArrayList<Pattern>();	//## remove ##
-		regexSSN = new ArrayList<Pattern>();	//## remove ##
-		regexDoBs = new ArrayList<Pattern>();	//## remove ##
-		regexPoBs = new ArrayList<Pattern>();	//## remove ##
-		regexMaidens = new ArrayList<Pattern>();	//## remove ##
-		regexAliens = new ArrayList<Pattern>();	//## remove ##
-		regexGrandJuries = new ArrayList<Pattern>();	//## remove ##		//<=========== create regex list for check box match pattern
-		regexFBIInfoFiles = new ArrayList<Pattern>();	//## remove ##
-		regexFBISources = new ArrayList<Pattern>();	//## remove ##
-		regexFBISourceCodes = new ArrayList<Pattern>();	//## remove ##
-		*/
-		
 		//Prepare Skipped Extensions:
 		skipExtensions = new HashSet<String>();
 		skipExtensions.add("mp3");
@@ -387,44 +290,6 @@ public class Main extends JFrame {
 		//FBI source codes
 		addRegexToList("\\b(AL|AQ|AX|AN|AT|BA|BH|BS|BQ|BU|BT|CE|CG|CI|CV|CO|DL|DN|DE|EP|HN|HO|IP|JN|JK|KC|KX|LV|LR|LA|LS|ME|MM|MI|MP|MO|NK|NH|NO|NR|NY|NF|OC|OM|PH|PX|PG|PD|RH|SC|SL|SU|SA|SD|SF|SJ|SV|SE|SI|TP|WFO|BER|BOG|BON|HON|LON|MAN|MEX|OTT|PAN|PAR|ROM|TOK)\\s+\\b", HMComponents.get("FBISourceCode").regex);
 		
-		/*			// old codes
-		// perfect old format ssn with hyphens, followed by anything other than a number, dash, or slash
-		addRegexToList("(\\b(?!000)(?!666)(?:[0-6]\\d{2}|7[0-2][0-9]|73[0-3]|7[5-6][0-9]|77[0-2]))-((?!00)\\d{2})-((?!0000)\\d{4})([^0-9-/]|)", regexSSN);
-		// same as above but with a newline in front
-		addRegexToList("\\s?^?SSN?\\s?#\\s?[0-9]", regexSSN); //Combined this one with the above regex
-		//look for a space, the letters SSN, a possible space, and any number
-		addRegexToList("\\sSSN\\s?[0-9]", regexSSN);
-		// SSN or SSA plus the letters NO, plus a number within 5 spaces
-		addRegexToList(" SSN?A?\\s?No\\s?.{0,5}[0-9]", regexSSN);
-		// group of 3, 2, 4 separated by a space, bounded by a word boundary
-		addRegexToList("(\\b|^)\\d{3} \\d{2} \\d{4}(\\b|$)", regexSSN);
-		// group of 3, 2, 4 separated by a . a / or - bounded by something other than a number, hyphen or slash
-		addRegexToList("([^0-9.-/]|^)\\d{3}[./-]\\d{2}[./-]\\d{4}([^0-9-/]|$)", regexSSN);
-		
-		//"birth" or "born" or "DOB" within 5 words of mm/dd/yy, mm-dd-yy, mm.dd.yy, mm dd yy, mm/dd/yyyy, mm-dd-yyyy ,mm.dd.yyyy ,mm dd yyyy
-		addRegexToList("\\b(birth|born|DOB)\\W*(?:\\w*\\W*){1,5}((\\D+|^)(?:(1[0-2]|0?[1-9])([- /.]+)(3[01]|[12][0-9]|0?[1-9])|(3[01]|[12][0-9]|0?[1-9])([- /.]+)(1[0-2]|0?[1-9]))([- /.]+)(?:19|20)?\\d\\d)", regexDoBs);
-		//"birth" or "born" or "DOB" within 5 words of yyyy/mm/dd, yyyy-mm-dd, yyyy.mm.dd, yyyy mm dd
-		addRegexToList("\\b(birth|born|DOB)\\W*(?:\\w*\\W*){1,5}((19|20)\\d\\d([- /.]+)(0[1-9]|1[012])([- /.]+)(0[1-9]|[12][0-9]|3[01]))", regexDoBs);
-		//"birth" or "born" or "DOB" within 5 words of a month spelled out date, with or without period, allows for 1st, 2nd, 3rd, 4th, etc.
-		addRegexToList("\\b(birth|born|DOB)\\W*(?:\\w*\\W*){1,5}((?:Jan\\.?(?:uary)?|Feb\\.?(?:ruary)?|Mar\\.?(?:ch)?|Apr\\.?(?:il)?|May|Jun\\.?(?:e)?|Jul\\.(?:y)?|Aug\\.?(?:ust)?|Sep\\.?(?:t\\.?(?:ember)?)?|Oct\\.?(?:ober)?|Nov\\.?(?:ember)?|Dec\\.?(?:ember)?)[ ][0-3]?\\d(?:st|rd|nd|th)?,?[ ](?:19|20)\\d\\d)", regexDoBs);
-		//"birth" or "born" or "DOB" within 5 words of a numeric day and a month spelled out (i.e. born on 31 December
-		addRegexToList("\\b(birth|born|DOB)\\W*(?:\\w*\\W*){1,5}(0?[1-9]|[12][0-9]|3[01]) (?:Jan\\.?(?:uary)?|Feb\\.?(?:ruary)?|Mar\\.?(?:ch)?|Apr\\.?(?:il)?|May|Jun\\.?(?:e)?|Jul\\.(?:y)?|Aug\\.?(?:ust)?|Sep\\.?(?:t\\.?(?:ember)?)?|Oct\\.?(?:ober)?|Nov\\.?(?:ember)?|Dec\\.?(?:ember)?)", regexDoBs);
-		//Place of Birth
-		addRegexToList("(POB|Place of Birth|birth place|birthplace|born in|born at|bornin|bornat|place ofbirth)", regexPoBs); 
-		//mother's maiden name or nee
-		addRegexToList("(maiden name|mother'?s? maiden name|\\bnee\\s)", regexMaidens);
-		//Alien number regex from healthcare.gov
-		addRegexToList("(\\b|^)(A|a)(-?[0-9]){9}(\\b|$)|(\\b|^)(A|a)(-?[0-9]){7}(\\b|$)", regexAliens);
-		//Grand Jury
-		addRegexToList("(Grand Jury)",regexGrandJuries);
-		//FBI Sources terms for protect identity, informant, psi, si, reliable, confidential
-		addRegexToList("(protect identity|informant|psi|si|reliable|confidential)", regexFBISources);
-		//Find FBI information files beginning with numbers beginning on 134, 137, 170
-		addRegexToList("\\b(134-\\d*|137-\\d*|170-\\d*)\\b", regexFBIInfoFiles);
-		//FBI source codes
-		addRegexToList("\\b(AL|AQ|AX|AN|AT|BA|BH|BS|BQ|BU|BT|CE|CG|CI|CV|CO|DL|DN|DE|EP|HN|HO|IP|JN|JK|KC|KX|LV|LR|LA|LS|ME|MM|MI|MP|MO|NK|NH|NO|NR|NY|NF|OC|OM|PH|PX|PG|PD|RH|SC|SL|SU|SA|SD|SF|SJ|SV|SE|SI|TP|WFO|BER|BOG|BON|HON|LON|MAN|MEX|OTT|PAN|PAR|ROM|TOK)\\s+\\b", regexFBISourceCodes);
-		*/
-		
 		// setting for file chooser
 		textFileChooser = new JFileChooser();
 		textFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);	// set default selection mode
@@ -450,8 +315,6 @@ public class Main extends JFrame {
 		//fileSaver.setFileFilter(csvFilter);
 		
 		initNewSearch(); 				//<====================initialize search helper variables here
-		
-		//System.exit(0);			//<=============== for debug 
 	}
 	
 	/**
@@ -462,32 +325,6 @@ public class Main extends JFrame {
 		//Row1: Elements
 		JCBCheckAll = new JCheckBox("Check All Options");
 		JCBCheckAll.setToolTipText("(All Options Activated)");
-		/*
-		JTField = new JTextArea("");	//## remove ##
-		JTField.setLineWrap(true);	//## remove ##
-		JTField.setWrapStyleWord(true);	//## remove ##
-		JCBSSN = new JCheckBox("SSN Match"); JCBSSN.setSelected(true);	//## remove ##
-		JCBSSN.setToolTipText("Matches (SSN#, SS#, SSN, 555-55-5555). Most likely to match SSNs. Fewest false positives.");	//## remove ##
-		JCBDoB = new JCheckBox("Date of Birth");	//## remove ##
-		JCBDoB.setToolTipText("(Birth, Born, DOB with a date) Matches terms related to date of birth.");	//## remove ##
-		JCBMaiden = new JCheckBox("Mother's Maiden Name or Nee");	//## remove ##
-		JCBMaiden.setToolTipText("Matches terms related to maiden names.");	//## remove ##
-		JCBPoB = new JCheckBox("Place of Birth");	//## remove ##
-		JCBPoB.setToolTipText("(POB, Place of Birth, birth place, birthplace, born in, born at) Matches terms related to place of birth");	//## remove ##
-		JCBAlien = new JCheckBox("Alien Registration Number");	//## remove ##
-		JCBAlien.setToolTipText("Matches terms to Alien Registration Numbers.");	//## remove ##
-		JCBGrandJury = new JCheckBox("Grand Jury");	//## remove ##		//<=========== initializing and defining new checkboxes and tool tip
-		JCBGrandJury.setToolTipText("Find all matches term Grand Jury");	//## remove ##
-		JCBFBIInfoFiles = new JCheckBox("FBI Info Files");	//## remove ##
-		JCBFBIInfoFiles.setToolTipText("FBI information files beginning with numbers beginning on 134, 137, 170");	//## remove ##
-		JCBFBISources = new JCheckBox("FBI Sources");	//## remove ##
-		JCBFBISources.setToolTipText("Find matches for protect identity, informant, psi, si, reliable, confidential");	//## remove ##
-		JCBFBISourceCodes = new JCheckBox("FBI Source Codes");	//## remove ##
-		JCBFBISourceCodes.setToolTipText("AL,AQ,AX,AN,AT,BA,BH,BS,BQ,BU,BT,CE,CG,CI,CV,CO,DL,DN," +
-										 "DE,EP,HN,HO,IP,JN,JK,KC,KX,LV,LR,LA,LS,ME,MM,MI,MP,MO,NK," +
-										 "NH,NO,NR,NY,NF,OC,OM,PH,PX,PG,PD,RH,SC,SL,SU,SA,SD,SF,SJ,SV," +
-										 "SE,SI,TP,WFO,BER,BOG,BON,HON,LON,MAN,MEX,OTT,PAN,PAR,ROM,TOK");	//## remove ##
-		*/
 		
 		JCBAutoParser = new JCheckBox("Read Additional Formats");
 		JCBAutoParser.setToolTipText("The program will attempt to read additional file formats.");
@@ -566,13 +403,7 @@ public class Main extends JFrame {
 		panel1.add(HMComponents.get("Maiden").checkBox);
 		panel1.add(HMComponents.get("PoB").checkBox);
 		panel1.add(HMComponents.get("Alien").checkBox);
-		/*
-		panel1.add(JCBSSN);	//** modify **
-		panel1.add(JCBDoB);	//** modify **
-		panel1.add(JCBMaiden);	//** modify **
-		panel1.add(JCBPoB);	//** modify **
-		panel1.add(JCBAlien);	//** modify **
-		*/
+		
 		//Row1: Panel2: Elements Added
 		JPanel panel2_sub1 = new JPanel();	//to get proper alignment of new check boxes above "Other Match mode"
 		JPanel panel2_sub2 = new JPanel();	//two sub panels are placed inside of panel2 using grid layout
@@ -583,12 +414,7 @@ public class Main extends JFrame {
 		panel2_sub1.add(HMComponents.get("FBIInfoFile").checkBox);
 		panel2_sub1.add(HMComponents.get("FBISource").checkBox);
 		panel2_sub1.add(HMComponents.get("FBISourceCode").checkBox);
-		/*
-		panel2_sub1.add(JCBGrandJury);	//** modify **
-		panel2_sub1.add(JCBFBIInfoFiles);	//** modify **
-		panel2_sub1.add(JCBFBISources);	//** modify **
-		panel2_sub1.add(JCBFBISourceCodes);	//** modify **
-		*/
+		
 		panel2_sub2.setBorder(BorderFactory.createTitledBorder("Other Match Mode"));
 		panel2_sub2.setLayout(new BoxLayout(panel2_sub2, BoxLayout.PAGE_AXIS));
 		panel2_sub2.add(HMComponents.get("TxtField").text);
@@ -711,8 +537,6 @@ public class Main extends JFrame {
 		JBCancel.addActionListener(new MySearchTaskListener());
 		JBExport.addActionListener(new MyIOListener());
 		pack();
-
-		//System.exit(0);			//<=============== for debug 
 	}
 	
 	/**
@@ -727,7 +551,7 @@ public class Main extends JFrame {
 *										GUI Action Listeners Class Section											*
 ********************************************************************************************************************/
 	/**
-	 * This internal class listens for user's interaction with the remove duplicates button.
+	 * listens for user's interaction with the remove duplicates button.
 	 */
 	private class CleanResultsListener implements ActionListener {
 		@Override
@@ -736,19 +560,14 @@ public class Main extends JFrame {
 				initNewExport();
 				JBTableModel.setRowCount(0);
 				
-				searchTask.cleanTextResults(HMComponents.get("TxtField").resultListUnique);	//*** modify ***
-				searchTask.cleanSSNResults(HMComponents.get("SSN").resultListUnique);	//*** modify ***
-				/*
-				searchTask.cleanTextResults(resultTextListUnique);	//*** modify ***
-				searchTask.cleanSSNResults(resultSSNListUnique);	//*** modify ***
-				*/
+				searchTask.cleanTextResults(HMComponents.get("TxtField").resultListUnique);
+				searchTask.cleanSSNResults(HMComponents.get("SSN").resultListUnique);
 				searchTask.getOtherResults(resultOtherMatchList);
 				JBTableModel.fireTableDataChanged();
 				JBRemoveDuplicates.setEnabled(false);
 				JBRemoveDuplicates.setText("Duplicates Removed");
 				
 				searchTask.getConfidenceTable();
-				
 				searchTask.buildHtmlResult();
 				searchTask.buildCSVResult();
 			}
@@ -756,7 +575,7 @@ public class Main extends JFrame {
 	}
 	
 	/**
-	 * This internal class listens for user's interaction with check all option.
+	 * listens for user's interaction with check all option.
 	 */
 	private class CheckAllOptionsListener implements ActionListener {
 		@Override
@@ -767,94 +586,61 @@ public class Main extends JFrame {
 					for (Component comp : HMComponents.values ())
 						if (comp.TYPE == 'C')
 							comp.checkBox.setSelected(true);
-					/*
-					JCBSSN.setSelected(true);	//** modify **
-					JCBDoB.setSelected(true);	//** modify **
-					JCBMaiden.setSelected(true);	//** modify **
-					JCBPoB.setSelected(true);	//** modify **
-					JCBAlien.setSelected(true);	//** modify **
-					JCBFBIInfoFiles.setSelected(true);	//** modify **	//<=========== sets all checkbox to true
-					JCBGrandJury.setSelected(true);	//** modify **
-					JCBFBISources.setSelected(true);	//** modify **
-					JCBFBISourceCodes.setSelected(true);	//** modify **
-					*/
 			   } else {
 					for (Component comp : HMComponents.values ())
 						if (comp.TYPE == 'C')
 							comp.checkBox.setSelected(false);
-					/*
-					JCBSSN.setSelected(false);	//** modify **
-					JCBDoB.setSelected(false);	//** modify **
-					JCBMaiden.setSelected(false);	//** modify **
-					JCBPoB.setSelected(false);	//** modify **
-					JCBAlien.setSelected(false);	//** modify **
-					JCBFBIInfoFiles.setSelected(false);	//** modify **	//<=========== sets all check box to false
-					JCBGrandJury.setSelected(false);	//** modify **
-					JCBFBISources.setSelected(false);	//** modify **
-					JCBFBISourceCodes.setSelected(false);	//** modify **
-					*/
 				}
 			}
 		}
 	}
 	
 	/**
-	 * This internal class listens for user's interaction with run mode.
+	 * listens for user's interaction with run mode.
 	 */
 	private class MyRunModeListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent event) {
-			if (event.getSource() == JRBDirectory) {				// DIRECTORY ONLY MODE
+			if (event.getSource() == JRBDirectory)				// DIRECTORY ONLY MODE
 				fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-			} else if (event.getSource() == JRBFile) { 				// FILE ONLY MODE
+			else if (event.getSource() == JRBFile)				// FILE ONLY MODE
 				fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-			}
 		}
 	}
 
 	/**
-	 * This internal class listens for user's input/output
+	 * listens for user's input/output
 	 */
 	private class MyIOListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent event) {
 			if (event.getSource() == JBInput) {					// INPUT BUTTON
-				// open browse directory/file dialog
-				int userRespond = fileChooser.showOpenDialog(Main.this);
-				
+				int userRespond = fileChooser.showOpenDialog(Main.this);	// open browse directory/file dialog
 				if (userRespond == JFileChooser.APPROVE_OPTION) {	// user select a directory/file
 					userInput = fileChooser.getSelectedFile();
-					String msg = "Input: " + userInput + "\n";
-					printToProgress(msg);
+					printToProgress("Input: " + userInput + "\n");
 				}
 			} else if (event.getSource() == JBExport) {				// HTML SAVE BUTTON
-				// get today date
-				Calendar cal = Calendar.getInstance();
-				String month = String.valueOf(cal.get(Calendar.MONTH) + 1);
-				String day = String.valueOf(cal.get(Calendar.DAY_OF_MONTH));
-				String year = String.valueOf(cal.get(Calendar.YEAR));
- 
+				Calendar cal = Calendar.getInstance ();		// get today date
 				// open save file dialog with a default file name
-				String filename = "pii_finder_result_" + month + "_" + day + "_" + year + "";
-				fileSaver.setSelectedFile(new File(filename));
+				StringBuilder filename = new StringBuilder ("pii_finder_result_" + (cal.get(Calendar.MONTH) + 1) + "_" + cal.get(Calendar.DAY_OF_MONTH) + "_" + cal.get(Calendar.YEAR));
+				fileSaver.setSelectedFile(new File(filename.toString ()));
  
 				int userRespond1 = fileSaver.showSaveDialog(Main.this);
- 
-				// user enter a save file
-				if (userRespond1 == JFileChooser.APPROVE_OPTION) {
+				
+				if (userRespond1 == JFileChooser.APPROVE_OPTION) {	// user enter a save file
 					if (fileSaver.getFileFilter().equals(webpageFilter)) {
-						outputFileHTML = new File(fileSaver.getSelectedFile()+".html");
+						outputFileHTML = new File(fileSaver.getSelectedFile() + ".html");
 						if (outputFileHTML != null && outputFileHTML.exists()) {
-							String msg = "The file " + outputFileHTML.getName() + " already exists. Do you want to replace the existing file?";
-							String title = "Ovewrite file?";
-							int userRespond2 = JOptionPane.showConfirmDialog(Main.this, msg, title, JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+							StringBuilder msg = new StringBuilder ("The file " + outputFileHTML.getName() + " already exists. Do you want to replace the existing file?");
+							StringBuilder title = new StringBuilder ("Ovewrite file?");
+							int userRespond2 = JOptionPane.showConfirmDialog(Main.this, msg.toString (), title.toString (), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 							
 							if (userRespond2 != JOptionPane.YES_OPTION)	// user choose NO
 								return; // stop here
 						}
  
 						String path = fileSaver.getSelectedFile().toString();
-						
 						if (!path.endsWith(".html")) {
 							path += ".html";
 							
@@ -910,43 +696,23 @@ public class Main extends JFrame {
 	}
 	
 	/**
-	 * This internal class listens for user's interaction with run button.
+	 * listens for user's interaction with run button.
 	 */
 	private class MySearchTaskListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent event) {			
 			if (event.getSource() == JBRun) {			// RUN BUTTON
-				// check if a match mode is selected
 				boolean noneSelected = true;				
 				for (Component comp : HMComponents.values ())
 					if (comp.TYPE == 'T' && !comp.text.getText().isEmpty())
 						noneSelected = false;
 					else if (comp.TYPE == 'C' && comp.checkBox.isSelected())
 						noneSelected = false;
-					
-				/*
-				if (HMComponents.get("TxtField").text.getText().isEmpty() && 
-					!HMComponents.get("SSN").checkBox.isSelected() && 
-					!HMComponents.get("PoB").checkBox.isSelected() && 
-					!HMComponents.get("DoB").checkBox.isSelected() && 
-					!HMComponents.get("Maiden").checkBox.isSelected() && 
-					!HMComponents.get("Alien").checkBox.isSelected() && 
-					!HMComponents.get("GrandJury").checkBox.isSelected() && 
-					!HMComponents.get("FBISource").checkBox.isSelected() && 
-					!HMComponents.get("FBISourceCode").checkBox.isSelected() && 
-					!HMComponents.get("FBIInfoFile").checkBox.isSelected()) {
-				*/
-				if (noneSelected) {
-					JOptionPane.showMessageDialog(Main.this, "ERROR: No match mode is selected");
-					return; // stop here	
-				}
 				
-				/*				//******** modify if statement below **********
-				if (JTField.getText().isEmpty() && !JCBSSN.isSelected() && !JCBPoB.isSelected() && !JCBDoB.isSelected() && !JCBMaiden.isSelected() && !JCBAlien.isSelected() && !JCBGrandJury.isSelected() && !JCBFBISources.isSelected() && !JCBFBISourceCodes.isSelected() && !JCBFBIInfoFiles.isSelected()) {
+				if (noneSelected) {	// check if a match mode is selected
 					JOptionPane.showMessageDialog(Main.this, "ERROR: No match mode is selected");
 					return; // stop here	
 				}
-				*/
 				
 				if (userInput == null) {		// check if there is an input file/directory
 					JOptionPane.showMessageDialog(Main.this, "ERROR: No input file/directory");
@@ -1118,7 +884,7 @@ public class Main extends JFrame {
 						} else {
 							if (JCBAutoParser.isSelected()) {
 								if (skipExtensions.contains(fileExtension)) {
-									System.out.println("Skipped");
+									//System.out.println("Skipped " + fileExtension);		//<============ for debug
 									continue;
 								} else {
 									ContentHandler handler = new BodyContentHandler(-1);
@@ -1195,10 +961,7 @@ public class Main extends JFrame {
 			String lineA = "";
 			
 			addTextToRegex(HMComponents.get("TxtField").text.getText());
-			//addTextToRegex(JTField.getText());						//** modify **
-			
-			System.out.println ("regexText is " + HMComponents.get("TxtField").regex);			//<================ for debug
-			//System.out.println("regexText is " + regexText);			//<================ for debug
+			//System.out.println ("regexText is " + HMComponents.get("TxtField").regex);			//<================ for debug
 			
 			if (fileReader.hasNext()) {			// check if file is readable
 				readCounter ++;
@@ -1215,7 +978,6 @@ public class Main extends JFrame {
 			while(fileReader.hasNext()) {
 				String lineB = fileReader.nextLine();
 				String line = lineA + lineB;
-				//Matcher patternMatcher = null;
 				
 				for (Component comp : HMComponents.values ()) {			// perhaps impliments the true false stuff directly into each individual
 					if (comp.TYPE == 'T' && !comp.text.getText().isEmpty()) {// objects rather than using method parameters like this
@@ -1228,149 +990,6 @@ public class Main extends JFrame {
 					}
 				}
 				
-				/*
-				if (!(JTField.getText().isEmpty())) {					//** modify **
-					for (Pattern regexTexti : regexText) {					//** modify **
-						patternMatcher = regexTexti.matcher(line);
-						while (patternMatcher.find()) {
-							textCounter++;									//********** modify ***********
-							
-							resultTextList.add(new Match(textCounter, "Text", patternMatcher.group(), line, fileExtension, file, lineNum));	//** modify **
-							resultTextListUnique.add(new Match(textCounter, "Text", patternMatcher.group(), line, fileExtension, file, lineNum));	//** modify **
-							
-							JBTableModel.addRow(new Object[]{textCounter, "Text", patternMatcher.group(), line, fileExtension, file, lineNum});	//** modify **
-						}
-					}
-				}
-				
-				if (JCBSSN.isSelected()) {	//** modify **
-					for (Pattern regexSSNi : regexSSN) {	//** modify **
-						patternMatcher = regexSSNi.matcher(line);
-						while (patternMatcher.find()) {
-							ssnCounter++;	//** modify **
-							
-							resultSSNList.add(new Match(ssnCounter, "SSN", patternMatcher.group(), line, fileExtension, file, lineNum));	//** modify **
-							resultSSNListUnique.add(new Match(ssnCounter, "SSN", patternMatcher.group(), line, fileExtension, file, lineNum));	//** modify **
-							
-							JBTableModel.addRow(new Object[]{ssnCounter, "SSN", patternMatcher.group(), line, fileExtension, file, lineNum});	//** modify **
-						}
-					}
-				}
-				
-				
-				if (JCBDoB.isSelected()) {	//** modify **
-					for (Pattern regexDoB: regexDoBs) {	//** modify **
-						patternMatcher = regexDoB.matcher(line);
-						while (patternMatcher.find()) {
-							matchCounter ++;
-							dobCounter ++;	//** modify **
-
-							resultOtherMatchList.add(new Match(dobCounter, "DoB", patternMatcher.group(), line, fileExtension, file, lineNum));	//** modify **
-
-							JBTableModel.addRow(new Object[]{dobCounter, "DoB", patternMatcher.group(), line, fileExtension, file, lineNum});	//** modify **
-						}
-					}
-				}
-
-				if (JCBPoB.isSelected()) {	//** modify **
-					for (Pattern regexPoB: regexPoBs) {	//** modify **
-						patternMatcher = regexPoB.matcher(line);
-						while (patternMatcher.find()) {
-							matchCounter ++;
-							pobCounter ++;	//** modify **
-
-							resultOtherMatchList.add(new Match(pobCounter, "PoB", patternMatcher.group(), line, fileExtension, file, lineNum));	//** modify **
-
-							JBTableModel.addRow(new Object[]{pobCounter, "PoB", patternMatcher.group(), line, fileExtension, file, lineNum});	//** modify **
-						}
-					}
-				}
-
-				if (JCBMaiden.isSelected()) {	//** modify **
-					for (Pattern regexMaiden: regexMaidens) {	//** modify **
-						patternMatcher = regexMaiden.matcher(line);
-						while (patternMatcher.find()) {
-							matchCounter ++;
-							maidenCounter ++;	//** modify **
-
-							resultOtherMatchList.add(new Match(maidenCounter, "Maiden", patternMatcher.group(), line, fileExtension, file, lineNum));	//** modify **
-
-							JBTableModel.addRow(new Object[]{maidenCounter, "Maiden", patternMatcher.group(), line, fileExtension, file, lineNum});	//** modify **
-						}
-					}
-				}
-				
-				if (JCBAlien.isSelected()) {	//** modify **
-					for (Pattern regexAlien: regexAliens) {	//** modify **
-						patternMatcher = regexAlien.matcher(line);
-						while (patternMatcher.find()) {
-							matchCounter ++;
-							alienCounter ++;	//** modify **
-
-							resultOtherMatchList.add(new Match(alienCounter, "Alien", patternMatcher.group(), line, fileExtension, file, lineNum));	//** modify **
-
-							JBTableModel.addRow(new Object[]{alienCounter, "Alien", patternMatcher.group(), line, fileExtension, file, lineNum});	//** modify **
-						}
-					}
-				}
-				
-				if (JCBGrandJury.isSelected()) {	//** modify **		//<==================== check box active varified here !!
-					for (Pattern regexGrandJury: regexGrandJuries) {	//** modify **
-						patternMatcher = regexGrandJury.matcher(line);
-						while (patternMatcher.find()) {
-							matchCounter ++;
-							grandJuryCounter ++;	//** modify **
-
-							resultOtherMatchList.add(new Match(grandJuryCounter, "Grand Jury", patternMatcher.group(), line, fileExtension, file, lineNum));	//** modify **
-
-							JBTableModel.addRow(new Object[]{grandJuryCounter, "Grand Jury", patternMatcher.group(), line, fileExtension, file, lineNum});	//** modify **
-						}
-					}
-				}
-				
-				if (JCBFBIInfoFiles.isSelected()) {	//** modify **
-					for (Pattern regexFBIInfoFile: regexFBIInfoFiles) {	//** modify **
-						patternMatcher = regexFBIInfoFile.matcher(line);
-						while (patternMatcher.find()) {
-							matchCounter ++;
-							FBIInfoFileCounter ++;	//** modify **
-
-							resultOtherMatchList.add(new Match(FBIInfoFileCounter, "FBI Information File", patternMatcher.group(), line, fileExtension, file, lineNum));	//** modify **
-
-							JBTableModel.addRow(new Object[]{FBIInfoFileCounter, "FBI Information File", patternMatcher.group(), line, fileExtension, file, lineNum});	//** modify **
-						}
-					}
-				}
-				
-				if (JCBFBISources.isSelected()) {	//** modify **
-					for (Pattern regexFBISource: regexFBISources) {	//** modify **
-						patternMatcher = regexFBISource.matcher(line);
-						while (patternMatcher.find()) {
-							matchCounter ++;
-							FBISourceCounter ++;	//** modify **
-
-							resultOtherMatchList.add(new Match(FBISourceCounter, "FBI Source", patternMatcher.group(), line, fileExtension, file, lineNum));	//** modify **
-
-							JBTableModel.addRow(new Object[]{FBISourceCounter, "FBI Source", patternMatcher.group(), line, fileExtension, file, lineNum});	//** modify **
-						}
-					}
-				}
-				
-				if (JCBFBISourceCodes.isSelected()) {	//** modify **
-					for (Pattern regexFBISourceCode: regexFBISourceCodes) {	//** modify **
-						patternMatcher = regexFBISourceCode.matcher(line);
-						while (patternMatcher.find()) {
-							matchCounter ++;
-							FBISourceCodeCounter ++;	//** modify **
-
-							resultOtherMatchList.add(new Match(FBISourceCodeCounter, "FBI Source Code", patternMatcher.group(), line, fileExtension, file, lineNum));	//** modify **
-
-							JBTableModel.addRow(new Object[]{FBISourceCodeCounter, "FBI Source Code", patternMatcher.group(), line, fileExtension, file, lineNum});	//** modify **
-						}
-					}
-				}
-				*/
-				
 				lineNum ++;
 				lineA = lineB;
 			}
@@ -1378,9 +997,7 @@ public class Main extends JFrame {
 //////IF MATCH ON LAST LINE OR ONLY ONE LINE////////////IF MATCH ON LAST LINE OR ONLY ONE LINE//////
 //////IF MATCH ON LAST LINE OR ONLY ONE LINE////////////IF MATCH ON LAST LINE OR ONLY ONE LINE//////
 //////IF MATCH ON LAST LINE OR ONLY ONE LINE////////////IF MATCH ON LAST LINE OR ONLY ONE LINE//////
-			if( !(fileReader.hasNext()) ) {
-				//Matcher patternMatcher = null;
-				
+			if( !(fileReader.hasNext()) ) {				
 				for (Component comp : HMComponents.values ()) {			// perhaps impliments the true false stuff directly into each individual
 					if (comp.TYPE == 'T' && !comp.text.getText().isEmpty()) {// objects rather than using method parameters like this
 						doResult (comp, lineA, fileExtension, file, lineNum, false, true, true, false);
@@ -1392,145 +1009,6 @@ public class Main extends JFrame {
 					}
 				}
 				
-				/*
-				if (!(JTField.getText().isEmpty())) {	//** modify **
-					for (Pattern regexTexti : regexText) {	//** modify **
-						patternMatcher = regexTexti.matcher(lineA);
-						while (patternMatcher.find()) {
-							textCounter++;	//** modify **
-							resultTextList.add(new Match(textCounter, "Text", patternMatcher.group(), lineA, fileExtension, file, lineNum));	//** modify **
-							resultTextListUnique.add(new Match(textCounter, "Text", patternMatcher.group(), lineA, fileExtension, file, lineNum));	//** modify **
-							
-							JBTableModel.addRow(new Object[]{textCounter, "Text", patternMatcher.group(), lineA, fileExtension, file, lineNum});	//** modify **
-						}	
-					}
-				}
-
-				if (JCBSSN.isSelected()) {	//** modify **
-					for (Pattern regexSSNi : regexSSN) {	//** modify **
-						patternMatcher = regexSSNi.matcher(lineA);
-						while (patternMatcher.find()) {
-							ssnCounter++;	//** modify **
-							resultSSNList.add(new Match(ssnCounter, "SSN", patternMatcher.group(), lineA, fileExtension, file, lineNum));	//** modify **
-							resultSSNListUnique.add(new Match(ssnCounter, "SSN", patternMatcher.group(), lineA, fileExtension, file, lineNum));	//** modify **
-
-							JBTableModel.addRow(new Object[]{ssnCounter, "SSN", patternMatcher.group(), lineA, fileExtension, file, lineNum});	//** modify **
-						}
-					}
-				}
-
-				if (JCBDoB.isSelected()) {	//** modify **
-					for (Pattern regexDoB: regexDoBs) {	//** modify **
-						patternMatcher = regexDoB.matcher(lineA);
-						while (patternMatcher.find()) {
-							matchCounter ++;
-							dobCounter ++;	//** modify **
-
-							resultOtherMatchList.add(new Match(dobCounter, "DoB", patternMatcher.group(), lineA, fileExtension, file, lineNum));	//** modify **
-
-							JBTableModel.addRow(new Object[]{dobCounter, "DoB", patternMatcher.group(), lineA, fileExtension, file, lineNum});	//** modify **
-						}
-					}
-				}
-
-				if (JCBPoB.isSelected()) {	//** modify **
-					for (Pattern regexPoB: regexPoBs) {	//** modify **
-						patternMatcher = regexPoB.matcher(lineA);
-						while (patternMatcher.find()) {
-							matchCounter ++;
-							pobCounter ++;	//** modify **
-
-							resultOtherMatchList.add(new Match(pobCounter, "PoB", patternMatcher.group(), lineA, fileExtension, file, lineNum));	//** modify **
-
-							JBTableModel.addRow(new Object[]{pobCounter, "PoB", patternMatcher.group(), lineA, fileExtension, file, lineNum});	//** modify **
-						}
-					}
-				}
-
-				if (JCBMaiden.isSelected()) {	//** modify **
-					for (Pattern regexMaiden: regexMaidens) {	//** modify **
-						patternMatcher = regexMaiden.matcher(lineA);
-						while (patternMatcher.find()) {
-							matchCounter ++;
-							maidenCounter ++;	//** modify **
-
-							resultOtherMatchList.add(new Match(maidenCounter, "Maiden", patternMatcher.group(), lineA, fileExtension, file, lineNum));	//** modify **
-
-							JBTableModel.addRow(new Object[]{maidenCounter, "Maiden", patternMatcher.group(), lineA, fileExtension, file, lineNum});	//** modify **
-						}
-					}
-				}
-				
-				if (JCBAlien.isSelected()) {	//** modify **
-					for (Pattern regexAlien: regexAliens) {	//** modify **
-						patternMatcher = regexAlien.matcher(lineA);
-						while (patternMatcher.find()) {
-							matchCounter ++;
-							alienCounter ++;	//** modify **
-
-							resultOtherMatchList.add(new Match(alienCounter, "Alien", patternMatcher.group(), lineA, fileExtension, file, lineNum));	//** modify **
-
-							JBTableModel.addRow(new Object[]{alienCounter, "Alien", patternMatcher.group(), lineA, fileExtension, file, lineNum});	//** modify **
-						}
-					}
-				}
-				
-				if (JCBGrandJury.isSelected()) {	//** modify **	//<==================== check box active varified here !!
-					for (Pattern regexGrandJury: regexGrandJuries) {	//** modify **
-						patternMatcher = regexGrandJury.matcher(lineA);
-						while (patternMatcher.find()) {
-							matchCounter ++;
-							grandJuryCounter ++;	//** modify **
-
-							resultOtherMatchList.add(new Match(grandJuryCounter, "Grand Jury", patternMatcher.group(), lineA, fileExtension, file, lineNum));	//** modify **
-
-							JBTableModel.addRow(new Object[]{grandJuryCounter, "Grand Jury", patternMatcher.group(), lineA, fileExtension, file, lineNum});	//** modify **
-						}
-					}
-				}
-				
-				if (JCBFBIInfoFiles.isSelected()) {	//** modify **
-					for (Pattern regexFBIInfoFile: regexFBIInfoFiles) {	//** modify **
-						patternMatcher = regexFBIInfoFile.matcher(lineA);
-						while (patternMatcher.find()) {
-							matchCounter ++;
-							FBIInfoFileCounter ++;	//** modify **
-
-							resultOtherMatchList.add(new Match(FBIInfoFileCounter, "FBI Information File", patternMatcher.group(), lineA, fileExtension, file, lineNum));	//** modify **
-
-							JBTableModel.addRow(new Object[]{FBIInfoFileCounter, "FBI Information File", patternMatcher.group(), lineA, fileExtension, file, lineNum});	//** modify **
-						}
-					}
-				}
-				
-				if (JCBFBISources.isSelected()) {	//** modify **
-					for (Pattern regexFBISource: regexFBISources) {	//** modify **
-						patternMatcher = regexFBISource.matcher(lineA);
-						while (patternMatcher.find()) {
-							matchCounter ++;
-							FBISourceCounter ++;	//** modify **
-
-							resultOtherMatchList.add(new Match(FBISourceCounter, "FBI Source", patternMatcher.group(), lineA, fileExtension, file, lineNum));	//** modify **
-
-							JBTableModel.addRow(new Object[]{FBISourceCounter, "FBI Source", patternMatcher.group(), lineA, fileExtension, file, lineNum});	//** modify **
-						}
-					}
-				}
-				
-				if (JCBFBISourceCodes.isSelected()) {	//** modify **
-					for (Pattern regexFBISourceCode: regexFBISourceCodes) {	//** modify **
-						patternMatcher = regexFBISourceCode.matcher(lineA);
-						while (patternMatcher.find()) {
-							matchCounter ++;
-							FBISourceCodeCounter ++;	//** modify **
-
-							resultOtherMatchList.add(new Match(FBISourceCodeCounter, "FBI Source Code", patternMatcher.group(), lineA, fileExtension, file, lineNum));	//** modify **
-
-							JBTableModel.addRow(new Object[]{FBISourceCodeCounter, "FBI Source Code", patternMatcher.group(), lineA, fileExtension, file, lineNum});	//** modify **
-						}
-					}
-				}
-				*/
 				lineNum ++;
 			}
 			
@@ -1544,41 +1022,9 @@ public class Main extends JFrame {
 			for (Match pr : resultOtherMatchList) {
 				JBTableModel.addRow(new Object[]{pr.getID(), pr.getConfidence(), pr.getText(), pr.getLine(), pr.getType(), pr.getFile(), pr.getLineNum()});
 				
-				if(pr.getConfidence().matches("Text"))
-					Main.this.addToAllRow (false, false, 0, pr, HMComponents.get ("TxtField").html, HMComponents.get ("TxtField").csv);
-					//Main.this.addToAllRow (false, false, 0, pr, textHTML, textCSV);	//** modify **
-					
-				if(pr.getConfidence().matches("PoB"))
-					Main.this.addToAllRow (false, false, 0, pr, HMComponents.get ("PoB").html, HMComponents.get ("PoB").csv);
-					//Main.this.addToAllRow (false, false, 0, pr, pobHTML, pobCSV);	//** modify **
-				
-				if(pr.getConfidence().matches("DoB"))
-					Main.this.addToAllRow (false, false, 0, pr, HMComponents.get ("DoB").html, HMComponents.get ("DoB").csv);
-					//Main.this.addToAllRow (false, false, 0, pr, dobHTML, dobCSV);	//** modify **
-				
-				if(pr.getConfidence().matches("Maiden"))
-					Main.this.addToAllRow (false, false, 0, pr, HMComponents.get ("Maiden").html, HMComponents.get ("Maiden").csv);
-					//Main.this.addToAllRow (false, false, 0, pr, maidenHTML, maidenCSV);	//** modify **
-				
-				if(pr.getConfidence().matches("Alien"))
-					Main.this.addToAllRow (false, false, 0, pr, HMComponents.get ("Alien").html, HMComponents.get ("Alien").csv);
-					//Main.this.addToAllRow (false, false, 0, pr, alienHTML, alienCSV);	//** modify **
-				
-				if(pr.getConfidence().matches("Grand Jury"))
-					Main.this.addToAllRow (false, false, 0, pr, HMComponents.get ("Grand Jury").html, HMComponents.get ("Grand Jury").csv);
-					//Main.this.addToAllRow (false, false, 0, pr, grandJuryHTML, grandJuryCSV);	//** modify **
-				
-				if(pr.getConfidence().matches("FBI Information File"))
-					Main.this.addToAllRow (false, false, 0, pr, HMComponents.get ("FBIInfoFile").html, HMComponents.get ("FBIInfoFile").csv);
-					//Main.this.addToAllRow (false, false, 0, pr, FBIInfoFileHTML, FBIInfoFileCSV);	//** modify **
-				
-				if(pr.getConfidence().matches("FBI Source"))
-					Main.this.addToAllRow (false, false, 0, pr, HMComponents.get ("FBISource").html, HMComponents.get ("FBISource").csv);
-					//Main.this.addToAllRow (false, false, 0, pr, FBISourceHTML, FBISourceCSV);	//** modify **
-				
-				if(pr.getConfidence().matches("FBI Source Code"))
-					Main.this.addToAllRow (false, false, 0, pr, HMComponents.get ("FBISourceCode").html, HMComponents.get ("FBISourceCode").csv);
-					//Main.this.addToAllRow (false, false, 0, pr, FBISourceCodeHTML, FBISourceCodeCSV);	//** modify **
+				for (Component comp : HMComponents.values ())	//itterate over the hashTable to match every symbols
+					if(pr.getConfidence().matches(comp.SYM))
+						Main.this.addToAllRow (false, false, 0, pr, comp.html, comp.csv);
 			}
 			
 			return resultOtherMatchList;
@@ -1591,10 +1037,8 @@ public class Main extends JFrame {
 			for(Match pr : elf)
 				if(elf.contains(pr))
 					tmpList.add(pr);
-					//resultTextListUniqueFinal.add(pr);	//** modify **
 			
 			Collections.sort(tmpList, new Comparator <Match> () {
-			//Collections.sort(resultTextListUniqueFinal, new Comparator<Match>() {	//** modify **
 				@Override
 				public int compare(Match z1, Match z2) {
 					if (z1.getID() > z2.getID()) { return 1; }
@@ -1605,16 +1049,12 @@ public class Main extends JFrame {
 			
 			int i = 1;
 			for (Match pr : tmpList) {
-			//for (Match pr : resultTextListUniqueFinal) {	//** modify **
 				Main.this.addToAllRow (true, true, i, pr, tmpComp.html, tmpComp.csv);
-				//Main.this.addToAllRow (true, true, i, pr, textHTML, textCSV);	//** modify **
 				i++;
 			}
 			
 			tmpComp.counter = tmpList.size ();
 			return tmpList;
-			//textCounter = resultTextListUniqueFinal.size();	//** modify **
-			//return resultTextListUniqueFinal;	//** modify **
 		}
 		
 		private ArrayList cleanSSNResults(HashSet<Match> elf) {            
@@ -1624,10 +1064,8 @@ public class Main extends JFrame {
 			for(Match pr : elf)
 				if(elf.contains(pr))
 					tmpList.add (pr);
-					//resultSSNListUniqueFinal.add(pr);	//** modify **
 			
 			Collections.sort(tmpList, new Comparator<Match>() {
-			//Collections.sort(resultSSNListUniqueFinal, new Comparator<Match>() {	//** modify **
 				@Override
 				public int compare(Match z1, Match z2) {
 					if (z1.getID() > z2.getID()) { return 1; }
@@ -1638,16 +1076,12 @@ public class Main extends JFrame {
 			
 			int i = 1;
 			for (Match pr : tmpList) {
-			//for (Match pr : resultSSNListUniqueFinal) {	//** modify **
 				Main.this.addToAllRow (true, true, i, pr, tmpComp.html, tmpComp.csv);
-				//Main.this.addToAllRow (true, true, i, pr, ssnHTML, ssnCSV);	//** modify **
 				i++;
 			}
 			
 			tmpComp.counter = tmpList.size ();
 			return tmpList;
-			//ssnCounter = resultSSNListUniqueFinal.size();	//** modify **
-			//return resultSSNListUniqueFinal;	//** modify **
 		}
 		
 		private ArrayList<Match> getTextResults(ArrayList<Match> elf) {
@@ -1657,14 +1091,11 @@ public class Main extends JFrame {
 			int i = 1;
 			for (Match pr : elf) {
 				Main.this.addToAllRow (true, true, i, pr, tmpComp.html, tmpComp.csv);
-				//Main.this.addToAllRow (true, true, i, pr, textHTML, textCSV);	//** modify **
 				i++;
 			}
 			
 			tmpComp.counter = tmpList.size();
 			return tmpList;
-			//textCounter = resultTextList.size();	//** modify **
-			//return resultTextList;	//** modify **
 		}
 		
 		private ArrayList<Match> getSSNResults(ArrayList<Match> elf) {
@@ -1674,14 +1105,11 @@ public class Main extends JFrame {
 			int i = 1;
 			for (Match pr : elf) {
 				Main.this.addToAllRow (true, true, i, pr, tmpComp.html, tmpComp.csv);
-				//Main.this.addToAllRow (true, true, i, pr, ssnHTML, ssnCSV);	//** modify **
 				i++;
 			}
 			
 			tmpComp.counter = tmpList.size ();
 			return tmpList;
-			//ssnCounter = resultSSNList.size();	//** modify **
-			//return resultSSNList;	//** modify **
 		}
 		
 		private void buildCSVResult() {
@@ -1692,38 +1120,6 @@ public class Main extends JFrame {
 					postCSVResult.append (comp.csv.toString ());
 				else if (comp.TYPE == 'C' && comp.checkBox.isSelected ())
 					postCSVResult.append (comp.csv.toString ());
-			
-			/*
-			if (!(JTField.getText().isEmpty()))	//** modify **
-				postCSVResult.append (textCSV.toString ());	//** modify **
-			
-			if (JCBSSN.isSelected())	//** modify **
-				postCSVResult.append (ssnCSV.toString ());	//** modify **
-			
-			if (JCBDoB.isSelected())	//** modify **
-				postCSVResult.append (dobCSV.toString ());	//** modify **
-			
-			if (JCBPoB.isSelected())	//** modify **
-				postCSVResult.append (pobCSV.toString ());	//** modify **
-			
-			if (JCBMaiden.isSelected())	//** modify **
-				postCSVResult.append (maidenCSV.toString ());	//** modify **
-			
-			if (JCBAlien.isSelected())	//** modify **
-				postCSVResult.append (alienCSV.toString ());	//** modify **
-			
-			if (JCBGrandJury.isSelected())	//** modify **
-				postCSVResult.append (grandJuryCSV.toString ());	//** modify **
-			
-			if (JCBFBIInfoFiles.isSelected())	//** modify **
-				postCSVResult.append (FBIInfoFileCSV.toString ());	//** modify **
-			
-			if (JCBFBISources.isSelected())	//** modify **
-				postCSVResult.append (FBISourceCSV.toString ());	//** modify **
-			
-			if (JCBFBISourceCodes.isSelected())	//** modify **
-				postCSVResult.append (FBISourceCodeCSV.toString ());	//** modify **
-			*/
 		}
 
 		/**
@@ -1751,38 +1147,6 @@ public class Main extends JFrame {
 					Main.this.buildHTMLNav (comp.counter, link, lnkLabel);
 			}
 			
-			/*
-			if (!(JTField.getText().isEmpty()))	//** modify **
-				Main.this.buildHTMLNav (textCounter, "textResults", "Text Matches");	//** modify **
-			
-			if (JCBSSN.isSelected())	//** modify **
-				Main.this.buildHTMLNav (ssnCounter, "ssnResults", "SSN Matches");	//** modify **
-			
-			if (JCBDoB.isSelected())	//** modify **
-				Main.this.buildHTMLNav (dobCounter, "dobResults", "DoB Matches");	//** modify **
-			
-			if (JCBPoB.isSelected())	//** modify **
-				Main.this.buildHTMLNav (pobCounter, "pobResults", "PoB Matches");	//** modify **
-			
-			if (JCBMaiden.isSelected())	//** modify **
-				Main.this.buildHTMLNav (maidenCounter, "maidenResults", "Maiden Matches");	//** modify **
-			
-			if (JCBAlien.isSelected())	//** modify **
-				Main.this.buildHTMLNav (alienCounter, "alienResults", "Alien Matches");	//** modify **
-			
-			if (JCBGrandJury.isSelected())	//** modify **
-				Main.this.buildHTMLNav (grandJuryCounter, "grandJuryResults", "Grand Jury Matches");	//** modify **
-			
-			if (JCBFBIInfoFiles.isSelected())	//** modify **
-				Main.this.buildHTMLNav (FBIInfoFileCounter, "FBIInfoFilesResults", "FBI Information Files Matches");	//** modify **
-			
-			if (JCBFBISources.isSelected())	//** modify **
-				Main.this.buildHTMLNav (FBISourceCounter, "FBISourceResults", "FBI Source Matches");	//** modify **
-			
-			if (JCBFBISourceCodes.isSelected())	//** modify **
-				Main.this.buildHTMLNav (FBISourceCodeCounter, "FBISourceCodeResults", "FBI Source Code Matches");	//** modify **
-			*/
-			
 			postHtmlResult.append (htmlWriter.addCloseNavULTag());
 			postHtmlResult.append (htmlWriter.addCloseNavTag());
 			postHtmlResult.append (htmlWriter.addCloseCenterTag());
@@ -1790,7 +1154,6 @@ public class Main extends JFrame {
 			postHtmlResult.append (htmlWriter.addOpenCenterTag());
 			postHtmlResult.append (htmlWriter.addOpenNavTag());
 			postHtmlResult.append (htmlWriter.addOpenNavULTag());	// ********* !! possible bug !! why line below only considers ssnCounter and textCounter? **********
-			//postHtmlResult.append (htmlWriter.addResultNote(skipFiles.size(), readCounter, totalFiles, textCounter + ssnCounter + matchCounter, calculateElapsedTime()));	//** modify **
 			postHtmlResult.append (htmlWriter.addResultNote(skipFiles.size(), readCounter, totalFiles, HMComponents.get ("TxtField").counter + HMComponents.get ("SSN").counter + matchCounter, calculateElapsedTime()));
 			postHtmlResult.append (htmlWriter.addExtNote(extCounter));
 			postHtmlResult.append (htmlWriter.addCloseNavULTag());
@@ -1808,38 +1171,6 @@ public class Main extends JFrame {
 				else if (comp.TYPE == 'C' && comp.checkBox.isSelected ())
 					Main.this.buildHTMLPanel (link, lnkLabel, tableTagId, html);
 			}
-			
-			/*
-			if ((!(JTField.getText().isEmpty())) && (textCounter > 0))	//** modify **
-				Main.this.buildHTMLPanel ("textResults", "Text Found Results", "textResultTable", textHTML.toString ());	//** modify **
-			
-			if (JCBSSN.isSelected() && (ssnCounter > 0))	//** modify **
-				Main.this.buildHTMLPanel ("ssnResults", "SSN Found Results", "ssnResultTable", ssnHTML.toString ());	//** modify **
-
-			if (JCBDoB.isSelected() && (dobCounter > 0))	//** modify **
-				Main.this.buildHTMLPanel ("dobResults", "DoB Found Results", "dobResultTable", dobHTML.toString ());	//** modify **
-
-			if (JCBPoB.isSelected() && (pobCounter > 0))	//** modify **
-				Main.this.buildHTMLPanel ("pobResults", "PoB Found Results", "pobResultTable", pobHTML.toString ());	//** modify **
-
-			if (JCBMaiden.isSelected() && (maidenCounter > 0))	//** modify **
-				Main.this.buildHTMLPanel ("maidenResults", "Maiden Name Found Results", "maidenResultTable", maidenHTML.toString ());	//** modify **
-			
-			if (JCBAlien.isSelected() && (alienCounter > 0))	//** modify **
-				Main.this.buildHTMLPanel ("alienResults", "Alien Found Results", "alienResultTable", alienHTML.toString ());	//** modify **
-			
-			if (JCBGrandJury.isSelected() && (grandJuryCounter > 0))	//** modify **
-				Main.this.buildHTMLPanel ("grandJuryResults", "Grand Jury Found Results", "grandJuryResultTable", grandJuryHTML.toString ());	//** modify **
-			
-			if (JCBFBISources.isSelected() && (FBISourceCounter > 0))	//** modify **
-				Main.this.buildHTMLPanel ("FBISourceResults", "FBI Source Found Results", "FBISourceResultTable", FBISourceHTML.toString ());	//** modify **
-			
-			if (JCBFBIInfoFiles.isSelected() && (FBIInfoFileCounter > 0))	//** modify **
-				Main.this.buildHTMLPanel ("FBIInfoFileResults", "FBI Information File Found Results", "FBIInfoFileResultTable", FBIInfoFileHTML.toString ());	//** modify **
-			
-			if (JCBFBISourceCodes.isSelected() && (FBISourceCodeCounter > 0))	//** modify **
-				Main.this.buildHTMLPanel ("FBISourceCodeResults", "FBI Source Code Found Results", "FBISourceCodeResultTable", FBISourceCodeHTML.toString ());	//** modify **
-			*/
 			
 			if(skipFiles.size() > 0) {
 				postHtmlResult.append (htmlWriter.addOpenPanelTag());
@@ -1874,7 +1205,6 @@ public class Main extends JFrame {
 				if (msg.equals("printCurrentProgress")) {
 					JPBStatus.setVisible(true);
 					printToProgress("Completed " + fileCounter + " / " + totalFiles + " files." + " Results: " + (HMComponents.get ("TxtField").counter + HMComponents.get ("SSN").counter + matchCounter) );
-					//printToProgress("Completed " + fileCounter + " / " + totalFiles + " files." + " Results: " + (textCounter + ssnCounter + matchCounter) );	//** modify **
 				} else
 					printToLog(msg);
 			}
@@ -1883,26 +1213,10 @@ public class Main extends JFrame {
 		private void getConfidenceTable() {
 			JBTCatModel.setRowCount(0);
 			
-			for (Component comp : HMComponents.values ()) {
+			for (Component comp : HMComponents.values ())
 				JBTCatModel.addRow(new Object[]{comp.LABEL, comp.counter});
-			}
-			
-			/*
-			JBTCatModel.addRow(new Object[]{"Text Matches", textCounter});	//** modify **
-			JBTCatModel.addRow(new Object[]{"SSN Matches", ssnCounter});	//** modify **
-			JBTCatModel.addRow(new Object[]{"Date of Birth", dobCounter});	//** modify **
-			JBTCatModel.addRow(new Object[]{"Place of Birth", pobCounter});	//** modify **
-			JBTCatModel.addRow(new Object[]{"Maiden Names", maidenCounter});	//** modify **
-			JBTCatModel.addRow(new Object[]{"Alien Registration Numbers", alienCounter});	//** modify **
-			JBTCatModel.addRow(new Object[]{"Grand Jury", grandJuryCounter});	//** modify **
-			JBTCatModel.addRow(new Object[]{"FBI Information File", FBIInfoFileCounter});	//** modify **
-			JBTCatModel.addRow(new Object[]{"FBI Source", FBISourceCounter});	//** modify **
-			JBTCatModel.addRow(new Object[]{"FBI Source Code", FBISourceCodeCounter});	//** modify **
-			*/
 			
 			JBTCatModel.addRow(new Object[]{"Total Matches", HMComponents.get ("TxtField").counter + HMComponents.get ("SSN").counter + matchCounter});
-			//JBTCatModel.addRow(new Object[]{"Total Matches", textCounter + ssnCounter + matchCounter});	//** modify **
-			
 		}
 		
 		private void getExtensionTable() {
@@ -1915,7 +1229,7 @@ public class Main extends JFrame {
 		
 		@Override
 		protected void done() {            
-			System.out.println(skipFiles.toString());			//<=========== for debug
+			//System.out.println(skipFiles.toString());			//<=========== for debug
 			
 			Toolkit.getDefaultToolkit().beep();		// notify
 			JPBStatus.setVisible(false);
@@ -1923,8 +1237,6 @@ public class Main extends JFrame {
 			
 			getTextResults(HMComponents.get ("TxtField").resultList);		// update
 			getSSNResults(HMComponents.get ("SSN").resultList);
-			//getTextResults(resultTextList);		// update
-			//getSSNResults(resultSSNList);
 			getOtherResults(resultOtherMatchList);
 			getExtensionTable();
 			getConfidenceTable();
@@ -1941,7 +1253,6 @@ public class Main extends JFrame {
 			// build result messages
 			StringBuilder msg = new StringBuilder ("*Readable: " + readCounter + " files / " + totalFiles + " files.\n" +
 						 "*Found: " + (HMComponents.get ("TxtField").counter + HMComponents.get ("SSN").counter + matchCounter) + " matches.\n" +
-						 //"*Found: " + (textCounter + ssnCounter + matchCounter) + " matches.\n" +	//** modify **
 						 "*Elapsed Time: " + calculateElapsedTime() + "\n");
 
 			if (isCancelled()) {
@@ -2118,48 +1429,24 @@ public class Main extends JFrame {
 		
 		String[] tempText = text.split("(,)|(\\|)"); //split text entry on commas|(\\s), pipes or blank spaces (including line breaks)
 		for (int i = 0; i < tempText.length; i++) {
-			System.out.println("tempText[i] is " + tempText[i]);		// <======== for debugging
+			//System.out.println("tempText[i] is " + tempText[i]);		// <======== for debugging
 			
 			if (!tempText[i].matches("")) {
 				tempText[i] = tempText[i].trim();
-				System.out.println("adding " + tempText[i]);		// <======== for debugging
+				//System.out.println("adding " + tempText[i]);		// <======== for debugging
 				tempTextList.add(tempText[i]);
 			}
 		}
 
 		Pattern pattern = Pattern.compile("\\b(" + StringUtils.join(tempTextList,"|") + ")\\b", Pattern.DOTALL);
-		//System.out.println("pattern is x" + pattern + " x");		// <======== for debugging
-		System.out.println("List: " + tempTextList);			// <======== for debugging
+		//System.out.println("List: " + tempTextList);			// <======== for debugging
 		HMComponents.get ("TxtField").regex.add(pattern);
-		//regexText.add(pattern);	//** modify **
 	}
 	
 	/**
 	 * This method resets all strings used for exports.
 	 */
 	private void initNewExport() {
-		/*
-		textHTML = new StringBuilder ();	//** modify **
-		ssnHTML = new StringBuilder ();	//** modify **
-		dobHTML = new StringBuilder ();	//** modify **
-		pobHTML = new StringBuilder ();	//** modify **
-		maidenHTML = new StringBuilder ();	//** modify **
-		alienHTML = new StringBuilder ();	//** modify **
-		grandJuryHTML = new StringBuilder ();	//** modify **
-		FBIInfoFileHTML = new StringBuilder ();	//** modify **
-		FBISourceHTML = new StringBuilder ();	//** modify **
-		FBISourceCodeHTML = new StringBuilder ();	//** modify **
-		textCSV = new StringBuilder ();	//** modify **
-		ssnCSV = new StringBuilder ();	//** modify **
-		dobCSV = new StringBuilder ();	//** modify **
-		pobCSV = new StringBuilder ();	//** modify **
-		maidenCSV = new StringBuilder ();	//** modify **
-		alienCSV = new StringBuilder ();	//** modify **
-		grandJuryCSV = new StringBuilder ();	//** modify **
-		FBIInfoFileCSV = new StringBuilder ();	//** modify **
-		FBISourceCSV = new StringBuilder ();	//** modify **
-		FBISourceCodeCSV = new StringBuilder ();		//** modify **
-		*/
 		for (Component comp : HMComponents.values ())
 			comp.clrExport ();
 		
@@ -2176,15 +1463,6 @@ public class Main extends JFrame {
 		JBTFileExtModel.setNumRows(0);
 		JBTCatModel.setRowCount(0);
 		skipFiles.clear();
-		/*
-		regexText.clear();		//** modify **
-		resultTextList.clear();		//** modify **
-		resultTextListUnique.clear();		//** modify **
-		resultTextListUniqueFinal.clear();		//** modify **
-		resultSSNList.clear();		//** modify **
-		resultSSNListUnique.clear();		//** modify **
-		resultSSNListUniqueFinal.clear();		//** modify **
-		*/
 		resultOtherMatchList.clear();
 		searchTask = new SearchTask();
 		extCounter = new ExtensionCounter();
@@ -2199,19 +1477,6 @@ public class Main extends JFrame {
 			comp.initValues ();
 		
 		initNewExport();
-		/*
-		textCounter = 0;		//** modify **
-		ssnCounter = 0;		//** modify **
-		dobCounter = 0;		//** modify **
-		pobCounter = 0;		//** modify **
-		maidenCounter = 0;		//** modify **
-		alienCounter = 0;		//** modify **
-		grandJuryCounter = 0;		//** modify **
-		FBIInfoFileCounter = 0;		//** modify **
-		FBISourceCounter = 0;		//** modify **
-		FBISourceCodeCounter = 0;		//** modify **
-		*/
-		
 	}
 
 	/**
