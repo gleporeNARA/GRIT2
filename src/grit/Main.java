@@ -450,7 +450,7 @@ public class Main extends JFrame {
 		
 		initNewSearch(); 				//<====================initialize search helper variables here
 		
-		//System.exit(0);			//<=============== for debug 
+		System.exit(0);			//<=============== for debug 
 	}
 	
 	/**
@@ -1530,42 +1530,56 @@ public class Main extends JFrame {
 				JBTableModel.addRow(new Object[]{pr.getID(), pr.getConfidence(), pr.getText(), pr.getLine(), pr.getType(), pr.getFile(), pr.getLineNum()});
 				
 				if(pr.getConfidence().matches("Text"))
-					Main.this.addToAllRow (false, false, 0, pr, textHTML, textCSV);	//** modify **
+					Main.this.addToAllRow (false, false, 0, pr, HMComponents.get ("TxtField").html, HMComponents.get ("TxtField").csv);
+					//Main.this.addToAllRow (false, false, 0, pr, textHTML, textCSV);	//** modify **
 					
 				if(pr.getConfidence().matches("PoB"))
-					Main.this.addToAllRow (false, false, 0, pr, pobHTML, pobCSV);	//** modify **
+					Main.this.addToAllRow (false, false, 0, pr, HMComponents.get ("PoB").html, HMComponents.get ("PoB").csv);
+					//Main.this.addToAllRow (false, false, 0, pr, pobHTML, pobCSV);	//** modify **
 				
 				if(pr.getConfidence().matches("DoB"))
-					Main.this.addToAllRow (false, false, 0, pr, dobHTML, dobCSV);	//** modify **
+					Main.this.addToAllRow (false, false, 0, pr, HMComponents.get ("DoB").html, HMComponents.get ("DoB").csv);
+					//Main.this.addToAllRow (false, false, 0, pr, dobHTML, dobCSV);	//** modify **
 				
 				if(pr.getConfidence().matches("Maiden"))
-					Main.this.addToAllRow (false, false, 0, pr, maidenHTML, maidenCSV);	//** modify **
+					Main.this.addToAllRow (false, false, 0, pr, HMComponents.get ("Maiden").html, HMComponents.get ("Maiden").csv);
+					//Main.this.addToAllRow (false, false, 0, pr, maidenHTML, maidenCSV);	//** modify **
 				
 				if(pr.getConfidence().matches("Alien"))
-					Main.this.addToAllRow (false, false, 0, pr, alienHTML, alienCSV);	//** modify **
+					Main.this.addToAllRow (false, false, 0, pr, HMComponents.get ("Alien").html, HMComponents.get ("Alien").csv);
+					//Main.this.addToAllRow (false, false, 0, pr, alienHTML, alienCSV);	//** modify **
 				
 				if(pr.getConfidence().matches("Grand Jury"))
-					Main.this.addToAllRow (false, false, 0, pr, grandJuryHTML, grandJuryCSV);	//** modify **
+					Main.this.addToAllRow (false, false, 0, pr, HMComponents.get ("Grand Jury").html, HMComponents.get ("Grand Jury").csv);
+					//Main.this.addToAllRow (false, false, 0, pr, grandJuryHTML, grandJuryCSV);	//** modify **
 				
 				if(pr.getConfidence().matches("FBI Information File"))
-					Main.this.addToAllRow (false, false, 0, pr, FBIInfoFileHTML, FBIInfoFileCSV);	//** modify **
+					Main.this.addToAllRow (false, false, 0, pr, HMComponents.get ("FBIInfoFile").html, HMComponents.get ("FBIInfoFile").csv);
+					//Main.this.addToAllRow (false, false, 0, pr, FBIInfoFileHTML, FBIInfoFileCSV);	//** modify **
 				
 				if(pr.getConfidence().matches("FBI Source"))
-					Main.this.addToAllRow (false, false, 0, pr, FBISourceHTML, FBISourceCSV);	//** modify **
+					Main.this.addToAllRow (false, false, 0, pr, HMComponents.get ("FBISource").html, HMComponents.get ("FBISource").csv);
+					//Main.this.addToAllRow (false, false, 0, pr, FBISourceHTML, FBISourceCSV);	//** modify **
 				
 				if(pr.getConfidence().matches("FBI Source Code"))
-					Main.this.addToAllRow (false, false, 0, pr, FBISourceCodeHTML, FBISourceCodeCSV);	//** modify **
+					Main.this.addToAllRow (false, false, 0, pr, HMComponents.get ("FBISourceCode").html, HMComponents.get ("FBISourceCode").csv);
+					//Main.this.addToAllRow (false, false, 0, pr, FBISourceCodeHTML, FBISourceCodeCSV);	//** modify **
 			}
 			
 			return resultOtherMatchList;
 		}
 		
 		private ArrayList cleanTextResults(HashSet<Match> elf) {            
+			Component tmpComp = HMComponents.get ("TxtField");	// get reference handler to TextField object component 
+			ArrayList <Match> tmpList = tmpComp.resultListUniqueFinal;	// get reference handler to resultTextListUniqueFinal
+			
 			for(Match pr : elf)
 				if(elf.contains(pr))
-					resultTextListUniqueFinal.add(pr);	//** modify **
+					tmpList.add(pr);
+					//resultTextListUniqueFinal.add(pr);	//** modify **
 			
-			Collections.sort(resultTextListUniqueFinal, new Comparator<Match>() {	//** modify **
+			Collections.sort(tmpList, new Comparator <Match> () {
+			//Collections.sort(resultTextListUniqueFinal, new Comparator<Match>() {	//** modify **
 				@Override
 				public int compare(Match z1, Match z2) {
 					if (z1.getID() > z2.getID()) { return 1; }
@@ -1575,21 +1589,30 @@ public class Main extends JFrame {
 			});
 			
 			int i = 1;
-			for (Match pr : resultTextListUniqueFinal) {	//** modify **
-				Main.this.addToAllRow (true, true, i, pr, textHTML, textCSV);	//** modify **
+			for (Match pr : tmpList) {
+			//for (Match pr : resultTextListUniqueFinal) {	//** modify **
+				Main.this.addToAllRow (true, true, i, pr, tmpComp.html, tmpComp.csv);
+				//Main.this.addToAllRow (true, true, i, pr, textHTML, textCSV);	//** modify **
 				i++;
 			}
 			
-			textCounter = resultTextListUniqueFinal.size();	//** modify **
-			return resultTextListUniqueFinal;	//** modify **
+			tmpComp.counter = tmpList.size ();
+			return tmpList;
+			//textCounter = resultTextListUniqueFinal.size();	//** modify **
+			//return resultTextListUniqueFinal;	//** modify **
 		}
 		
 		private ArrayList cleanSSNResults(HashSet<Match> elf) {            
+			Component tmpComp = HMComponents.get ("SSN");	// get reference handler to SSN object component 
+			ArrayList <Match> tmpList = tmpComp.resultListUniqueFinal;	// get reference handler to resultSSNListUniqueFinal
+			
 			for(Match pr : elf)
 				if(elf.contains(pr))
-					resultSSNListUniqueFinal.add(pr);	//** modify **
+					tmpList.add (pr);
+					//resultSSNListUniqueFinal.add(pr);	//** modify **
 			
-			Collections.sort(resultSSNListUniqueFinal, new Comparator<Match>() {	//** modify **
+			Collections.sort(tmpList, new Comparator<Match>() {
+			//Collections.sort(resultSSNListUniqueFinal, new Comparator<Match>() {	//** modify **
 				@Override
 				public int compare(Match z1, Match z2) {
 					if (z1.getID() > z2.getID()) { return 1; }
@@ -1599,40 +1622,65 @@ public class Main extends JFrame {
 			});
 			
 			int i = 1;
-			for (Match pr : resultSSNListUniqueFinal) {	//** modify **
-				Main.this.addToAllRow (true, true, i, pr, ssnHTML, ssnCSV);	//** modify **
+			for (Match pr : tmpList) {
+			//for (Match pr : resultSSNListUniqueFinal) {	//** modify **
+				Main.this.addToAllRow (true, true, i, pr, tmpComp.html, tmpComp.csv);
+				//Main.this.addToAllRow (true, true, i, pr, ssnHTML, ssnCSV);	//** modify **
 				i++;
 			}
 			
-			ssnCounter = resultSSNListUniqueFinal.size();	//** modify **
-			return resultSSNListUniqueFinal;	//** modify **
+			tmpComp.counter = tmpList.size ();
+			return tmpList;
+			//ssnCounter = resultSSNListUniqueFinal.size();	//** modify **
+			//return resultSSNListUniqueFinal;	//** modify **
 		}
 		
 		private ArrayList<Match> getTextResults(ArrayList<Match> elf) {
+			Component tmpComp = HMComponents.get ("TxtField");	// get reference handler to TextField object component 
+			ArrayList <Match> tmpList = tmpComp.resultListUniqueFinal;	// get reference handler to resultTextListUniqueFinal
+			
 			int i = 1;
 			for (Match pr : elf) {
-				Main.this.addToAllRow (true, true, i, pr, textHTML, textCSV);	//** modify **
+				Main.this.addToAllRow (true, true, i, pr, tmpComp.html, tmpComp.csv);
+				//Main.this.addToAllRow (true, true, i, pr, textHTML, textCSV);	//** modify **
 				i++;
 			}
 			
-			textCounter = resultTextList.size();	//** modify **
-			return resultTextList;	//** modify **
+			tmpComp.counter = tmpList.size();
+			return tmpList;
+			//textCounter = resultTextList.size();	//** modify **
+			//return resultTextList;	//** modify **
 		}
 		
 		private ArrayList<Match> getSSNResults(ArrayList<Match> elf) {
+			Component tmpComp = HMComponents.get ("SSN");	// get reference handler to SSN object component 
+			ArrayList <Match> tmpList = tmpComp.resultListUniqueFinal;	// get reference handler to resultSSNListUniqueFinal
+			
 			int i = 1;
 			for (Match pr : elf) {
-				Main.this.addToAllRow (true, true, i, pr, ssnHTML, ssnCSV);	//** modify **
+				Main.this.addToAllRow (true, true, i, pr, tmpComp.html, tmpComp.csv);
+				//Main.this.addToAllRow (true, true, i, pr, ssnHTML, ssnCSV);	//** modify **
 				i++;
 			}
 			
-			ssnCounter = resultSSNList.size();	//** modify **
-			return resultSSNList;	//** modify **
+			tmpComp.counter = tmpList.size ();
+			return tmpList;
+			//ssnCounter = resultSSNList.size();	//** modify **
+			//return resultSSNList;	//** modify **
 		}
 		
 		private void buildCSVResult() {
 			postCSVResult.append (csvWriter.addTableHeader());
 			
+			for (Component comp : HMComponents.values ()) {
+				if (comp.TYPE == 'T' && !comp.text.getText().isEmpty())
+					postCSVResult.append (comp.csv.toString ());
+				
+				if (comp.TYPE == 'T' && comp.checkBox.isSelected ())
+					postCSVResult.append (comp.csv.toString ());
+			}
+			
+			/*
 			if (!(JTField.getText().isEmpty()))	//** modify **
 				postCSVResult.append (textCSV.toString ());	//** modify **
 			
@@ -1662,6 +1710,7 @@ public class Main extends JFrame {
 			
 			if (JCBFBISourceCodes.isSelected())	//** modify **
 				postCSVResult.append (FBISourceCodeCSV.toString ());	//** modify **
+			*/
 		}
 
 		/**
@@ -1678,6 +1727,18 @@ public class Main extends JFrame {
 			postHtmlResult.append (htmlWriter.addOpenNavTag());
 			postHtmlResult.append (htmlWriter.addOpenNavULTag());
 			
+			for (Component comp : HMComponents.values ()) {
+				StringBuilder link = new StringBuilder (comp.SYM.replaceAll ("\\s+", ""));
+				StringBuilder lnkLabel = new StringBuilder (comp.SYM + " Matches");
+				
+				if (comp.TYPE == 'T' && !comp.text.getText().isEmpty())
+					Main.this.buildHTMLNav (comp.counter, link, lnkLabel);
+				
+				if (comp.TYPE == 'T' && comp.checkBox.isSelected ())
+					Main.this.buildHTMLNav (comp.counter, link, lnkLabel);
+			}
+			
+			/*
 			if (!(JTField.getText().isEmpty()))	//** modify **
 				Main.this.buildHTMLNav (textCounter, "textResults", "Text Matches");	//** modify **
 			
@@ -1707,6 +1768,7 @@ public class Main extends JFrame {
 			
 			if (JCBFBISourceCodes.isSelected())	//** modify **
 				Main.this.buildHTMLNav (FBISourceCodeCounter, "FBISourceCodeResults", "FBI Source Code Matches");	//** modify **
+			*/
 			
 			postHtmlResult.append (htmlWriter.addCloseNavULTag());
 			postHtmlResult.append (htmlWriter.addCloseNavTag());
@@ -1714,13 +1776,28 @@ public class Main extends JFrame {
 			
 			postHtmlResult.append (htmlWriter.addOpenCenterTag());
 			postHtmlResult.append (htmlWriter.addOpenNavTag());
-			postHtmlResult.append (htmlWriter.addOpenNavULTag());
-			postHtmlResult.append (htmlWriter.addResultNote(skipFiles.size(), readCounter, totalFiles, textCounter + ssnCounter + matchCounter, calculateElapsedTime()));
+			postHtmlResult.append (htmlWriter.addOpenNavULTag());	// ********* !! possible bug !! why line below only considers ssnCounter and textCounter? **********
+			//postHtmlResult.append (htmlWriter.addResultNote(skipFiles.size(), readCounter, totalFiles, textCounter + ssnCounter + matchCounter, calculateElapsedTime()));	//** modify **
+			postHtmlResult.append (htmlWriter.addResultNote(skipFiles.size(), readCounter, totalFiles, HMComponents.get ("TxtField").counter + HMComponents.get ("SSN").counter + matchCounter, calculateElapsedTime()));
 			postHtmlResult.append (htmlWriter.addExtNote(extCounter));
 			postHtmlResult.append (htmlWriter.addCloseNavULTag());
 			postHtmlResult.append (htmlWriter.addCloseNavTag());
 			postHtmlResult.append (htmlWriter.addCloseCenterTag());
-
+			
+			for (Component comp : HMComponents.values ()) {
+				StringBuilder link = new StringBuilder (comp.SYM.replaceAll ("\\s+", ""));
+				StringBuilder lnkLabel = new StringBuilder (comp.SYM + " Found Results");
+				StringBuilder tableTagId = new StringBuilder (comp.SYM.replaceAll ("\\s+", "") + "ResultTable");
+				StringBuilder html = new StringBuilder (comp.html.toString ());
+				
+				if (comp.TYPE == 'T' && !comp.text.getText().isEmpty())
+					Main.this.buildHTMLPanel (link, lnkLabel, tableTagId, html);
+				
+				if (comp.TYPE == 'T' && comp.checkBox.isSelected ())
+					Main.this.buildHTMLPanel (link, lnkLabel, tableTagId, html);
+			}
+			
+			/*
 			if ((!(JTField.getText().isEmpty())) && (textCounter > 0))	//** modify **
 				Main.this.buildHTMLPanel ("textResults", "Text Found Results", "textResultTable", textHTML.toString ());	//** modify **
 			
@@ -1750,6 +1827,7 @@ public class Main extends JFrame {
 			
 			if (JCBFBISourceCodes.isSelected() && (FBISourceCodeCounter > 0))	//** modify **
 				Main.this.buildHTMLPanel ("FBISourceCodeResults", "FBI Source Code Found Results", "FBISourceCodeResultTable", FBISourceCodeHTML.toString ());	//** modify **
+			*/
 			
 			if(skipFiles.size() > 0) {
 				postHtmlResult.append (htmlWriter.addOpenPanelTag());
@@ -1783,7 +1861,8 @@ public class Main extends JFrame {
 			for (String msg : msgList) {
 				if (msg.equals("printCurrentProgress")) {
 					JPBStatus.setVisible(true);
-					printToProgress("Completed " + fileCounter + " / " + totalFiles + " files." + " Results: " + (textCounter + ssnCounter + matchCounter) );	//** modify **
+					printToProgress("Completed " + fileCounter + " / " + totalFiles + " files." + " Results: " + (HMComponents.get ("TxtField").counter + HMComponents.get ("SSN").counter + matchCounter) );
+					//printToProgress("Completed " + fileCounter + " / " + totalFiles + " files." + " Results: " + (textCounter + ssnCounter + matchCounter) );	//** modify **
 				} else
 					printToLog(msg);
 			}
@@ -1791,6 +1870,12 @@ public class Main extends JFrame {
 		
 		private void getConfidenceTable() {
 			JBTCatModel.setRowCount(0);
+			
+			for (Component comp : HMComponents.values ()) {
+				JBTCatModel.addRow(new Object[]{comp.LABEL, comp.counter});
+			}
+			
+			/*
 			JBTCatModel.addRow(new Object[]{"Text Matches", textCounter});	//** modify **
 			JBTCatModel.addRow(new Object[]{"SSN Matches", ssnCounter});	//** modify **
 			JBTCatModel.addRow(new Object[]{"Date of Birth", dobCounter});	//** modify **
@@ -1801,7 +1886,11 @@ public class Main extends JFrame {
 			JBTCatModel.addRow(new Object[]{"FBI Information File", FBIInfoFileCounter});	//** modify **
 			JBTCatModel.addRow(new Object[]{"FBI Source", FBISourceCounter});	//** modify **
 			JBTCatModel.addRow(new Object[]{"FBI Source Code", FBISourceCodeCounter});	//** modify **
-			JBTCatModel.addRow(new Object[]{"Total Matches", textCounter + ssnCounter + matchCounter});	//** modify **
+			*/
+			
+			JBTCatModel.addRow(new Object[]{"Total Matches", HMComponents.get ("TxtField").counter + HMComponents.get ("SSN").counter + matchCounter});
+			//JBTCatModel.addRow(new Object[]{"Total Matches", textCounter + ssnCounter + matchCounter});	//** modify **
+			
 		}
 		
 		private void getExtensionTable() {
@@ -1820,8 +1909,10 @@ public class Main extends JFrame {
 			JPBStatus.setVisible(false);
 			JPBStatus.setValue(0);
 			
-			getTextResults(resultTextList);		// update
-			getSSNResults(resultSSNList);
+			getTextResults(HMComponents.get ("TxtField").resultList);		// update
+			getSSNResults(HMComponents.get ("SSN").resultList);
+			//getTextResults(resultTextList);		// update
+			//getSSNResults(resultSSNList);
 			getOtherResults(resultOtherMatchList);
 			getExtensionTable();
 			getConfidenceTable();
@@ -1837,7 +1928,8 @@ public class Main extends JFrame {
 			
 			// build result messages
 			StringBuilder msg = new StringBuilder ("*Readable: " + readCounter + " files / " + totalFiles + " files.\n" +
-						 "*Found: " + (textCounter + ssnCounter + matchCounter) + " matches.\n" +	//** modify **
+						 "*Found: " + (HMComponents.get ("TxtField").counter + HMComponents.get ("SSN").counter + matchCounter) + " matches.\n" +
+						 //"*Found: " + (textCounter + ssnCounter + matchCounter) + " matches.\n" +	//** modify **
 						 "*Elapsed Time: " + calculateElapsedTime() + "\n");
 
 			if (isCancelled()) {
@@ -1877,6 +1969,7 @@ public class Main extends JFrame {
 	private class Component {
 		final char TYPE;	//C = check box, T = text box
 		final String SYM;
+		final String LABEL;
 		JCheckBox checkBox;
 		JTextArea text;
 		int counter;
@@ -1891,11 +1984,13 @@ public class Main extends JFrame {
 		public Component (char type, String sym, String label, String tip) {
 			this.TYPE = type;
 			this.SYM = sym;
-			if (type = 'C') {
+			this.LABEL = label;
+			
+			if (type == 'C') {
 				checkBox = new JCheckBox (label);
 				checkBox.setToolTipText(tip);
-			} else if (type = 'T') {
-				text = JTextField (label);
+			} else if (type == 'T') {
+				text = new JTextArea (label);
 				text.setToolTipText(tip);
 				text.setLineWrap(true);
 				text.setWrapStyleWord(true);
@@ -1912,7 +2007,7 @@ public class Main extends JFrame {
 		
 		void initValues () {
 			counter = 0;
-			if (this.type == 'T')		//we only want to clear the user input regex content of the text box,
+			if (this.TYPE == 'T')		//we only want to clear the user input regex content of the text box,
 				regex.clear ();			//all other regex contents should remain intact after each search
 			resultList.clear ();
 			resultListUnique.clear ();
@@ -1928,25 +2023,25 @@ public class Main extends JFrame {
 	/**
 	 * This subroutine method is use for writing found regex matches to result list 
 	 */
-	private void doResult (Component comp, String line, String fileExtension, File file, int lineNum, boolean cntMatch, boolean lst, boolean lstUniqe, boolean lstOther) {
+	private void doResult (Component comp, String line, String fileExt, File file, int lineNum, boolean cntMatch, boolean lst, boolean lstUnique, boolean lstOther) {
 		for (Pattern regex : comp.regex) {
 			Matcher patternMatcher = regex.matcher(line);
 			
 			while (patternMatcher.find()) {
 				comp.counter ++;
-				JBTableModel.addRow(new Object[]{comp.counter, comp.SYM, patternMatcher.group(), line, fileExtension, file, lineNum});
+				JBTableModel.addRow(new Object[]{comp.counter, comp.SYM, patternMatcher.group(), line, fileExt, file, lineNum});
 				
 				if (cntMatch) 
 					matchCounter ++;
 				
 				if (lst)
-					comp.resultList.add(new Match(comp.counter, comp.SYM, patternMatcher.group(), line, fileExtension, file, lineNum));
+					comp.resultList.add(new Match(comp.counter, comp.SYM, patternMatcher.group(), line, fileExt, file, lineNum));
 				
 				if (lstUnique)
-					comp.resultListUnique.add(new Match(comp.counter, comp.SYM, patternMatcher.group(), line, fileExtension, file, lineNum));
+					comp.resultListUnique.add(new Match(comp.counter, comp.SYM, patternMatcher.group(), line, fileExt, file, lineNum));
 				
 				if (lstOther)
-					resultOtherMatchList.add(new Match(comp.counter, comp.SYM, patternMatcher.group(), line, fileExtension, file, lineNum));
+					resultOtherMatchList.add(new Match(comp.counter, comp.SYM, patternMatcher.group(), line, fileExt, file, lineNum));
 			}
 		}
 	}
@@ -1970,22 +2065,22 @@ public class Main extends JFrame {
 	/**
 	 * This subroutine method is used for the buildHtmlResult inside the SearchTask class
 	 */
-	private void buildHTMLNav (int arg1, String arg2, String arg3) {
+	private void buildHTMLNav (int val, StringBuilder lnk, StringBuilder lnkLabel) {
 		postHtmlResult.append (htmlWriter.addOpenNavLITag());
-		postHtmlResult.append (htmlWriter.addCounter(arg1));
-		postHtmlResult.append (htmlWriter.addTextLink(arg2, arg3));
+		postHtmlResult.append (htmlWriter.addCounter(val));
+		postHtmlResult.append (htmlWriter.addTextLink(lnk.toString (), lnkLabel.toString ()));
 		postHtmlResult.append (htmlWriter.addCloseNavLITag());
 	}
 	
 	/**
 	 * This subroutine method is used for the buildHtmlResult inside the SearchTask class
 	 */
-	private void buildHTMLPanel (String arg1, String arg2, String arg3, String arg4) {
+	private void buildHTMLPanel (StringBuilder link, StringBuilder lnkLabel, StringBuilder tblTagId, StringBuilder html) {
 		postHtmlResult.append (htmlWriter.addOpenPanelTag());
-		postHtmlResult.append (htmlWriter.addAnchorLink(arg1, arg2));
-		postHtmlResult.append (htmlWriter.addOpenTableTag(arg3));
+		postHtmlResult.append (htmlWriter.addAnchorLink(link.toString (), lnkLabel.toString ()));
+		postHtmlResult.append (htmlWriter.addOpenTableTag(tblTagId.toString ()));
 		postHtmlResult.append (htmlWriter.addTableHeader());
-		postHtmlResult.append (arg4);
+		postHtmlResult.append (html.toString ());
 		postHtmlResult.append (htmlWriter.addCloseTableTag());
 		postHtmlResult.append (htmlWriter.addBackToTopLink("top", "Back to Top"));
 		postHtmlResult.append (htmlWriter.addClosePanelTag());
@@ -2022,8 +2117,9 @@ public class Main extends JFrame {
 
 		Pattern pattern = Pattern.compile("\\b(" + StringUtils.join(tempTextList,"|") + ")\\b", Pattern.DOTALL);
 		//System.out.println("pattern is x" + pattern + " x");		// <======== for debugging
-		System.out.println("List: " + tempTextList);				// <======== for debugging
-		regexText.add(pattern);	//** modify **
+		System.out.println("List: " + tempTextList);			// <======== for debugging
+		HMComponents.get ("TxtField").regex.add(pattern);
+		//regexText.add(pattern);	//** modify **
 	}
 	
 	/**
@@ -2052,8 +2148,8 @@ public class Main extends JFrame {
 		FBISourceCSV = new StringBuilder ();	//** modify **
 		FBISourceCodeCSV = new StringBuilder ();		//** modify **
 		*/
-		for (Component c : HMComponents.entrySet ())
-			c.clrExport ();
+		for (Component comp : HMComponents.values ())
+			comp.clrExport ();
 		
 		postCSVResult = new StringBuilder ();
 		postHtmlResult = new StringBuilder ();
@@ -2087,8 +2183,8 @@ public class Main extends JFrame {
 		readCounter = 0;
 		matchCounter = 0;
 		
-		for (Component c : HMComponents.entrySet ())
-			c.initValues ();
+		for (Component comp : HMComponents.values ())
+			comp.initValues ();
 		
 		initNewExport();
 		/*
