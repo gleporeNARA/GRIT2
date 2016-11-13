@@ -236,6 +236,7 @@ public class Main extends JFrame {
 	public Main() {
 		initSystemComponents();
 		initGUIComponents();
+		//System.exit(0);			//<=============== for debug 
 	}
 
 	private void initSystemComponents() {
@@ -450,7 +451,7 @@ public class Main extends JFrame {
 		
 		initNewSearch(); 				//<====================initialize search helper variables here
 		
-		System.exit(0);			//<=============== for debug 
+		//System.exit(0);			//<=============== for debug 
 	}
 	
 	/**
@@ -710,6 +711,8 @@ public class Main extends JFrame {
 		JBCancel.addActionListener(new MySearchTaskListener());
 		JBExport.addActionListener(new MyIOListener());
 		pack();
+
+		//System.exit(0);			//<=============== for debug 
 	}
 	
 	/**
@@ -911,13 +914,29 @@ public class Main extends JFrame {
 	 */
 	private class MySearchTaskListener implements ActionListener {
 		@Override
-		public void actionPerformed(ActionEvent event) {
+		public void actionPerformed(ActionEvent event) {			
 			if (event.getSource() == JBRun) {			// RUN BUTTON
 				// check if a match mode is selected
-				if (HMComponents.get("TxtField").text.getText().isEmpty() && !HMComponents.get("SSN").checkBox.isSelected() && !HMComponents.get("PoB").checkBox.isSelected() && 
-					!HMComponents.get("DoB").checkBox.isSelected() && !HMComponents.get("Maiden").checkBox.isSelected() && !HMComponents.get("Alien").checkBox.isSelected() && 
-					!HMComponents.get("GrandJury").checkBox.isSelected() && !HMComponents.get("FBISource").checkBox.isSelected() && !HMComponents.get("FBICourceCode").checkBox.isSelected() && !HMComponents.get("FBIInfoFile").checkBox.isSelected()) {
+				boolean noneSelected = true;				
+				for (Component comp : HMComponents.values ())
+					if (comp.TYPE == 'T' && !comp.text.getText().isEmpty())
+						noneSelected = false;
+					else if (comp.TYPE == 'C' && comp.checkBox.isSelected())
+						noneSelected = false;
 					
+				/*
+				if (HMComponents.get("TxtField").text.getText().isEmpty() && 
+					!HMComponents.get("SSN").checkBox.isSelected() && 
+					!HMComponents.get("PoB").checkBox.isSelected() && 
+					!HMComponents.get("DoB").checkBox.isSelected() && 
+					!HMComponents.get("Maiden").checkBox.isSelected() && 
+					!HMComponents.get("Alien").checkBox.isSelected() && 
+					!HMComponents.get("GrandJury").checkBox.isSelected() && 
+					!HMComponents.get("FBISource").checkBox.isSelected() && 
+					!HMComponents.get("FBISourceCode").checkBox.isSelected() && 
+					!HMComponents.get("FBIInfoFile").checkBox.isSelected()) {
+				*/
+				if (noneSelected) {
 					JOptionPane.showMessageDialog(Main.this, "ERROR: No match mode is selected");
 					return; // stop here	
 				}
@@ -961,9 +980,6 @@ public class Main extends JFrame {
 /********************************************************************************************************************
 *											The Search Task Section													*
 ********************************************************************************************************************/
-	/**
-	 * This is the search task class
-	 */
 	private class SearchTask extends SwingWorker<Void, String> {
 		/**
 		 * This method takes a given directory and find SSNs for all the files reachable from that directory.
@@ -1204,15 +1220,14 @@ public class Main extends JFrame {
 				for (Component comp : HMComponents.values ()) {			// perhaps impliments the true false stuff directly into each individual
 					if (comp.TYPE == 'T' && !comp.text.getText().isEmpty()) {// objects rather than using method parameters like this
 						doResult (comp, line, fileExtension, file, lineNum, false, true, true, false);
-					} else if (comp.TYPE == 'C' && !comp.checkBox.isSelected()) {
+					} else if (comp.TYPE == 'C' && comp.checkBox.isSelected()) {
 						if (comp.SYM == "SSN")
 							doResult (comp, line, fileExtension, file, lineNum, false, true, true, false);
 						else
 							doResult (comp, line, fileExtension, file, lineNum, true, false, false, true);
 					}
 				}
-					
-//doResult (Component comp, String, line, String fileExtension, File file, int lineNum, boolean cntMatch, boolean lst, boolean lstUniqe, boolean lstOther)				
+				
 				/*
 				if (!(JTField.getText().isEmpty())) {					//** modify **
 					for (Pattern regexTexti : regexText) {					//** modify **
@@ -1369,7 +1384,7 @@ public class Main extends JFrame {
 				for (Component comp : HMComponents.values ()) {			// perhaps impliments the true false stuff directly into each individual
 					if (comp.TYPE == 'T' && !comp.text.getText().isEmpty()) {// objects rather than using method parameters like this
 						doResult (comp, lineA, fileExtension, file, lineNum, false, true, true, false);
-					} else if (comp.TYPE == 'C' && !comp.checkBox.isSelected()) {
+					} else if (comp.TYPE == 'C' && comp.checkBox.isSelected()) {
 						if (comp.SYM == "SSN")
 							doResult (comp, lineA, fileExtension, file, lineNum, false, true, true, false);
 						else
@@ -1637,7 +1652,7 @@ public class Main extends JFrame {
 		
 		private ArrayList<Match> getTextResults(ArrayList<Match> elf) {
 			Component tmpComp = HMComponents.get ("TxtField");	// get reference handler to TextField object component 
-			ArrayList <Match> tmpList = tmpComp.resultListUniqueFinal;	// get reference handler to resultTextListUniqueFinal
+			ArrayList <Match> tmpList = tmpComp.resultList;	// get reference handler to resultTextList
 			
 			int i = 1;
 			for (Match pr : elf) {
@@ -1654,7 +1669,7 @@ public class Main extends JFrame {
 		
 		private ArrayList<Match> getSSNResults(ArrayList<Match> elf) {
 			Component tmpComp = HMComponents.get ("SSN");	// get reference handler to SSN object component 
-			ArrayList <Match> tmpList = tmpComp.resultListUniqueFinal;	// get reference handler to resultSSNListUniqueFinal
+			ArrayList <Match> tmpList = tmpComp.resultList;	// get reference handler to resultSSNList
 			
 			int i = 1;
 			for (Match pr : elf) {
@@ -1672,13 +1687,11 @@ public class Main extends JFrame {
 		private void buildCSVResult() {
 			postCSVResult.append (csvWriter.addTableHeader());
 			
-			for (Component comp : HMComponents.values ()) {
+			for (Component comp : HMComponents.values ())
 				if (comp.TYPE == 'T' && !comp.text.getText().isEmpty())
 					postCSVResult.append (comp.csv.toString ());
-				
-				if (comp.TYPE == 'T' && comp.checkBox.isSelected ())
+				else if (comp.TYPE == 'C' && comp.checkBox.isSelected ())
 					postCSVResult.append (comp.csv.toString ());
-			}
 			
 			/*
 			if (!(JTField.getText().isEmpty()))	//** modify **
@@ -1734,7 +1747,7 @@ public class Main extends JFrame {
 				if (comp.TYPE == 'T' && !comp.text.getText().isEmpty())
 					Main.this.buildHTMLNav (comp.counter, link, lnkLabel);
 				
-				if (comp.TYPE == 'T' && comp.checkBox.isSelected ())
+				if (comp.TYPE == 'C' && comp.checkBox.isSelected ())
 					Main.this.buildHTMLNav (comp.counter, link, lnkLabel);
 			}
 			
@@ -1792,8 +1805,7 @@ public class Main extends JFrame {
 				
 				if (comp.TYPE == 'T' && !comp.text.getText().isEmpty())
 					Main.this.buildHTMLPanel (link, lnkLabel, tableTagId, html);
-				
-				if (comp.TYPE == 'T' && comp.checkBox.isSelected ())
+				else if (comp.TYPE == 'C' && comp.checkBox.isSelected ())
 					Main.this.buildHTMLPanel (link, lnkLabel, tableTagId, html);
 			}
 			
@@ -1897,7 +1909,7 @@ public class Main extends JFrame {
 			for (String s : extCounter.extList) {
 				int i = extCounter.extList.indexOf(s);
 				int c = extCounter.extCount.get(i);
-				JBTFileExtModel.addRow(new Object[]{s,c});
+				JBTFileExtModel.addRow(new Object [] {s, c});
 			}
 		}
 		
