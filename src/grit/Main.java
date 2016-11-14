@@ -258,35 +258,34 @@ public class Main extends JFrame {
 		// perfect old format ssn with hyphens, followed by anything other than a number, dash, or slash
 		addRegexToList("(\\b(?!000)(?!666)(?:[0-6]\\d{2}|7[0-2][0-9]|73[0-3]|7[5-6][0-9]|77[0-2]))-((?!00)\\d{2})-((?!0000)\\d{4})([^0-9-/]|)", HMComponents.get("SSN").regex);
 		// same as above but with a newline in front
-		addRegexToList("\\s?^?SSN?\\s?#\\s?[0-9]", HMComponents.get("SSN").regex); //Combined this one with the above regex
+		addRegexToList("(?i:\\s?^?SSN?\\s?#\\s?[0-9])", HMComponents.get("SSN").regex); //Combined this one with the above regex
 		//look for a space, the letters SSN, a possible space, and any number
-		addRegexToList("\\sSSN\\s?[0-9]", HMComponents.get("SSN").regex);
+		addRegexToList("(?i:\\sSSN\\s?[0-9])", HMComponents.get("SSN").regex);
 		// SSN or SSA plus the letters NO, plus a number within 5 spaces
-		addRegexToList(" SSN?A?\\s?No\\s?.{0,5}[0-9]", HMComponents.get("SSN").regex);
+		addRegexToList("(?i: SSN?A?\\s?No\\s?.{0,5}[0-9])", HMComponents.get("SSN").regex);
 		// group of 3, 2, 4 separated by a space, bounded by a word boundary
 		addRegexToList("(\\b|^)\\d{3} \\d{2} \\d{4}(\\b|$)", HMComponents.get("SSN").regex);
 		// group of 3, 2, 4 separated by a . a / or - bounded by something other than a number, hyphen or slash
 		addRegexToList("([^0-9.-/]|^)\\d{3}[./-]\\d{2}[./-]\\d{4}([^0-9-/]|$)", HMComponents.get("SSN").regex);
-		
 		//"birth" or "born" or "DOB" within 5 words of mm/dd/yy, mm-dd-yy, mm.dd.yy, mm dd yy, mm/dd/yyyy, mm-dd-yyyy ,mm.dd.yyyy ,mm dd yyyy
-		addRegexToList("\\b(birth|born|DOB)\\W*(?:\\w*\\W*){1,5}((\\D+|^)(?:(1[0-2]|0?[1-9])([- /.]+)(3[01]|[12][0-9]|0?[1-9])|(3[01]|[12][0-9]|0?[1-9])([- /.]+)(1[0-2]|0?[1-9]))([- /.]+)(?:19|20)?\\d\\d)", HMComponents.get("DoB").regex);
+		addRegexToList("\\b(?i:(birth|born|DOB))\\W*(?:\\w*\\W*){1,5}((\\D+|^)(?:(1[0-2]|0?[1-9])([- /.]+)(3[01]|[12][0-9]|0?[1-9])|(3[01]|[12][0-9]|0?[1-9])([- /.]+)(1[0-2]|0?[1-9]))([- /.]+)(?:19|20)?\\d\\d)", HMComponents.get("DoB").regex);
 		//"birth" or "born" or "DOB" within 5 words of yyyy/mm/dd, yyyy-mm-dd, yyyy.mm.dd, yyyy mm dd
-		addRegexToList("\\b(birth|born|DOB)\\W*(?:\\w*\\W*){1,5}((19|20)\\d\\d([- /.]+)(0[1-9]|1[012])([- /.]+)(0[1-9]|[12][0-9]|3[01]))", HMComponents.get("DoB").regex);
-		//"birth" or "born" or "DOB" within 5 words of a month spelled out date, with or without period, allows for 1st, 2nd, 3rd, 4th, etc.
-		addRegexToList("\\b(birth|born|DOB)\\W*(?:\\w*\\W*){1,5}((?:Jan\\.?(?:uary)?|Feb\\.?(?:ruary)?|Mar\\.?(?:ch)?|Apr\\.?(?:il)?|May|Jun\\.?(?:e)?|Jul\\.(?:y)?|Aug\\.?(?:ust)?|Sep\\.?(?:t\\.?(?:ember)?)?|Oct\\.?(?:ober)?|Nov\\.?(?:ember)?|Dec\\.?(?:ember)?)[ ][0-3]?\\d(?:st|rd|nd|th)?,?[ ](?:19|20)\\d\\d)", HMComponents.get("DoB").regex);
-		//"birth" or "born" or "DOB" within 5 words of a numeric day and a month spelled out (i.e. born on 31 December
-		addRegexToList("\\b(birth|born|DOB)\\W*(?:\\w*\\W*){1,5}(0?[1-9]|[12][0-9]|3[01]) (?:Jan\\.?(?:uary)?|Feb\\.?(?:ruary)?|Mar\\.?(?:ch)?|Apr\\.?(?:il)?|May|Jun\\.?(?:e)?|Jul\\.(?:y)?|Aug\\.?(?:ust)?|Sep\\.?(?:t\\.?(?:ember)?)?|Oct\\.?(?:ober)?|Nov\\.?(?:ember)?|Dec\\.?(?:ember)?)", HMComponents.get("DoB").regex);
-		//Place of Birth
-		addRegexToList("(POB|Place of Birth|birth place|birthplace|born in|born at|bornin|bornat|place ofbirth)", HMComponents.get("PoB").regex); 
+		addRegexToList("\\b(?i:(birth|born|DOB))\\W*(?:\\w*\\W*){1,5}((19|20)\\d\\d([- /.]+)(0[1-9]|1[012])([- /.]+)(0[1-9]|[12][0-9]|3[01]))", HMComponents.get("DoB").regex);
+        //"birth" or "born" or "DOB" within 5 words of a month spelled out date, with or without period, allows for 1st, 2nd, 3rd, 4th, etc.
+		addRegexToList("\\b(?i:(birth|born|DOB)\\W*(?:\\w*\\W*){1,5}((?:Jan\\.?(?:uary)?|Feb\\.?(?:ruary)?|Mar\\.?(?:ch)?|Apr\\.?(?:il)?|May|Jun\\.?(?:e)?|Jul\\.(?:y)?|Aug\\.?(?:ust)?|Sep\\.?(?:t\\.?(?:ember)?)?|Oct\\.?(?:ober)?|Nov\\.?(?:ember)?|Dec\\.?(?:ember)?)[ ][0-3]?\\d(?:st|rd|nd|th)?,?[ ](?:19|20)\\d\\d))", HMComponents.get("DoB").regex);
+		//"birth" or "born" or "DOB" within 5 words of a numeric day and a month spelled out (i.e. born on 31 December)
+		addRegexToList("\\b(?i:(birth|born|DOB)\\W*(?:\\w*\\W*){1,5}(0?[1-9]|[12][0-9]|3[01]) (?:Jan\\.?(?:uary)?|Feb\\.?(?:ruary)?|Mar\\.?(?:ch)?|Apr\\.?(?:il)?|May|Jun\\.?(?:e)?|Jul\\.(?:y)?|Aug\\.?(?:ust)?|Sep\\.?(?:t\\.?(?:ember)?)?|Oct\\.?(?:ober)?|Nov\\.?(?:ember)?|Dec\\.?(?:ember)?))", HMComponents.get("DoB").regex);
+        //Place of Birth
+		addRegexToList("(?i:(POB|Place of Birth|birth place|birthplace|born in|born at|bornin|bornat|place ofbirth))", HMComponents.get("PoB").regex);
 		//mother's maiden name or nee
-		addRegexToList("(maiden name|mother'?s? maiden name|\\bnee\\s)", HMComponents.get("Maiden").regex);
+		addRegexToList("(?i:(maiden name|mother'?s? maiden name|\\bnee\\s))", HMComponents.get("Maiden").regex);
 		//Alien number regex from healthcare.gov
 		addRegexToList("(\\b|^)(A|a)(-?[0-9]){9}(\\b|$)|(\\b|^)(A|a)(-?[0-9]){7}(\\b|$)", HMComponents.get("Alien").regex);
 		//Grand Jury
-		addRegexToList("(Grand Jury)", HMComponents.get("GrandJury").regex);
+		addRegexToList("(?i:Grand Jury)", HMComponents.get("GrandJury").regex);
 		//FBI Sources terms for protect identity, informant, psi, si, reliable, confidential
-		addRegexToList("(protect identity|informant|psi|si|reliable|confidential)", HMComponents.get("FBISource").regex);
-		//Find FBI information files beginning with numbers beginning on 134, 137, 170
+		addRegexToList("\\b(protect identity|informant|psi|si|reliable|confidential)\\b", HMComponents.get("FBISource").regex);
+		//Find FBI information files beginning with numbers beginning with 134, 137, 170, followed by a dash and more numbers
 		addRegexToList("\\b(134-\\d*|137-\\d*|170-\\d*)\\b", HMComponents.get("FBIInfoFile").regex);
 		//FBI source codes
 		addRegexToList("\\b(AL|AQ|AX|AN|AT|BA|BH|BS|BQ|BU|BT|CE|CG|CI|CV|CO|DL|DN|DE|EP|HN|HO|IP|JN|JK|KC|KX|LV|LR|LA|LS|ME|MM|MI|MP|MO|NK|NH|NO|NR|NY|NF|OC|OM|PH|PX|PG|PD|RH|SC|SL|SU|SA|SD|SF|SJ|SV|SE|SI|TP|WFO|BER|BOG|BON|HON|LON|MAN|MEX|OTT|PAN|PAR|ROM|TOK)\\s+\\b", HMComponents.get("FBISourceCode").regex);
@@ -1391,7 +1390,7 @@ public class Main extends JFrame {
 	 * @param regexList - pattern list where regex will be added to
 	 */
 	private void addRegexToList(String regex, List <Pattern> regexList) {
-		Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+		Pattern pattern = Pattern.compile(regex, Pattern.DOTALL);
 		regexList.add(pattern);
 	}
 	
