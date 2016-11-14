@@ -1,7 +1,7 @@
 package grit;
 
 /*
- * this class contins the help information text displayed on the result window
+ * this class contains the help information text displayed in the result window
  * when the application started.
  */
 
@@ -26,8 +26,8 @@ public class Help {
 			"13. PDF: Portable Document format\n" +
 			"\n" +
 			"HOW TO USE:\n" +
-			"1. Select the approriate match mode(s). See below for detailed descriptions of matching algorithms.\n" +
-			"2. Select the approriate read mode.\n" +
+			"1. Select the appropriate match mode(s). See below for detailed descriptions of matching algorithms.\n" +
+			"2. Select the appropriate read mode.\n" +
 			"3. Browse to the directory/file you want to search by clicking Input.\n" +
 			"4. Hit Run to start the search.\n" +
 			"5. Once the search is done, you can save search results by clicking Save Results as HTML or CSV.\n" +
@@ -66,8 +66,33 @@ public class Help {
 			"6. Alien Registration Number matches:\n" +
 			"     a. matches either a word boundary or the start of a line, then a capital A or lowercase a, \n" +
 			"     then an optional dash, then either 9 or 7 numbers in a row, with any amount of other dashes \n" +
-			"     in between, followed by a word boundary or the end of the line." +
+			"     in between, followed by a word boundary or the end of the line.\n" +
 			"\n" +
+			"7. Grand Jury matches:\n" +
+			"     a. matches either a word boundary or the start of a line, then the words grand jury, \n" +
+			"     with any capitalization \n" +
+			"\n" +
+
+            "8. FBI Information Files matches:\n" +
+			"     a. matches the numbers 134, 137, or 170, followed by a dash (-), followed by any amount of numeric \n" +
+			"     characters \n" +
+			"\n" +
+
+            "9. FBI Sources matches:\n" +
+			"     a. matches either a word boundary or the start of a line, then the words protect identity, \n" +
+			"     informant, psi, si, reliable, or confidential, followed by a word boundary, \n" +
+            "     with any capitalization \n" +
+			"\n" +
+
+            "10. FBI Source Codes matches:\n" +
+			"     a. matches either a word boundary or the start of a line, then the words grand jury, \n" +
+            "     AL, AQ, AX, AN, AT, BA, BH, BS, BQ, BU, BT, CE, CG, CI, CV, CO, DL, DN, DE, EP, HN, HO, IP, JN, JK, KC, \n" +
+            "     KX, LV, LR, LA, LS, ME, MM, MI, MP, MO, NK, NH, NO, NR, NY, NF, OC, OM, PH, PX, PG, PD, RH, SC, SL, SU, \n" +
+            "     SA, SD, SF, SJ, SV, SE, SI, TP, WFO, BER, BOG, BON, HON, LON, MAN, MEX, OTT, PAN, PAR, ROM, or TOK \n" +
+			"     only in all capitalization \n" +
+			"\n" +
+
+
 			"NOTES:\n" +
 			"This PIIFinder does not search for Social Security Numbers which follow the new formatting rules introduced in 2011.\n";
 	}
