@@ -7,6 +7,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.plaf.basic.BasicProgressBarUI;
 import javax.swing.table.DefaultTableModel;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hsmf.MAPIMessage;
 import org.apache.poi.hsmf.exceptions.ChunkNotFoundException;
@@ -21,16 +22,25 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.poi.xwpf.extractor.XWPFWordExtractor;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
+import org.apache.tika.exception.TikaException;
+import org.apache.tika.metadata.Metadata;
+import org.apache.tika.parser.AutoDetectParser;
+import org.apache.tika.parser.ParseContext;
+import org.apache.tika.parser.html.HtmlParser;
+import org.apache.tika.parser.mbox.MboxParser;
+import org.apache.tika.parser.mbox.OutlookPSTParser;
+import org.apache.tika.parser.microsoft.JackcessParser;
+import org.apache.tika.parser.pdf.PDFParser;
+import org.apache.tika.parser.rtf.RTFParser;
+import org.apache.tika.parser.txt.TXTParser;
+import org.apache.tika.sax.BodyContentHandler;
+
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
+
 import java.awt.*;
 import java.awt.event.*;
-import java.io.BufferedWriter;
-import java.io.EOFException;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
+import java.util.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -44,20 +54,14 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipException;
-import org.apache.tika.exception.TikaException;
-import org.apache.tika.metadata.Metadata;
-import org.apache.tika.parser.AutoDetectParser;
-import org.apache.tika.parser.ParseContext;
-import org.apache.tika.parser.html.HtmlParser;
-import org.apache.tika.parser.mbox.MboxParser;
-import org.apache.tika.parser.mbox.OutlookPSTParser;
-import org.apache.tika.parser.microsoft.JackcessParser;
-import org.apache.tika.parser.pdf.PDFParser;
-import org.apache.tika.parser.rtf.RTFParser;
-import org.apache.tika.parser.txt.TXTParser;
-import org.apache.tika.sax.BodyContentHandler;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.SAXException;
+import java.io.BufferedWriter;
+import java.io.EOFException;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * This program is used to find Generalized Retriever of Information Tool.
@@ -81,7 +85,7 @@ import org.xml.sax.SAXException;
  * - Basic functionality.
  * 
  * Notes: subroutine methods are created to reduce redundant codes. multiple values passed to subroutine needed to 
- * be modified with persistency, thus, specific return type method would not be feasable for this purpose. to achieve data
+ * be modified with persistency, thus, method returns would not be feasable for this purpose. to achieve data
  * persistency passed to subroutine, immutable data such as stings and integers are wrapped in class objects and pass
  * as referenceto void return type subroutine for handling.
  */
@@ -225,10 +229,7 @@ public class Main extends JFrame {
 		HMComponents.put ("GrandJury", new Component ('C', "Grand Jury", "Grand Jury", "Find all matches term Grand Jury"));
 		HMComponents.put ("FBIInfoFile", new Component ('C', "FBI Info File", "FBI Info Files", "FBI information files beginning with numbers beginning on 134, 137, 170"));
 		HMComponents.put ("FBISource", new Component ('C', "FBI Source", "FBI Sources", "Find matches for protect identity, informant, psi, si, reliable, confidential"));
-		HMComponents.put ("FBISourceCode", new Component ('C', "FBI Source Code", "FBI Source Codes", "AL,AQ,AX,AN,AT,BA,BH,BS,BQ,BU,BT,CE,CG,CI,CV,CO,DL,DN," +
-																				   "DE,EP,HN,HO,IP,JN,JK,KC,KX,LV,LR,LA,LS,ME,MM,MI,MP,MO,NK," +
-																				   "NH,NO,NR,NY,NF,OC,OM,PH,PX,PG,PD,RH,SC,SL,SU,SA,SD,SF,SJ,SV," +
-																				   "SE,SI,TP,WFO,BER,BOG,BON,HON,LON,MAN,MEX,OTT,PAN,PAR,ROM,TOK"));
+		HMComponents.put ("FBISourceCode", new Component ('C', "FBI Source Code", "FBI Source Codes", "AL,AQ,AX,AN,AT,BA,BH,BS,BQ,BU,BT,CE,CG,CI,CV,CO,DL,DN,DE,EP,HN,HO,IP,JN,JK,KC,KX,LV,LR,LA,LS,ME,MM,MI,MP,MO,NK,NH,NO,NR,NY,NF,OC,OM,PH,PX,PG,PD,RH,SC,SL,SU,SA,SD,SF,SJ,SV,SE,SI,TP,WFO,BER,BOG,BON,HON,LON,MAN,MEX,OTT,PAN,PAR,ROM,TOK"));
 		
 		//Prepare Skipped Extensions:
 		skipExtensions = new HashSet<String>();
@@ -560,8 +561,8 @@ public class Main extends JFrame {
 				initNewExport();
 				JBTableModel.setRowCount(0);
 				
-				searchTask.cleanTextResults(HMComponents.get("TxtField").resultListUnique);
-				searchTask.cleanSSNResults(HMComponents.get("SSN").resultListUnique);
+				searchTask.cleanResults(HMComponents.get("TxtField"));
+				searchTask.cleanResults(HMComponents.get("SSN"));
 				searchTask.getOtherResults(resultOtherMatchList);
 				JBTableModel.fireTableDataChanged();
 				JBRemoveDuplicates.setEnabled(false);
@@ -609,7 +610,7 @@ public class Main extends JFrame {
 	}
 
 	/**
-	 * listens for user's input/output
+	 * listens for user's input and export button
 	 */
 	private class MyIOListener implements ActionListener {
 		@Override
@@ -617,7 +618,8 @@ public class Main extends JFrame {
 			if (event.getSource() == JBInput) {					// INPUT BUTTON
 				int userRespond = fileChooser.showOpenDialog(Main.this);	// open browse directory/file dialog
 				if (userRespond == JFileChooser.APPROVE_OPTION) {	// user select a directory/file
-					userInput = fileChooser.getSelectedFile();
+					userInput = fileChooser.getSelectedFile();					
+					System.out.println ("In MyIOListerner: " + userInput);			//<================ for debug
 					printToProgress("Input: " + userInput + "\n");
 				}
 			} else if (event.getSource() == JBExport) {				// HTML SAVE BUTTON
@@ -696,22 +698,22 @@ public class Main extends JFrame {
 	}
 	
 	/**
-	 * listens for user's interaction with run button.
+	 * listens for user interaction with RUN and CANCEL button
 	 */
 	private class MySearchTaskListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent event) {			
-			if (event.getSource() == JBRun) {			// RUN BUTTON
+			if (event.getSource() == JBRun) {				// RUN BUTTON
 				boolean noneSelected = true;				
-				for (Component comp : HMComponents.values ())
-					if (comp.TYPE == 'T' && !comp.text.getText().isEmpty())
+				for (Component comp : HMComponents.values ())		//itterate over all search elements and check
+					if (comp.TYPE == 'T' && !comp.text.getText().isEmpty())	//if any is of them selected 
 						noneSelected = false;
 					else if (comp.TYPE == 'C' && comp.checkBox.isSelected())
 						noneSelected = false;
 				
-				if (noneSelected) {	// check if a match mode is selected
+				if (noneSelected) {	// check if no match mode is selected, show an error and stop
 					JOptionPane.showMessageDialog(Main.this, "ERROR: No match mode is selected");
-					return; // stop here	
+					return; // stop here
 				}
 				
 				if (userInput == null) {		// check if there is an input file/directory
@@ -719,18 +721,11 @@ public class Main extends JFrame {
 					return; // stop here
 				}
 				
-				if (fileChooser.getFileSelectionMode() == JFileChooser.DIRECTORIES_ONLY) {	// read mode: directory only
-					initNewSearch();
-					searchTask.execute();
-					JBRun.setEnabled(false);
-					JBCancel.setEnabled(true);
-				} else if (fileChooser.getFileSelectionMode() == JFileChooser.FILES_ONLY) {	// read mode: file only
-					initNewSearch();
-					searchTask.execute();
-					JBRun.setEnabled(false);
-					JBCancel.setEnabled(true);
-				}
-
+				initNewSearch();
+				searchTask.execute();
+				JBRun.setEnabled(false);
+				JBCancel.setEnabled(true);
+				
 				JPMain.remove(row3);
 				JPMain.add(row4);
 				JPMain.add(row5);
@@ -746,211 +741,223 @@ public class Main extends JFrame {
 /********************************************************************************************************************
 *											The Search Task Section													*
 ********************************************************************************************************************/
+//###################################################################################################################
+//###################################################################################################################
+//###################################################################################################################
 	private class SearchTask extends SwingWorker<Void, String> {
 		/**
 		 * This method takes a given directory and find SSNs for all the files reachable from that directory.
 		 * @param dir - directory that need to be processed
 		 */
-		public void recursiveSearch(File dir) {
-			if (Thread.currentThread().isInterrupted())	// handle interrupted (cancel)
-				return;
+//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+//==================================		The Recursion Method		=============================================
+//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+		public void runSearch(File dir) {
+			//if (Thread.currentThread().isInterrupted())	// handle interrupted (cancel)
+				//return;
 			
-			List<File> inputFiles = new ArrayList<File>();		// build list of input files
+			List <File> inputFiles = new ArrayList<File>();		// build list of input files
 			
-			if (fileChooser.getFileSelectionMode() == JFileChooser.FILES_ONLY)
-				inputFiles.add(dir);
+			if (fileChooser.getFileSelectionMode() == JFileChooser.FILES_ONLY)	// if a FILE
+				inputFiles.add(dir);	// add that file to list
+			else if (fileChooser.getFileSelectionMode() == JFileChooser.DIRECTORIES_ONLY)	// if a DIRECTORY
+				inputFiles = (List <File>) FileUtils.listFiles(dir, null, true);	// parse al in dir and sub dirs
 			else
-				inputFiles = Arrays.asList(dir.listFiles());
+				return;
 			
 			totalFiles += inputFiles.size();	// update counter
 			
+			//inputFiles.forEach ((f) -> {System.out.println (f);});	//<========== for debug
+			
 			for (File file: inputFiles) {		// process file by file
-				if (file.isDirectory()) {
-					totalFiles --;
-					recursiveSearch(file);
-				} else {
-					InputStream input = null;
+				if (Thread.currentThread().isInterrupted()) {	// handle interrupted (cancel)
+					return;
+				}
+				
+				InputStream input = null;
+				
+				try {
+					String fileName = file.getName();
+					String fileExtension = "txt";
+					int i = fileName.lastIndexOf(".");
 					
-					try {
-						String fileName = file.getName();
-						String fileExtension = "txt";
-						int i = fileName.lastIndexOf(".");
-						if (i > 0) {
-							fileExtension = fileName.substring(i+1);
-						}
-						
-						if (fileExtension.equals("txt")) {
-							ContentHandler handler = new BodyContentHandler(-1);
-							input = new FileInputStream(file);
-							Metadata metadata = new Metadata();
-							TXTParser TXTParser = new TXTParser();
-							ParseContext context = new ParseContext();
+					if (i > 0)
+						fileExtension = fileName.substring(i+1);
+					
+					if (fileExtension.equals("txt")) {
+						ContentHandler handler = new BodyContentHandler(-1);
+						input = new FileInputStream(file);
+						Metadata metadata = new Metadata();
+						TXTParser TXTParser = new TXTParser();
+						ParseContext context = new ParseContext();
 
-							TXTParser.parse(input, handler, metadata, context);
+						TXTParser.parse(input, handler, metadata, context);
 
-							fileReader = new Scanner(handler.toString());
-						} else if (fileExtension.equals("docx")) {
-							OPCPackage pkg = OPCPackage.open(file);
-							XWPFDocument docx = new XWPFDocument(OPCPackage.open(file));
-							XWPFWordExtractor extractor = new XWPFWordExtractor(docx);
-							fileReader = new Scanner(extractor.getText());
-							pkg.close();
-						} else if (fileExtension.equals("doc")) {
-							NPOIFSFileSystem doc = new NPOIFSFileSystem(file);
-							WordExtractor extractor = new WordExtractor(doc.getRoot());
-							fileReader = new Scanner(WordExtractor.stripFields(extractor.getText()));
-							doc.close();
-						} else if (fileExtension.equals("xlsx")) {
-							OPCPackage pkg = OPCPackage.open(file);
-							XSSFWorkbook wb = new XSSFWorkbook(pkg);
-							XSSFExcelExtractor extractor = new XSSFExcelExtractor(wb);
-							extractor.setFormulasNotResults(true);
-							extractor.setIncludeSheetNames(false);
-							fileReader = new Scanner(extractor.getText());
-							pkg.close();
-						} else if (fileExtension.equals("xls")) {
-							NPOIFSFileSystem xls = new NPOIFSFileSystem(file);
-							HSSFWorkbook wb = new HSSFWorkbook(xls.getRoot(), false);
-							ExcelExtractor extractor = new ExcelExtractor(wb);
-							extractor.setFormulasNotResults(true);
-							extractor.setIncludeSheetNames(false);
-							fileReader = new Scanner(extractor.getText());
-							xls.close();
-						} else if (fileExtension.equals("msg")) {
-							MAPIMessage msg = new MAPIMessage(file.getAbsolutePath());
-							fileReader = new Scanner(msg.getTextBody());
-						} else if ((fileExtension.equals("htm"))||(fileExtension.equals("html"))) {
-							ContentHandler handler = new BodyContentHandler(-1);
-							input = new FileInputStream(file);
-							Metadata metadata = new Metadata();
-							HtmlParser HTMLParser = new HtmlParser();
-							ParseContext context = new ParseContext();
+						fileReader = new Scanner(handler.toString());
+					} else if (fileExtension.equals("docx")) {
+						OPCPackage pkg = OPCPackage.open(file);
+						XWPFDocument docx = new XWPFDocument(OPCPackage.open(file));
+						XWPFWordExtractor extractor = new XWPFWordExtractor(docx);
+						fileReader = new Scanner(extractor.getText());
+						pkg.close();
+					} else if (fileExtension.equals("doc")) {
+						NPOIFSFileSystem doc = new NPOIFSFileSystem(file);
+						WordExtractor extractor = new WordExtractor(doc.getRoot());
+						fileReader = new Scanner(WordExtractor.stripFields(extractor.getText()));
+						doc.close();
+					} else if (fileExtension.equals("xlsx")) {
+						OPCPackage pkg = OPCPackage.open(file);
+						XSSFWorkbook wb = new XSSFWorkbook(pkg);
+						XSSFExcelExtractor extractor = new XSSFExcelExtractor(wb);
+						extractor.setFormulasNotResults(true);
+						extractor.setIncludeSheetNames(false);
+						fileReader = new Scanner(extractor.getText());
+						pkg.close();
+					} else if (fileExtension.equals("xls")) {
+						NPOIFSFileSystem xls = new NPOIFSFileSystem(file);
+						HSSFWorkbook wb = new HSSFWorkbook(xls.getRoot(), false);
+						ExcelExtractor extractor = new ExcelExtractor(wb);
+						extractor.setFormulasNotResults(true);
+						extractor.setIncludeSheetNames(false);
+						fileReader = new Scanner(extractor.getText());
+						xls.close();
+					} else if (fileExtension.equals("msg")) {
+						MAPIMessage msg = new MAPIMessage(file.getAbsolutePath());
+						fileReader = new Scanner(msg.getTextBody());
+					} else if ((fileExtension.equals("htm"))||(fileExtension.equals("html"))) {
+						ContentHandler handler = new BodyContentHandler(-1);
+						input = new FileInputStream(file);
+						Metadata metadata = new Metadata();
+						HtmlParser HTMLParser = new HtmlParser();
+						ParseContext context = new ParseContext();
 
-							HTMLParser.parse(input, handler, metadata, context);
+						HTMLParser.parse(input, handler, metadata, context);
 
-							fileReader = new Scanner(handler.toString());
-						} else if (fileExtension.equals("rtf")) {
-							ContentHandler handler = new BodyContentHandler(-1);
-							input = new FileInputStream(file);
-							Metadata metadata = new Metadata();
-							RTFParser RTFParser = new RTFParser();
-							ParseContext context = new ParseContext();
+						fileReader = new Scanner(handler.toString());
+					} else if (fileExtension.equals("rtf")) {
+						ContentHandler handler = new BodyContentHandler(-1);
+						input = new FileInputStream(file);
+						Metadata metadata = new Metadata();
+						RTFParser RTFParser = new RTFParser();
+						ParseContext context = new ParseContext();
 
-							RTFParser.parse(input, handler, metadata, context);
+						RTFParser.parse(input, handler, metadata, context);
 
-							fileReader = new Scanner(handler.toString());
-						} else if (fileExtension.equals("mbox")) {
-							ContentHandler handler = new BodyContentHandler(-1);
-							input = new FileInputStream(file);
-							Metadata metadata = new Metadata();
-							MboxParser MBOXParser = new MboxParser();
-							ParseContext context = new ParseContext();
+						fileReader = new Scanner(handler.toString());
+					} else if (fileExtension.equals("mbox")) {
+						ContentHandler handler = new BodyContentHandler(-1);
+						input = new FileInputStream(file);
+						Metadata metadata = new Metadata();
+						MboxParser MBOXParser = new MboxParser();
+						ParseContext context = new ParseContext();
 
-							MBOXParser.parse(input, handler, metadata, context);
+						MBOXParser.parse(input, handler, metadata, context);
 
-							fileReader = new Scanner(handler.toString());
-						} else if (fileExtension.equals("pst")) {
-							ContentHandler handler = new BodyContentHandler(-1);
-							input = new FileInputStream(file);
-							Metadata metadata = new Metadata();
-							OutlookPSTParser OutlookPSTParser = new OutlookPSTParser();
-							ParseContext context = new ParseContext();
+						fileReader = new Scanner(handler.toString());
+					} else if (fileExtension.equals("pst")) {
+						ContentHandler handler = new BodyContentHandler(-1);
+						input = new FileInputStream(file);
+						Metadata metadata = new Metadata();
+						OutlookPSTParser OutlookPSTParser = new OutlookPSTParser();
+						ParseContext context = new ParseContext();
 
-							OutlookPSTParser.parse(input, handler, metadata, context);
+						OutlookPSTParser.parse(input, handler, metadata, context);
 
-							fileReader = new Scanner(handler.toString());
-						} else if (fileExtension.equals("mdb")) {
-							ContentHandler handler = new BodyContentHandler(-1);
-							input = new FileInputStream(file);
-							Metadata metadata = new Metadata();
-							JackcessParser JackcessParser = new JackcessParser();
-							ParseContext context = new ParseContext();
+						fileReader = new Scanner(handler.toString());
+					} else if (fileExtension.equals("mdb")) {
+						ContentHandler handler = new BodyContentHandler(-1);
+						input = new FileInputStream(file);
+						Metadata metadata = new Metadata();
+						JackcessParser JackcessParser = new JackcessParser();
+						ParseContext context = new ParseContext();
 
-							JackcessParser.parse(input, handler, metadata, context);
+						JackcessParser.parse(input, handler, metadata, context);
 
-							fileReader = new Scanner(handler.toString());
-						} else if (fileExtension.equals("pdf")) {
-							ContentHandler handler = new BodyContentHandler(-1);
-							input = new FileInputStream(file);
-							Metadata metadata = new Metadata();
-							PDFParser PDFParser = new PDFParser();
-							ParseContext context = new ParseContext();
+						fileReader = new Scanner(handler.toString());
+					} else if (fileExtension.equals("pdf")) {
+						ContentHandler handler = new BodyContentHandler(-1);
+						input = new FileInputStream(file);
+						Metadata metadata = new Metadata();
+						PDFParser PDFParser = new PDFParser();
+						ParseContext context = new ParseContext();
 
-							PDFParser.parse(input, handler, metadata, context);
+						PDFParser.parse(input, handler, metadata, context);
 
-							fileReader = new Scanner(handler.toString());
-						} else if (fileExtension.isEmpty()) {
-							fileReader = new Scanner(file);
-						} else {
-							if (JCBAutoParser.isSelected()) {
-								if (skipExtensions.contains(fileExtension)) {
-									//System.out.println("Skipped " + fileExtension);		//<============ for debug
-									continue;
-								} else {
-									ContentHandler handler = new BodyContentHandler(-1);
-									input = new FileInputStream(file);
-									Metadata metadata = new Metadata();
-									AutoDetectParser parser = new AutoDetectParser();
-
-									parser.parse(input, handler, metadata);
-
-									fileReader = new Scanner(handler.toString());
-								}    
-							} else {
+						fileReader = new Scanner(handler.toString());
+					} else if (fileExtension.isEmpty()) {
+						fileReader = new Scanner(file);
+					} else {
+						if (JCBAutoParser.isSelected()) {
+							if (skipExtensions.contains(fileExtension)) {
+								//System.out.println("Skipped " + fileExtension);		//<============ for debug
 								continue;
-							}
-						}
-						
-						matchRegex(file, fileExtension);	// find matching regex in current processing file
-						/*
-						throw new DataFormatException("DataFormatException");
-						
-					} catch (DataFormatException e) {
-						System.out.println("DFE "+e);
-						skipFiles.add(file);*/
-					} catch (NullPointerException e) {
-						System.out.println("NULLPE " + e);
-						skipFiles.add(file);
-					} catch (OutOfMemoryError e) {
-						System.out.println("OOME " + e);
-						skipFiles.add(file);
-					} catch (ZipException e) {
-						System.out.println("ZipE " + e);
-						skipFiles.add(file);
-					} catch (EOFException e) {
-						System.out.println("EOF " + e);
-						skipFiles.add(file);
-					} catch (FileNotFoundException e) {
-						System.out.println("FNFE " + e);
-						skipFiles.add(file);
-					} catch (ChunkNotFoundException e) {
-						System.out.println("CNFE " + e);
-						skipFiles.add(file);
-					} catch (InvalidFormatException e) {
-						System.out.println("IFE " + e);
-						skipFiles.add(file);
-					} catch (IOException e) {
-						System.out.println("IO " + e);
-						skipFiles.add(file);
-					} catch (TikaException e) {
-						System.out.println("TIKA " + e);
-						skipFiles.add(file);
-					} catch (SAXException e) {
-						System.out.println("SAX " + e);
-						skipFiles.add(file);
-					} finally {
-						if (input != null) {
-							try {
-								input.close();
-							} catch(IOException e) {
-								System.out.println("IOE " + e);
-							}
+							} else {
+								ContentHandler handler = new BodyContentHandler(-1);
+								input = new FileInputStream(file);
+								Metadata metadata = new Metadata();
+								AutoDetectParser parser = new AutoDetectParser();
+
+								parser.parse(input, handler, metadata);
+
+								fileReader = new Scanner(handler.toString());
+							}    
+						} else {
+							continue;
 						}
 					}
-				}
+					
+					matchRegex(file, fileExtension);	// find matching regex in current processing file
+					/*
+					throw new DataFormatException("DataFormatException");
+					
+				} catch (DataFormatException e) {
+					System.out.println("DFE "+e);
+					skipFiles.add(file);*/
+				} catch (NullPointerException e) {
+					System.out.println("NULLPE " + e);
+					skipFiles.add(file);
+				} catch (OutOfMemoryError e) {
+					System.out.println("OOME " + e);
+					skipFiles.add(file);
+				} catch (ZipException e) {
+					System.out.println("ZipE " + e);
+					skipFiles.add(file);
+				} catch (EOFException e) {
+					System.out.println("EOF " + e);
+					skipFiles.add(file);
+				} catch (FileNotFoundException e) {
+					System.out.println("FNFE " + e);
+					skipFiles.add(file);
+				} catch (ChunkNotFoundException e) {
+					System.out.println("CNFE " + e);
+					skipFiles.add(file);
+				} catch (InvalidFormatException e) {
+					System.out.println("IFE " + e);
+					skipFiles.add(file);
+				} catch (IOException e) {
+					System.out.println("IO " + e);
+					skipFiles.add(file);
+				} catch (TikaException e) {
+					System.out.println("TIKA " + e);
+					skipFiles.add(file);
+				} catch (SAXException e) {
+					System.out.println("SAX " + e);
+					skipFiles.add(file);
+				} catch (ConcurrentModificationException e) {
+					System.out.println ("Other Exception: " + e);
+				} finally {
+					if (input != null) {
+						try {
+							input.close();
+						} catch(IOException e) {
+							System.out.println("IOE " + e);
+						}
+					}
+				}	
 			}
 		}
-		
+//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 		/**
 		 * This method does the regular expression matching.
 		 * Results will be output to the GUI and save in HTML format.
@@ -962,6 +969,7 @@ public class Main extends JFrame {
 			
 			addTextToRegex(HMComponents.get("TxtField").text.getText());
 			//System.out.println ("regexText is " + HMComponents.get("TxtField").regex);			//<================ for debug
+			//System.out.println ("Made it to here !!!");			//<================ for debug
 			
 			if (fileReader.hasNext()) {			// check if file is readable
 				readCounter ++;
@@ -969,13 +977,11 @@ public class Main extends JFrame {
 				lineA = fileReader.nextLine();
 			} else
 				System.out.println(file.getName() + " ext: " + fileExtension);
-
-//////IF THERE ARE MULTIPLE LINES IN THE FILE////////////IF THERE ARE MULTIPLE LINES IN THE FILE//////
-//////IF THERE ARE MULTIPLE LINES IN THE FILE////////////IF THERE ARE MULTIPLE LINES IN THE FILE//////
-//////IF THERE ARE MULTIPLE LINES IN THE FILE////////////IF THERE ARE MULTIPLE LINES IN THE FILE//////		
 			
-			// use global file reader with file's text already loaded
-			while(fileReader.hasNext()) {
+				/****************************************************************
+							IF THERE ARE MULTIPLE LINES IN THE FILE
+				****************************************************************/
+			while(fileReader.hasNext()) {	// use global file reader with file's text already loaded
 				String lineB = fileReader.nextLine();
 				String line = lineA + lineB;
 				
@@ -994,9 +1000,9 @@ public class Main extends JFrame {
 				lineA = lineB;
 			}
 			
-//////IF MATCH ON LAST LINE OR ONLY ONE LINE////////////IF MATCH ON LAST LINE OR ONLY ONE LINE//////
-//////IF MATCH ON LAST LINE OR ONLY ONE LINE////////////IF MATCH ON LAST LINE OR ONLY ONE LINE//////
-//////IF MATCH ON LAST LINE OR ONLY ONE LINE////////////IF MATCH ON LAST LINE OR ONLY ONE LINE//////
+				/****************************************************************
+							IF MATCH ON LAST LINE OR ONLY ONE LINE
+				****************************************************************/
 			if( !(fileReader.hasNext()) ) {				
 				for (Component comp : HMComponents.values ()) {			// perhaps impliments the true false stuff directly into each individual
 					if (comp.TYPE == 'T' && !comp.text.getText().isEmpty()) {// objects rather than using method parameters like this
@@ -1030,15 +1036,19 @@ public class Main extends JFrame {
 			return resultOtherMatchList;
 		}
 		
-		private ArrayList cleanTextResults(HashSet<Match> elf) {            
-			Component tmpComp = HMComponents.get ("TxtField");	// get reference handler to TextField object component 
-			ArrayList <Match> tmpList = tmpComp.resultListUniqueFinal;	// get reference handler to resultTextListUniqueFinal
+		/**
+		 * This method is only used by the user entered regex (Text) and the SSN search
+		 * This method is only called from the CleanResultsListener listener to remove duplicates
+		 */
+		private ArrayList cleanResults(Component comp) {            
+			HashSet <Match> uniqList = comp.resultListUnique;		// get reference handler to resultListUnique
+			ArrayList <Match> fnlList = comp.resultListUniqueFinal;	// get reference handler to resultListUniqueFinal
 			
-			for(Match pr : elf)
-				if(elf.contains(pr))
-					tmpList.add(pr);
+			for(Match pr : uniqList)
+				if(uniqList.contains(pr))
+					fnlList.add(pr);
 			
-			Collections.sort(tmpList, new Comparator <Match> () {
+			Collections.sort(fnlList, new Comparator <Match> () {
 				@Override
 				public int compare(Match z1, Match z2) {
 					if (z1.getID() > z2.getID()) { return 1; }
@@ -1048,68 +1058,45 @@ public class Main extends JFrame {
 			});
 			
 			int i = 1;
-			for (Match pr : tmpList) {
-				Main.this.addToAllRow (true, true, i, pr, tmpComp.html, tmpComp.csv);
+			for (Match pr : fnlList) {
+				Main.this.addToAllRow (true, true, i, pr, comp.html, comp.csv);
 				i++;
 			}
 			
-			tmpComp.counter = tmpList.size ();
-			return tmpList;
+			comp.counter = fnlList.size ();
+			return fnlList;
 		}
 		
-		private ArrayList cleanSSNResults(HashSet<Match> elf) {            
-			Component tmpComp = HMComponents.get ("SSN");	// get reference handler to SSN object component 
-			ArrayList <Match> tmpList = tmpComp.resultListUniqueFinal;	// get reference handler to resultSSNListUniqueFinal
-			
-			for(Match pr : elf)
-				if(elf.contains(pr))
-					tmpList.add (pr);
-			
-			Collections.sort(tmpList, new Comparator<Match>() {
-				@Override
-				public int compare(Match z1, Match z2) {
-					if (z1.getID() > z2.getID()) { return 1; }
-					if (z1.getID() < z2.getID()) { return -1; }
-					return 0;
-				}
-			});
-			
+		/**
+		 * This method is only used by the user entered regex (Text) and the SSN search
+		 * This method is only called from the done() mehtod
+		 */
+		private ArrayList<Match> getResults(Component comp) {			
 			int i = 1;
-			for (Match pr : tmpList) {
-				Main.this.addToAllRow (true, true, i, pr, tmpComp.html, tmpComp.csv);
+			for (Match pr : comp.resultList) {
+				Main.this.addToAllRow (true, true, i, pr, comp.html, comp.csv);
 				i++;
 			}
 			
-			tmpComp.counter = tmpList.size ();
-			return tmpList;
+			comp.counter = comp.resultList.size();
+			return comp.resultList;
 		}
 		
-		private ArrayList<Match> getTextResults(ArrayList<Match> elf) {
-			Component tmpComp = HMComponents.get ("TxtField");	// get reference handler to TextField object component 
-			ArrayList <Match> tmpList = tmpComp.resultList;	// get reference handler to resultTextList
+		private void getConfidenceTable() {
+			JBTCatModel.setRowCount(0);
 			
-			int i = 1;
-			for (Match pr : elf) {
-				Main.this.addToAllRow (true, true, i, pr, tmpComp.html, tmpComp.csv);
-				i++;
-			}
+			for (Component comp : HMComponents.values ())
+				JBTCatModel.addRow(new Object[]{comp.LABEL, comp.counter});
 			
-			tmpComp.counter = tmpList.size();
-			return tmpList;
+			JBTCatModel.addRow(new Object[]{"Total Matches", HMComponents.get ("TxtField").counter + HMComponents.get ("SSN").counter + matchCounter});
 		}
 		
-		private ArrayList<Match> getSSNResults(ArrayList<Match> elf) {
-			Component tmpComp = HMComponents.get ("SSN");	// get reference handler to SSN object component 
-			ArrayList <Match> tmpList = tmpComp.resultList;	// get reference handler to resultSSNList
-			
-			int i = 1;
-			for (Match pr : elf) {
-				Main.this.addToAllRow (true, true, i, pr, tmpComp.html, tmpComp.csv);
-				i++;
+		private void getExtensionTable() {
+			for (String s : extCounter.extList) {
+				int i = extCounter.extList.indexOf(s);
+				int c = extCounter.extCount.get(i);
+				JBTFileExtModel.addRow(new Object [] {s, c});
 			}
-			
-			tmpComp.counter = tmpList.size ();
-			return tmpList;
 		}
 		
 		private void buildCSVResult() {
@@ -1192,7 +1179,7 @@ public class Main extends JFrame {
 		@Override
 		protected Void doInBackground() throws Exception {
 			startSearch = new Date();
-			recursiveSearch(userInput);
+			runSearch(userInput);
 			return null;
 		}
 		
@@ -1210,23 +1197,6 @@ public class Main extends JFrame {
 			}
 		}
 		
-		private void getConfidenceTable() {
-			JBTCatModel.setRowCount(0);
-			
-			for (Component comp : HMComponents.values ())
-				JBTCatModel.addRow(new Object[]{comp.LABEL, comp.counter});
-			
-			JBTCatModel.addRow(new Object[]{"Total Matches", HMComponents.get ("TxtField").counter + HMComponents.get ("SSN").counter + matchCounter});
-		}
-		
-		private void getExtensionTable() {
-			for (String s : extCounter.extList) {
-				int i = extCounter.extList.indexOf(s);
-				int c = extCounter.extCount.get(i);
-				JBTFileExtModel.addRow(new Object [] {s, c});
-			}
-		}
-		
 		@Override
 		protected void done() {            
 			//System.out.println(skipFiles.toString());			//<=========== for debug
@@ -1235,8 +1205,8 @@ public class Main extends JFrame {
 			JPBStatus.setVisible(false);
 			JPBStatus.setValue(0);
 			
-			getTextResults(HMComponents.get ("TxtField").resultList);		// update
-			getSSNResults(HMComponents.get ("SSN").resultList);
+			getResults(HMComponents.get ("TxtField"));		// update
+			getResults(HMComponents.get ("SSN"));
 			getOtherResults(resultOtherMatchList);
 			getExtensionTable();
 			getConfidenceTable();
@@ -1277,17 +1247,23 @@ public class Main extends JFrame {
 			JBExport.setEnabled(true);
 		}
 	}
+//###################################################################################################################
+//###################################################################################################################
+//###################################################################################################################
 
 /********************************************************************************************************************
 *									Miscelaneous Helper Method and Classes Section									*
-********************************************************************************************************************/
+********************************************************************************************************************/	
 	/**
-	 * This class use for contructing check boxes and user enter text boxes and related data content
-	 * used for search function. this class was created in effort to reduce code redundancy
-	 * @param type - 
-	 * @param sym - 
-	 * @param label - 
-	 * @param tip - 
+	 * Originally codes has redundancy due to increased search elements, the purpose of this wrapper class is
+	 * to redundancy by grouping related data elements and achieve data persistency for immutable
+	 * data such as strings and integers, as a result data members of class are meant to be accessed directly
+	 * without encapsulation implemented.
+	 * The constructor takes in four arguments to create the object and and initializes all related data members
+	 * @param type - character that specifies object will be check box or a text area, C = check box, T = text area 
+	 * @param sym - the symbol use to represent this object, can be use as web links or for web links label
+	 * @param label - the label that will be displayed next to the check box in the java GUI applicaiton
+	 * @param tip - the tool tip text that will be displayed when the user hover mouse cursor over this GUI element 
 	 */
 	private class Component {
 		final char TYPE;	//C = check box, T = text box
@@ -1370,8 +1346,8 @@ public class Main extends JFrame {
 	}
 	
 	/**
-	 * This subroutine method can be called from getOtherResults, cleanTextResults, cleanSSNResults, getTextResults,
-	 * and getSSNResults. this method is created to reduce code redundancy. This method can act as either getter or 
+	 * This subroutine method can be called from getOtherResults, cleanResults, and getResults.
+	 * this method is created to reduce code redundancy. This method can act as either getter or 
 	 * setter, which is determine by the setIdSwitch parameter. if setIdSwitch is enable, then index i argument can be
 	 * used.
 	 * @param addJBTable - switch to add a new row to JBTableModel
