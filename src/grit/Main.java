@@ -284,7 +284,7 @@ public class Main extends JFrame {
 		addRegexToList("(?i:Grand Jury)", HMComponents.get("GrandJury").regex);
 		//FBI Sources terms for protect identity, informant, psi, si, reliable, confidential
 		addRegexToList("\\b(protect identity|informant|psi|si|reliable|confidential)\\b", HMComponents.get("FBISource").regex);
-		//Find FBI information files beginning with numbers beginning on 134, 137, 170
+		//Find FBI information files beginning with numbers beginning with 134, 137, 170, followed by a dash and more numbers
 		addRegexToList("\\b(134-\\d*|137-\\d*|170-\\d*)\\b", HMComponents.get("FBIInfoFile").regex);
 		//FBI source codes
 		addRegexToList("\\b(AL|AQ|AX|AN|AT|BA|BH|BS|BQ|BU|BT|CE|CG|CI|CV|CO|DL|DN|DE|EP|HN|HO|IP|JN|JK|KC|KX|LV|LR|LA|LS|ME|MM|MI|MP|MO|NK|NH|NO|NR|NY|NF|OC|OM|PH|PX|PG|PD|RH|SC|SL|SU|SA|SD|SF|SJ|SV|SE|SI|TP|WFO|BER|BOG|BON|HON|LON|MAN|MEX|OTT|PAN|PAR|ROM|TOK)\\s+\\b", HMComponents.get("FBISourceCode").regex);
