@@ -769,9 +769,8 @@ public class Main extends JFrame {
 			//inputFiles.forEach ((f) -> {System.out.println (f);});	//<========== for debug
 			
 			for (File file: inputFiles) {		// process file by file
-				if (Thread.currentThread().isInterrupted()) {	// handle interrupted (cancel)
+				if (Thread.currentThread().isInterrupted())	// handle interrupted (cancel)
 					return;
-				}
 				
 				InputStream input = null;
 				
@@ -784,15 +783,15 @@ public class Main extends JFrame {
 						fileExtension = fileName.substring(i+1);
 					
 					if (fileExtension.equals("txt")) {
-						ContentHandler handler = new BodyContentHandler(-1);
-						input = new FileInputStream(file);
-						Metadata metadata = new Metadata();
-						TXTParser TXTParser = new TXTParser();
-						ParseContext context = new ParseContext();
-
-						TXTParser.parse(input, handler, metadata, context);
-
-						fileReader = new Scanner(handler.toString());
+						//ContentHandler handler = new BodyContentHandler(-1);
+						input = new FileInputStream(file);	
+						//Metadata metadata = new Metadata();
+						//TXTParser txtParser = new TXTParser();
+						//ParseContext context = new ParseContext();
+						
+						//txtParser.parse(input, handler, metadata, context);
+						//fileReader = new Scanner(handler.toString());
+						fileReader = new Scanner(input);
 					} else if (fileExtension.equals("docx")) {
 						OPCPackage pkg = OPCPackage.open(file);
 						XWPFDocument docx = new XWPFDocument(OPCPackage.open(file));
