@@ -104,6 +104,7 @@ public class Main extends JFrame {
 	private File outputFileCSV;
 
 	private static JProgressBar JPBStatus;
+	private static JProgressBar JPBStatus2;
 	private static JFileChooser textFileChooser;
 	private static JFileChooser fileChooser;
 	private static JFileChooser fileSaver;
@@ -125,6 +126,7 @@ public class Main extends JFrame {
 	private int readCounter;
 	private int matchCounter;
 	private int progressCounter;	// helper counter to update progress bar
+	private int progressCounter2;	// helper counter to update progress bar
 	
 	private ExtensionCounter extCounter;
 	private Date startSearch;
@@ -366,28 +368,22 @@ public class Main extends JFrame {
 		JTAProgressLog.setEditable(false);
 		JTAProgressLog.setHorizontalAlignment(JTextField.CENTER);
 		JTAProgressLog.setBackground(new Color(250, 250, 241));
-		JTAProgressLog.setMargin(new Insets(5, 5, 5, 5));
+		JTAProgressLog.setMargin(new Insets(2, 2, 2, 2));
 		JTAProgressLog.setToolTipText("Displays the current number of processed files");
 		
 		JPBStatus = new JProgressBar(0,100);
-		JPBStatus.setValue(0);
-		JPBStatus.setStringPainted(false);
-		//JPBStatus.setIndeterminate(true);
+		JPBStatus.setBorderPainted(false);
 		JPBStatus.setVisible(false);
-		JPBStatus.setBackground(Color.black);
 		JPBStatus.setForeground(new Color(129,218,245));
-	
-		JPBStatus.setUI(new BasicProgressBarUI() {
-			@Override
-			protected Color getSelectionBackground() { 
-				return new Color(129,218,245);
-			}
-			
-			@Override
-			protected Color getSelectionForeground() { 
-				return Color.black;
-			}
-		});
+		JPBStatus.setMinimumSize(new Dimension(Integer.MAX_VALUE, 3));
+		JPBStatus.setMaximumSize(new Dimension(Integer.MAX_VALUE, 3));
+		
+		JPBStatus2 = new JProgressBar(0,100);
+		JPBStatus2.setBorderPainted(false);
+		JPBStatus2.setVisible(false);
+		JPBStatus2.setForeground(new Color(129,218,245));
+		JPBStatus2.setMinimumSize(new Dimension(Integer.MAX_VALUE, 3));
+		JPBStatus2.setMaximumSize(new Dimension(Integer.MAX_VALUE, 3));
 		
 		//Row3: Elements
 		JTAResultLog = new JTextArea(getTutorial());
@@ -421,7 +417,6 @@ public class Main extends JFrame {
 		panel2_sub2.setBorder(BorderFactory.createTitledBorder("Other Match Mode"));
 		panel2_sub2.setLayout(new BoxLayout(panel2_sub2, BoxLayout.PAGE_AXIS));
 		panel2_sub2.add(HMComponents.get("TxtField").text);
-		//panel2_sub2.add(JTField);	//** modify **
 		
 		JPanel panel2 = new JPanel();
 		panel2.setLayout(new GridLayout(0,1));
@@ -460,11 +455,11 @@ public class Main extends JFrame {
 		
 		//Row2: Panel5: Elements Added
 		JPanel panel5 = new JPanel();
-		panel5.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
 		panel5.setLayout(new BoxLayout(panel5, BoxLayout.PAGE_AXIS));
-		panel5.setMinimumSize(new Dimension(Integer.MAX_VALUE, 15));
-		panel5.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));
+		panel5.setMinimumSize(new Dimension(Integer.MAX_VALUE, 20));
+		panel5.setMaximumSize(new Dimension(Integer.MAX_VALUE, 20));
 		panel5.add(JTAProgressLog);
+		panel5.add(JPBStatus2);
 		panel5.add(JPBStatus);
 		
 		//Row2: Elements Populated
@@ -751,24 +746,17 @@ public class Main extends JFrame {
 		public void runSearch(File dir) {			
 			List <File> inputFiles = new ArrayList<File>();		// build list of input files
 			
-			if (fileChooser.getFileSelectionMode() == JFileChooser.FILES_ONLY) {	// if a FILE
+			if (fileChooser.getFileSelectionMode() == JFileChooser.FILES_ONLY)	// if a FILE
 				inputFiles.add(dir);	// add that file to list
-				JPBStatus.setMaximum (countLines (dir));	//sets progress bar maximum to relative num of files to process
-			} else if (fileChooser.getFileSelectionMode() == JFileChooser.DIRECTORIES_ONLY) {	// if a DIRECTORY
+			else if (fileChooser.getFileSelectionMode() == JFileChooser.DIRECTORIES_ONLY)	// if a DIRECTORY
 				inputFiles = (List <File>) FileUtils.listFiles(dir, null, true);	// parse al in dir and sub dirs
-				JPBStatus.setMaximum (inputFiles.size ());	//sets progress bar maximum to relative num of files to process
-			} else
+			else
 				return;
-			
-			totalFiles += inputFiles.size();	// update counter
-			
 			//inputFiles.forEach ((f) -> {System.out.println (f);});	//<========== for debug
+			totalFiles += inputFiles.size();	// update counter
+			JPBStatus.setMaximum (totalFiles);	//sets progress bar maximum to relative num of files to process
 			
 			for (File file: inputFiles) {		// process file by file
-				
-				if (fileChooser.getFileSelectionMode() == JFileChooser.DIRECTORIES_ONLY)
-					JPBStatus.setValue(++progressCounter);	// update progress bar for many files search, directory search
-				
 				InputStream input = null;
 				
 				try {
@@ -948,7 +936,9 @@ public class Main extends JFrame {
 							System.out.println("IOE " + e);
 						}
 					}
-				}	
+				}
+				
+				JPBStatus.setValue(++progressCounter);	// update progress bar for many files search, directory search
 			}
 		}
 		/**
@@ -959,6 +949,9 @@ public class Main extends JFrame {
 		private void matchRegex(File file, String fileExtension) {
 			int lineNum = 1;		// init line counter
 			String lineA = "";
+			JPBStatus2.setMaximum (countLines (file));	//sets progress bar max to relative num of lines in file
+			JPBStatus2.setValue (0);	// reset line progress bar
+			progressCounter2 = 0;
 			
 			addTextToRegex(HMComponents.get("TxtField").text.getText());
 			//System.out.println ("regexText is " + HMComponents.get("TxtField").regex); //<================ for debug
@@ -977,9 +970,6 @@ public class Main extends JFrame {
 				if (Thread.currentThread().isInterrupted())	// handle interrupted (cancel button)
 					return;
 				
-				if (fileChooser.getFileSelectionMode() == JFileChooser.FILES_ONLY)
-					JPBStatus.setValue(++progressCounter);	// update progress bar for single file search, count lines
-				
 				String lineB = fileReader.nextLine();
 				String line = lineA + lineB;
 				
@@ -993,6 +983,8 @@ public class Main extends JFrame {
 							doResult (comp, line, fileExtension, file, lineNum, true, false, false, true);
 					}
 				}
+				
+				JPBStatus2.setValue(++progressCounter2);	// update progress bar for single file search, count lines
 				
 				lineNum ++;
 				lineA = lineB;
@@ -1178,6 +1170,8 @@ public class Main extends JFrame {
 		protected Void doInBackground() throws Exception {
 			startSearch = new Date();
 			JPBStatus.setValue(0);
+			//JPBStatus2.setValue(0);
+			JPBStatus2.setVisible(true);
 			JPBStatus.setVisible(true);
 			runSearch(userInput);
 			return null;
@@ -1200,8 +1194,8 @@ public class Main extends JFrame {
 			//System.out.println(skipFiles.toString());			//<=========== for debug
 			
 			Toolkit.getDefaultToolkit().beep();		// notify
-			System.out.println ("Got to here");
 			JPBStatus.setVisible(false);
+			JPBStatus2.setVisible(false);
 			
 			getResults(HMComponents.get ("TxtField"));		// update
 			getResults(HMComponents.get ("SSN"));
@@ -1469,6 +1463,7 @@ public class Main extends JFrame {
 		readCounter = 0;
 		matchCounter = 0;
 		progressCounter = 0;
+		progressCounter2 = 0;
 		
 		for (Component comp : HMComponents.values ())
 			comp.initValues ();
