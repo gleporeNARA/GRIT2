@@ -62,6 +62,8 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.FileReader;
+import java.io.LineNumberReader;
 
 /**
  * This program is used to find Generalized Retriever of Information Tool.
@@ -122,6 +124,7 @@ public class Main extends JFrame {
 	private int fileCounter;
 	private int readCounter;
 	private int matchCounter;
+	private int progressCounter;	// helper counter to update progress bar
 	
 	private ExtensionCounter extCounter;
 	private Date startSearch;
@@ -369,7 +372,7 @@ public class Main extends JFrame {
 		JPBStatus = new JProgressBar(0,100);
 		JPBStatus.setValue(0);
 		JPBStatus.setStringPainted(false);
-		JPBStatus.setIndeterminate(true);
+		//JPBStatus.setIndeterminate(true);
 		JPBStatus.setVisible(false);
 		JPBStatus.setBackground(Color.black);
 		JPBStatus.setForeground(new Color(129,218,245));
@@ -740,37 +743,31 @@ public class Main extends JFrame {
 /********************************************************************************************************************
 *											The Search Task Section													*
 ********************************************************************************************************************/
-//###################################################################################################################
-//###################################################################################################################
-//###################################################################################################################
 	private class SearchTask extends SwingWorker<Void, String> {
 		/**
 		 * This method takes a given directory and find SSNs for all the files reachable from that directory.
 		 * @param dir - directory that need to be processed
 		 */
-//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-//==================================		The Recursion Method		=============================================
-//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-		public void runSearch(File dir) {
-			//if (Thread.currentThread().isInterrupted())	// handle interrupted (cancel)
-				//return;
-			
+		public void runSearch(File dir) {			
 			List <File> inputFiles = new ArrayList<File>();		// build list of input files
 			
-			if (fileChooser.getFileSelectionMode() == JFileChooser.FILES_ONLY)	// if a FILE
+			if (fileChooser.getFileSelectionMode() == JFileChooser.FILES_ONLY) {	// if a FILE
 				inputFiles.add(dir);	// add that file to list
-			else if (fileChooser.getFileSelectionMode() == JFileChooser.DIRECTORIES_ONLY)	// if a DIRECTORY
+				JPBStatus.setMaximum (countLines (dir));	//sets progress bar maximum to relative num of files to process
+			} else if (fileChooser.getFileSelectionMode() == JFileChooser.DIRECTORIES_ONLY) {	// if a DIRECTORY
 				inputFiles = (List <File>) FileUtils.listFiles(dir, null, true);	// parse al in dir and sub dirs
-			else
+				JPBStatus.setMaximum (inputFiles.size ());	//sets progress bar maximum to relative num of files to process
+			} else
 				return;
 			
 			totalFiles += inputFiles.size();	// update counter
-			
+			JPBStatus.setVisible(true);
 			//inputFiles.forEach ((f) -> {System.out.println (f);});	//<========== for debug
 			
 			for (File file: inputFiles) {		// process file by file
-				if (Thread.currentThread().isInterrupted())	// handle interrupted (cancel)
-					return;
+				
+				if (fileChooser.getFileSelectionMode() == JFileChooser.DIRECTORIES_ONLY)
+					JPBStatus.setValue(++progressCounter);	// update progress bar for many files search, directory search
 				
 				InputStream input = null;
 				
@@ -954,8 +951,6 @@ public class Main extends JFrame {
 				}	
 			}
 		}
-//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 		/**
 		 * This method does the regular expression matching.
 		 * Results will be output to the GUI and save in HTML format.
@@ -966,8 +961,7 @@ public class Main extends JFrame {
 			String lineA = "";
 			
 			addTextToRegex(HMComponents.get("TxtField").text.getText());
-			//System.out.println ("regexText is " + HMComponents.get("TxtField").regex);			//<================ for debug
-			//System.out.println ("Made it to here !!!");			//<================ for debug
+			//System.out.println ("regexText is " + HMComponents.get("TxtField").regex); //<================ for debug
 			
 			if (fileReader.hasNext()) {			// check if file is readable
 				readCounter ++;
@@ -980,6 +974,12 @@ public class Main extends JFrame {
 							IF THERE ARE MULTIPLE LINES IN THE FILE
 				****************************************************************/
 			while(fileReader.hasNext()) {	// use global file reader with file's text already loaded
+				if (Thread.currentThread().isInterrupted())	// handle interrupted (cancel button)
+					return;
+				
+				if (fileChooser.getFileSelectionMode() == JFileChooser.FILES_ONLY)
+					JPBStatus.setValue(++progressCounter);	// update progress bar for single file search, count lines
+				
 				String lineB = fileReader.nextLine();
 				String line = lineA + lineB;
 				
@@ -1201,7 +1201,7 @@ public class Main extends JFrame {
 			
 			Toolkit.getDefaultToolkit().beep();		// notify
 			JPBStatus.setVisible(false);
-			JPBStatus.setValue(0);
+			//JPBStatus.setValue(0);
 			
 			getResults(HMComponents.get ("TxtField"));		// update
 			getResults(HMComponents.get ("SSN"));
@@ -1245,9 +1245,6 @@ public class Main extends JFrame {
 			JBExport.setEnabled(true);
 		}
 	}
-//###################################################################################################################
-//###################################################################################################################
-//###################################################################################################################
 
 /********************************************************************************************************************
 *									Miscelaneous Helper Method and Classes Section									*
@@ -1315,6 +1312,31 @@ public class Main extends JFrame {
 			html = new StringBuilder ();
 			csv = new StringBuilder ();
 		}
+	}
+	
+	/**
+	 * this method is use to determine the number of lines in a file, it is initially created as helper
+	 * method for the progress bar when searching through a single large file. a precise max value is needed
+	 * initialize the progress bar to count the progress accurately.
+	 * !note: since we don't know how many lines in is a large file and counting through each one is inefficient,
+	 * we skip the largest number of lines possible and the lineNumberReader will tell us how many lines it
+	 * actually has, this saves computational time in counting thorugh all the lines in between.
+	 */
+	public int countLines(File file) {
+		int lines = 0;
+
+		try {
+			LineNumberReader lineNumberReader = new LineNumberReader(new FileReader(file));
+			lineNumberReader.skip(Long.MAX_VALUE);	// skip the largest number to get the last line in the file
+			lines = lineNumberReader.getLineNumber();
+			lineNumberReader.close();
+		} catch (FileNotFoundException e) {
+			System.out.println("FileNotFoundException Occurred: " + e.getMessage());
+		} catch (IOException e) {
+			System.out.println("IOException Occurred: " + e.getMessage());
+		}
+
+		return lines + 1;	// compensate for last line since it count \n and last line doesn't have \n
 	}
 	
 	/**
@@ -1446,6 +1468,7 @@ public class Main extends JFrame {
 		fileCounter = 0;
 		readCounter = 0;
 		matchCounter = 0;
+		progressCounter = 0;
 		
 		for (Component comp : HMComponents.values ())
 			comp.initValues ();
