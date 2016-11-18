@@ -761,7 +761,7 @@ public class Main extends JFrame {
 				return;
 			
 			totalFiles += inputFiles.size();	// update counter
-			JPBStatus.setVisible(true);
+			
 			//inputFiles.forEach ((f) -> {System.out.println (f);});	//<========== for debug
 			
 			for (File file: inputFiles) {		// process file by file
@@ -1177,6 +1177,8 @@ public class Main extends JFrame {
 		@Override
 		protected Void doInBackground() throws Exception {
 			startSearch = new Date();
+			JPBStatus.setValue(0);
+			JPBStatus.setVisible(true);
 			runSearch(userInput);
 			return null;
 		}
@@ -1186,13 +1188,11 @@ public class Main extends JFrame {
 			if (isCancelled())
 				return;
 
-			for (String msg : msgList) {
-				if (msg.equals("printCurrentProgress")) {
-					JPBStatus.setVisible(true);
+			for (String msg : msgList)
+				if (msg.equals("printCurrentProgress"))
 					printToProgress("Completed " + fileCounter + " / " + totalFiles + " files." + " Results: " + (HMComponents.get ("TxtField").counter + HMComponents.get ("SSN").counter + matchCounter) );
-				} else
+				else
 					printToLog(msg);
-			}
 		}
 		
 		@Override
@@ -1200,8 +1200,8 @@ public class Main extends JFrame {
 			//System.out.println(skipFiles.toString());			//<=========== for debug
 			
 			Toolkit.getDefaultToolkit().beep();		// notify
+			System.out.println ("Got to here");
 			JPBStatus.setVisible(false);
-			//JPBStatus.setValue(0);
 			
 			getResults(HMComponents.get ("TxtField"));		// update
 			getResults(HMComponents.get ("SSN"));
