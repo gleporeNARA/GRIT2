@@ -768,14 +768,7 @@ public class Main extends JFrame {
 						fileExtension = fileName.substring(i+1);
 					
 					if (fileExtension.equals("txt")) {
-						//ContentHandler handler = new BodyContentHandler(-1);
-						input = new FileInputStream(file);	
-						//Metadata metadata = new Metadata();
-						//TXTParser txtParser = new TXTParser();
-						//ParseContext context = new ParseContext();
-						
-						//txtParser.parse(input, handler, metadata, context);
-						//fileReader = new Scanner(handler.toString());
+						input = new FileInputStream(file);	//for txt files we will let java read them natively instead of Tika parser
 						fileReader = new Scanner(input);
 					} else if (fileExtension.equals("docx")) {
 						OPCPackage pkg = OPCPackage.open(file);
@@ -948,16 +941,40 @@ public class Main extends JFrame {
 		 */
 		private void matchRegex(File file, String fileExtension) {
 			int lineNum = 1;		// init line counter
-			String lineA = "";
+			StringBuilder currLine = new StringBuilder ("");	//these are use as buffers to join multiple lines for search terms that are broken
+			StringBuilder prevLine = new StringBuilder ("");	//between the end of the privous line and start at the beginning of the next line
+			StringBuilder combLine = new StringBuilder ("");
 			JPBStatus2.setMaximum (countLines (file));	//sets progress bar max to relative num of lines in file
 			JPBStatus2.setValue (0);	// reset line progress bar
 			progressCounter2 = 0;
 			
-			addTextToRegex(HMComponents.get("TxtField").text.getText());
+			addTextToRegex(HMComponents.get("TxtField").text.getText()); //<<< possible redundancy >>> adding the same user input regex to list on each file searched
 			//System.out.println ("regexText is " + HMComponents.get("TxtField").regex); //<================ for debug
 			
+			while (fileReader.hasNext()) {
+				//combLine.append (fileReader.nextLine ());
+				currLine.setLength (0);	// clears the current string buffer
+				currLine.trimToSize ();	// and its internal char array buffer
+				currLine.append (fileReader.nextLine ()); //this is needed since it reassigns back to previous later
+				combLine.setLength (0);
+				combLine.trimToSize ();
+				combLine.append (currLine).append (prevLine);
+				System.out.println (combLine.toString ());
+				prevLine.setLength (0);
+				prevLine.trimToSize ();
+				prevLine.append (currLine);
+				
+			}
+			
+/*********************************************************************************************
+**********************************************************************************************
+**********************************************************************************************
+**********************************************************************************************
+*********************************************************************************************/			
+			
+/*			
 			if (fileReader.hasNext()) {			// check if file is readable
-				readCounter ++;
+				readCounter ++;	//<==============what does this do???
 				extCounter.count(fileExtension);
 				lineA = fileReader.nextLine();
 			} else
@@ -966,7 +983,7 @@ public class Main extends JFrame {
 				/****************************************************************
 							IF THERE ARE MULTIPLE LINES IN THE FILE
 				****************************************************************/
-			while(fileReader.hasNext()) {	// use global file reader with file's text already loaded
+/*			while(fileReader.hasNext()) {	// use global file reader with file's text already loaded
 				if (Thread.currentThread().isInterrupted())	// handle interrupted (cancel button)
 					return;
 				
@@ -993,7 +1010,7 @@ public class Main extends JFrame {
 				/****************************************************************
 							IF MATCH ON LAST LINE OR ONLY ONE LINE
 				****************************************************************/
-			if( !(fileReader.hasNext()) ) {				
+/*			if( !(fileReader.hasNext()) ) {				
 				for (Component comp : HMComponents.values ()) {			// perhaps impliments the true false stuff directly into each individual
 					if (comp.TYPE == 'T' && !comp.text.getText().isEmpty()) {// objects rather than using method parameters like this
 						doResult (comp, lineA, fileExtension, file, lineNum, false, true, true, false);
@@ -1006,7 +1023,14 @@ public class Main extends JFrame {
 				}
 				
 				lineNum ++;
-			}
+			}		
+*/			
+			
+/*********************************************************************************************
+**********************************************************************************************
+**********************************************************************************************
+**********************************************************************************************
+*********************************************************************************************/			
 			
 			fileReader.close();				// tidy up and update progress
 			publish("printCurrentProgress");
