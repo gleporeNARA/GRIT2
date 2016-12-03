@@ -962,7 +962,7 @@ public class Main extends JFrame {
 					return;
 				
 				Main.this.setString (currLine, new StringBuilder (fileReader.nextLine ())); //set new line to current line
-				Main.this.setString (combLine, currLine, prevLine); //combine current line with previous line into single line 
+				Main.this.setString (combLine, prevLine, new StringBuilder (" "), currLine); //combine current line with previous line into single line 
 				
 				for (Component comp : HMComponents.values ()) //check each active regex search component to find match on the line 
 					if (comp.isActive ())
@@ -1591,7 +1591,7 @@ public class Main extends JFrame {
 		}
 		
 		tempStr.trimToSize (); //trim the internal StringBuilder buffer array
-		//System.out.println ("tempStr ==> " + tempStr.toString () + " capacity:" + tempStr.capacity ()); //<==== for debug
+		//System.out.println ("tempStr ==> " + tempStr.toString () + " capacity: " + tempStr.capacity ()); //<==== for debug
 	}
 
 /********************************************************************************************************************
