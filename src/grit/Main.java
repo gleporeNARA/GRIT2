@@ -951,19 +951,26 @@ public class Main extends JFrame {
 			addTextToRegex(HMComponents.get("TxtField").text.getText()); //<<< possible redundancy >>> adding the same user input regex to list on each file searched
 			//System.out.println ("regexText is " + HMComponents.get("TxtField").regex); //<================ for debug
 			
-			while (fileReader.hasNext()) {
-				//combLine.append (fileReader.nextLine ());
-				currLine.setLength (0);	// clears the current string buffer
-				currLine.trimToSize ();	// and its internal char array buffer
-				currLine.append (fileReader.nextLine ()); //this is needed since it reassigns back to previous later
-				combLine.setLength (0);
-				combLine.trimToSize ();
-				combLine.append (currLine).append (prevLine);
-				System.out.println (combLine.toString ());
-				prevLine.setLength (0);
-				prevLine.trimToSize ();
-				prevLine.append (currLine);
+			if (fileReader.hasNext()) {			// check if file is readable
+				++readCounter;
+				extCounter.count(fileExtension);
+			} else
+				System.out.println(file.getName() + " ext: " + fileExtension);
+			
+			while (fileReader.hasNext()) { //walk over each line in file
+				if (Thread.currentThread().isInterrupted())	// handle interrupted (cancel button)
+					return;
 				
+				Main.this.setString (currLine, new StringBuilder (fileReader.nextLine ())); //set new line to current line
+				Main.this.setString (combLine, currLine, prevLine); //combine current line with previous line into single line 
+				
+				for (Component comp : HMComponents.values ()) //check each active regex search component to find match on the line 
+					if (comp.isActive ())
+						doResult (comp, combLine, fileExtension, file, lineNum);
+				
+				Main.this.setString (prevLine, currLine); //set current line to previous line
+				JPBStatus2.setValue(++progressCounter2);	// update progress bar for single file search, count lines
+				++lineNum;
 			}
 			
 /*********************************************************************************************
@@ -1330,6 +1337,15 @@ public class Main extends JFrame {
 			html = new StringBuilder ();
 			csv = new StringBuilder ();
 		}
+		
+		boolean isActive () {
+			if (TYPE == 'T')
+				return !text.getText().isEmpty();
+			else if (TYPE == 'C')
+				return checkBox.isSelected();
+			else
+				return false;
+		}
 	}
 	
 	/**
@@ -1358,27 +1374,41 @@ public class Main extends JFrame {
 	}
 	
 	/**
-	 * This subroutine method is use for writing found regex matches to result list 
+	 * This subroutine method is use for writing found regex matches to result list
+	 * 
+	 * Note! originally TextField and SSN results are added to List and ListUnique linkedList, for everything else
+	 * gets added to otherMatchList. be mindfull of how these two fields are treated differently than others matches
 	 */
-	private void doResult (Component comp, String line, String fileExt, File file, int lineNum, boolean cntMatch, boolean lst, boolean lstUnique, boolean lstOther) {
+	private void doResult (Component comp, StringBuilder line, String fileExt, File file, int lineNum) {
+	//private void doResult (Component comp, StringBuilder line, String fileExt, File file, int lineNum, boolean cntMatch, boolean lst, boolean lstUnique, boolean lstOther) {
 		for (Pattern regex : comp.regex) {
-			Matcher patternMatcher = regex.matcher(line);
+			Matcher patternMatcher = regex.matcher(line.toString ());
 			
 			while (patternMatcher.find()) {
 				comp.counter ++;
-				JBTableModel.addRow(new Object[]{comp.counter, comp.SYM, patternMatcher.group(), line, fileExt, file, lineNum});
+				JBTableModel.addRow(new Object[]{comp.counter, comp.SYM, patternMatcher.group(), line.toString(), fileExt, file, lineNum});
 				
-				if (cntMatch) 
-					matchCounter ++;
+				if (comp.SYM == "SSN" || comp.SYM == "Text") {
+					comp.resultList.add(new Match(comp.counter, comp.SYM, patternMatcher.group(), line.toString(), fileExt, file, lineNum));
+					comp.resultListUnique.add(new Match(comp.counter, comp.SYM, patternMatcher.group(), line.toString(), fileExt, file, lineNum));
+				} else {
+					matchCounter ++; // use for other matches only, not for ssn and textField
+					resultOtherMatchList.add(new Match(comp.counter, comp.SYM, patternMatcher.group(), line.toString(), fileExt, file, lineNum));
+				}
+				
+				/*
+				if (cntMatch)
+					matchCounter ++; // use for other matches only, not for ssn and textField
 				
 				if (lst)
-					comp.resultList.add(new Match(comp.counter, comp.SYM, patternMatcher.group(), line, fileExt, file, lineNum));
+					comp.resultList.add(new Match(comp.counter, comp.SYM, patternMatcher.group(), line.toString(), fileExt, file, lineNum));
 				
 				if (lstUnique)
-					comp.resultListUnique.add(new Match(comp.counter, comp.SYM, patternMatcher.group(), line, fileExt, file, lineNum));
+					comp.resultListUnique.add(new Match(comp.counter, comp.SYM, patternMatcher.group(), line.toString(), fileExt, file, lineNum));
 				
 				if (lstOther)
-					resultOtherMatchList.add(new Match(comp.counter, comp.SYM, patternMatcher.group(), line, fileExt, file, lineNum));
+					resultOtherMatchList.add(new Match(comp.counter, comp.SYM, patternMatcher.group(), line.toString(), fileExt, file, lineNum));
+				*/
 			}
 		}
 	}
@@ -1538,6 +1568,30 @@ public class Main extends JFrame {
 	private void printToLog(String msg) {
 		//JTAResultLog.append(msg);
 		//JTAResultLog.setCaretPosition(JTAResultLog.getDocument().getLength());
+	}
+	
+	/**
+	 * this method clears a targeted handler stringBuilder object internal array buffer
+	 * Note! the first vararg element is the handler string, all later elements is the concatenating string
+	 */
+	private void setString (StringBuilder... args) {
+		if (args.length == 0) 
+			return; //if no arguments is passed in, do nothing
+		
+		boolean firstElem = true; //switch used to clear the handler string, the first element in the varargs 
+		StringBuilder tempStr = null; //use to temporary hold the handler string to perform concatenation
+		
+		for (StringBuilder arg : args) {
+			if (firstElem) {
+				tempStr = arg; //get the handler string and clears it for concatenation
+				tempStr.setLength (0);
+				firstElem = false;
+			} else
+				tempStr.append (arg);
+		}
+		
+		tempStr.trimToSize (); //trim the internal StringBuilder buffer array
+		//System.out.println ("tempStr ==> " + tempStr.toString () + " capacity:" + tempStr.capacity ()); //<==== for debug
 	}
 
 /********************************************************************************************************************
