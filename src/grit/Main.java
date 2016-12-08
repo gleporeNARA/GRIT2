@@ -934,22 +934,30 @@ public class Main extends JFrame {
 				JPBStatus.setValue(++progressCounter);	// update progress bar for many files search, directory search
 			}
 		}
+
+/**********************************************************************************************************************************
+***********************************************************************************************************************************
+***********************************************************************************************************************************
+***********************************************************************************************************************************
+**********************************************************************************************************************************/
+		
 		/**
 		 * This method does the regular expression matching.
 		 * Results will be output to the GUI and save in HTML format.
 		 * @param file - file that will be processed
+		 *
+		 * Note! redundant issue where previous line is read twice. find ways to fix!
 		 */
 		private void matchRegex(File file, String fileExtension) {
 			int lineNum = 1;		// init line counter
-			StringBuilder currLine = new StringBuilder ("");	//these are use as buffers to join multiple lines for search terms that are broken
-			StringBuilder prevLine = new StringBuilder ("");	//between the end of the privous line and start at the beginning of the next line
-			StringBuilder combLine = new StringBuilder ("");
+			StringBuilder currLine = new StringBuilder ();	//these are use as buffers to join multiple lines for search terms that are broken
+			StringBuilder prevLine = new StringBuilder ();	//between the end of the privous line and start at the beginning of the next line
+			StringBuilder combLine = new StringBuilder ();
 			JPBStatus2.setMaximum (countLines (file));	//sets progress bar max to relative num of lines in file
 			JPBStatus2.setValue (0);	// reset line progress bar
 			progressCounter2 = 0;
 			
 			addTextToRegex(HMComponents.get("TxtField").text.getText()); //<<< possible redundancy >>> adding the same user input regex to list on each file searched
-			//System.out.println ("regexText is " + HMComponents.get("TxtField").regex); //<================ for debug
 			
 			if (fileReader.hasNext()) {			// check if file is readable
 				++readCounter;
@@ -961,89 +969,74 @@ public class Main extends JFrame {
 				if (Thread.currentThread().isInterrupted())	// handle interrupted (cancel button)
 					return;
 				
-				Main.this.setString (currLine, new StringBuilder (fileReader.nextLine ())); //set new line to current line
-				Main.this.setString (combLine, prevLine, new StringBuilder (" "), currLine); //combine current line with previous line into single line 
+				Main.this.setString (currLine, new StringBuilder (fileReader.nextLine ())); //get new line from file and set to current line
+				Main.this.setString (combLine, prevLine, new StringBuilder (" "), currLine); //combine current line with previous line into single line
 				
-				for (Component comp : HMComponents.values ()) //check each active regex search component to find match on the line 
-					if (comp.isActive ())
-						doResult (comp, combLine, fileExtension, file, lineNum);
-				
+				for (Component comp : HMComponents.values ()) //for each line check whether each active regex search component contains a match
+					if (comp.isActive ()) {
+						//doResult (comp, combLine, fileExtension, file, lineNum);
+						
+						
+						
+						for (Pattern regex : comp.regex) {
+							int prvMchCnt = 0, crrMchCnt = 0, cmbMchCnt = 0;
+							
+							Matcher prvMchr = regex.matcher (prevLine.toString ());
+							while (prvMchr.find ())
+								++prvMchCnt;
+							
+							Matcher crrMchr = regex.matcher (currLine.toString ());
+							while (crrMchr.find ())
+								++crrMchCnt;
+							crrMchr.reset ();
+							
+							Matcher cmbMchr = regex.matcher (combLine.toString ());
+							while (cmbMchr.find ())
+								++cmbMchCnt;
+							cmbMchr.reset ();
+							
+							if (cmbMchCnt > crrMchCnt + prvMchCnt) {
+								System.out.println ("adding combine line");
+								while (cmbMchr.find ())
+										doResult (comp, combLine, cmbMchr, fileExtension, file, lineNum);
+							} else {
+								System.out.println ("adding current line");
+								while (crrMchr.find ())
+									doResult (comp, currLine, crrMchr, fileExtension, file, lineNum);
+							}
+							
+							
+							// issue of double counting when match is found between lines. previously added current line gets counted 
+							// again when it becomes the previous of the current itteration, where there is match found in between the
+							// jointed lines. it look like one line look ahead is insufficient, perhaps implement two lines look ahead
+							
+							System.out.println ("prevLine: " + prevLine.toString () + " match cnt: " + prvMchCnt); //<======for debug !!!
+							System.out.println ("currLine: " + currLine.toString () + " match cnt: " + crrMchCnt); //<======for debug !!!
+							System.out.println ("combLine: " + combLine.toString () + " match cnt: " + cmbMchCnt + '\n'); //<======for debug !!!
+							
+							
+							
+						}
+						
+						
+						
+						
+					}
 				Main.this.setString (prevLine, currLine); //set current line to previous line
 				JPBStatus2.setValue(++progressCounter2);	// update progress bar for single file search, count lines
 				++lineNum;
-			}
-			
-/*********************************************************************************************
-**********************************************************************************************
-**********************************************************************************************
-**********************************************************************************************
-*********************************************************************************************/			
-			
-/*			
-			if (fileReader.hasNext()) {			// check if file is readable
-				readCounter ++;	//<==============what does this do???
-				extCounter.count(fileExtension);
-				lineA = fileReader.nextLine();
-			} else
-				System.out.println(file.getName() + " ext: " + fileExtension);
-			
-				/****************************************************************
-							IF THERE ARE MULTIPLE LINES IN THE FILE
-				****************************************************************/
-/*			while(fileReader.hasNext()) {	// use global file reader with file's text already loaded
-				if (Thread.currentThread().isInterrupted())	// handle interrupted (cancel button)
-					return;
-				
-				String lineB = fileReader.nextLine();
-				String line = lineA + lineB;
-				
-				for (Component comp : HMComponents.values ()) {			// perhaps impliments the true false stuff directly into each individual
-					if (comp.TYPE == 'T' && !comp.text.getText().isEmpty()) {// objects rather than using method parameters like this
-						doResult (comp, line, fileExtension, file, lineNum, false, true, true, false);
-					} else if (comp.TYPE == 'C' && comp.checkBox.isSelected()) {
-						if (comp.SYM == "SSN")
-							doResult (comp, line, fileExtension, file, lineNum, false, true, true, false);
-						else
-							doResult (comp, line, fileExtension, file, lineNum, true, false, false, true);
-					}
-				}
-				
-				JPBStatus2.setValue(++progressCounter2);	// update progress bar for single file search, count lines
-				
-				lineNum ++;
-				lineA = lineB;
-			}
-			
-				/****************************************************************
-							IF MATCH ON LAST LINE OR ONLY ONE LINE
-				****************************************************************/
-/*			if( !(fileReader.hasNext()) ) {				
-				for (Component comp : HMComponents.values ()) {			// perhaps impliments the true false stuff directly into each individual
-					if (comp.TYPE == 'T' && !comp.text.getText().isEmpty()) {// objects rather than using method parameters like this
-						doResult (comp, lineA, fileExtension, file, lineNum, false, true, true, false);
-					} else if (comp.TYPE == 'C' && comp.checkBox.isSelected()) {
-						if (comp.SYM == "SSN")
-							doResult (comp, lineA, fileExtension, file, lineNum, false, true, true, false);
-						else
-							doResult (comp, lineA, fileExtension, file, lineNum, true, false, false, true);
-					}
-				}
-				
-				lineNum ++;
-			}		
-*/			
-			
-/*********************************************************************************************
-**********************************************************************************************
-**********************************************************************************************
-**********************************************************************************************
-*********************************************************************************************/			
+			}			
 			
 			fileReader.close();				// tidy up and update progress
 			publish("printCurrentProgress");
 			fileCounter ++;
-			//System.out.println("Search Ended");		//<========= for debugging
 		}
+		
+/**********************************************************************************************************************************
+***********************************************************************************************************************************
+***********************************************************************************************************************************
+***********************************************************************************************************************************
+**********************************************************************************************************************************/
 		
 		private ArrayList getOtherResults(ArrayList<Match> elf) {
 			for (Match pr : resultOtherMatchList) {
@@ -1122,11 +1115,8 @@ public class Main extends JFrame {
 		
 		private void buildCSVResult() {
 			postCSVResult.append (csvWriter.addTableHeader());
-			
 			for (Component comp : HMComponents.values ())
-				if (comp.TYPE == 'T' && !comp.text.getText().isEmpty())
-					postCSVResult.append (comp.csv.toString ());
-				else if (comp.TYPE == 'C' && comp.checkBox.isSelected ())
+				if (comp.isActive ())
 					postCSVResult.append (comp.csv.toString ());
 		}
 
@@ -1145,14 +1135,11 @@ public class Main extends JFrame {
 			postHtmlResult.append (htmlWriter.addOpenNavULTag());
 			
 			for (Component comp : HMComponents.values ()) {
-				StringBuilder link = new StringBuilder (comp.SYM.replaceAll ("\\s+", ""));
-				StringBuilder lnkLabel = new StringBuilder (comp.SYM + " Matches");
-				
-				if (comp.TYPE == 'T' && !comp.text.getText().isEmpty())
+				if (comp.isActive ()) {
+					StringBuilder link = new StringBuilder (comp.SYM.replaceAll ("\\s+", ""));
+					StringBuilder lnkLabel = new StringBuilder (comp.SYM + " Matches");
 					Main.this.buildHTMLNav (comp.counter, link, lnkLabel);
-				
-				if (comp.TYPE == 'C' && comp.checkBox.isSelected ())
-					Main.this.buildHTMLNav (comp.counter, link, lnkLabel);
+				}
 			}
 			
 			postHtmlResult.append (htmlWriter.addCloseNavULTag());
@@ -1169,15 +1156,13 @@ public class Main extends JFrame {
 			postHtmlResult.append (htmlWriter.addCloseCenterTag());
 			
 			for (Component comp : HMComponents.values ()) {
-				StringBuilder link = new StringBuilder (comp.SYM.replaceAll ("\\s+", ""));
-				StringBuilder lnkLabel = new StringBuilder (comp.SYM + " Found Results");
-				StringBuilder tableTagId = new StringBuilder (comp.SYM.replaceAll ("\\s+", "") + "ResultTable");
-				StringBuilder html = new StringBuilder (comp.html.toString ());
-				
-				if (comp.TYPE == 'T' && !comp.text.getText().isEmpty())
+				if (comp.isActive ()) {
+					StringBuilder link = new StringBuilder (comp.SYM.replaceAll ("\\s+", ""));
+					StringBuilder lnkLabel = new StringBuilder (comp.SYM + " Found Results");
+					StringBuilder tableTagId = new StringBuilder (comp.SYM.replaceAll ("\\s+", "") + "ResultTable");
+					StringBuilder html = new StringBuilder (comp.html.toString ());
 					Main.this.buildHTMLPanel (link, lnkLabel, tableTagId, html);
-				else if (comp.TYPE == 'C' && comp.checkBox.isSelected ())
-					Main.this.buildHTMLPanel (link, lnkLabel, tableTagId, html);
+				}
 			}
 			
 			if(skipFiles.size() > 0) {
@@ -1201,7 +1186,6 @@ public class Main extends JFrame {
 		protected Void doInBackground() throws Exception {
 			startSearch = new Date();
 			JPBStatus.setValue(0);
-			//JPBStatus2.setValue(0);
 			JPBStatus2.setVisible(true);
 			JPBStatus.setVisible(true);
 			runSearch(userInput);
@@ -1379,12 +1363,13 @@ public class Main extends JFrame {
 	 * Note! originally TextField and SSN results are added to List and ListUnique linkedList, for everything else
 	 * gets added to otherMatchList. be mindfull of how these two fields are treated differently than others matches
 	 */
-	private void doResult (Component comp, StringBuilder line, String fileExt, File file, int lineNum) {
-	//private void doResult (Component comp, StringBuilder line, String fileExt, File file, int lineNum, boolean cntMatch, boolean lst, boolean lstUnique, boolean lstOther) {
-		for (Pattern regex : comp.regex) {
-			Matcher patternMatcher = regex.matcher(line.toString ());
+	private void doResult (Component comp, StringBuilder line, Matcher patternMatcher, String fileExt, File file, int lineNum) {
+		//for (Pattern regex : comp.regex) {
+			//Matcher patternMatcher = regex.matcher(line.toString ());
 			
-			while (patternMatcher.find()) {
+			//while (patternMatcher.find()) {
+				
+				
 				comp.counter ++;
 				JBTableModel.addRow(new Object[]{comp.counter, comp.SYM, patternMatcher.group(), line.toString(), fileExt, file, lineNum});
 				
@@ -1396,21 +1381,9 @@ public class Main extends JFrame {
 					resultOtherMatchList.add(new Match(comp.counter, comp.SYM, patternMatcher.group(), line.toString(), fileExt, file, lineNum));
 				}
 				
-				/*
-				if (cntMatch)
-					matchCounter ++; // use for other matches only, not for ssn and textField
 				
-				if (lst)
-					comp.resultList.add(new Match(comp.counter, comp.SYM, patternMatcher.group(), line.toString(), fileExt, file, lineNum));
-				
-				if (lstUnique)
-					comp.resultListUnique.add(new Match(comp.counter, comp.SYM, patternMatcher.group(), line.toString(), fileExt, file, lineNum));
-				
-				if (lstOther)
-					resultOtherMatchList.add(new Match(comp.counter, comp.SYM, patternMatcher.group(), line.toString(), fileExt, file, lineNum));
-				*/
-			}
-		}
+			//}
+		//}
 	}
 	
 	/**
@@ -1472,18 +1445,14 @@ public class Main extends JFrame {
 		tempTextList.clear();
 		
 		String[] tempText = text.split("(,)|(\\|)"); //split text entry on commas|(\\s), pipes or blank spaces (including line breaks)
-		for (int i = 0; i < tempText.length; i++) {
-			//System.out.println("tempText[i] is " + tempText[i]);		// <======== for debugging
-			
+		for (int i = 0; i < tempText.length; i++) {			
 			if (!tempText[i].matches("")) {
 				tempText[i] = tempText[i].trim();
-				//System.out.println("adding " + tempText[i]);		// <======== for debugging
 				tempTextList.add(tempText[i]);
 			}
 		}
 
 		Pattern pattern = Pattern.compile("\\b(" + StringUtils.join(tempTextList,"|") + ")\\b", Pattern.DOTALL);
-		//System.out.println("List: " + tempTextList);			// <======== for debugging
 		HMComponents.get ("TxtField").regex.add(pattern);
 	}
 	
@@ -1581,17 +1550,14 @@ public class Main extends JFrame {
 		boolean firstElem = true; //switch used to clear the handler string, the first element in the varargs 
 		StringBuilder tempStr = null; //use to temporary hold the handler string to perform concatenation
 		
-		for (StringBuilder arg : args) {
+		for (StringBuilder arg : args)
 			if (firstElem) {
 				tempStr = arg; //get the handler string and clears it for concatenation
 				tempStr.setLength (0);
+				tempStr.trimToSize (); //trim the internal StringBuilder buffer array
 				firstElem = false;
 			} else
 				tempStr.append (arg);
-		}
-		
-		tempStr.trimToSize (); //trim the internal StringBuilder buffer array
-		//System.out.println ("tempStr ==> " + tempStr.toString () + " capacity: " + tempStr.capacity ()); //<==== for debug
 	}
 
 /********************************************************************************************************************
