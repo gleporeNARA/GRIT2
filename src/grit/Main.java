@@ -947,12 +947,31 @@ public class Main extends JFrame {
 		 * @param file - file that will be processed
 		 *
 		 * Note! redundant issue where previous line is read twice. find ways to fix!
+		 *											
+		 * Note! issue of double counting when match is found between lines. previously added current line gets counted 
+		 * again when it becomes the previous of the current itteration, where there is match found in between the
+		 * jointed lines. it look like one line look ahead is insufficient, perhaps implement two lines look ahead
+		 *
+		 * Note! we look ahead one line to check if match is found in between lines, if a match is found in between lines then
+		 * we get match results of the combined current line and next line. but if no match is found in between, then we just get
+		 * match result from current line and sets the next line to current line and repeat the look ahead process. this also
+		 * results in the current line unable to reach the last line in file because last line was already read by next line and
+		 * the loop couldn't come around to set next line to current line. a oneExtraRun is implemented to allow the loop to run
+		 * one extra time to set next line to current line for normal matching function.
+		 * 
+		 * Note! this algorithm considers higher precedence for matches found in between line than matches found on current line, 
+		 * since matches found in between lines also contains matches on current line. thus this should avoid double counting 
+		 * of current line matches when a between match occurs.
 		 */
 		private void matchRegex(File file, String fileExtension) {
 			int lineNum = 1;		// init line counter
-			StringBuilder currLine = new StringBuilder ();	//these are use as buffers to join multiple lines for search terms that are broken
-			StringBuilder prevLine = new StringBuilder ();	//between the end of the privous line and start at the beginning of the next line
-			StringBuilder combLine = new StringBuilder ();
+			int oneExtraRun = 1;	//causes the line reader to run one extra time when last line in file is reached so that
+				//next line can be reassign to current line for matching on current line
+			
+			StringBuilder currLine = new StringBuilder ();	//between the end of the privous line and start at the beginning of the next line
+			StringBuilder nextLine = new StringBuilder ();	//look ahead line check if match is found between joined line to avoid double counting
+			StringBuilder combLine = new StringBuilder ();	//this is the combine line of the previous line and the current line
+			
 			JPBStatus2.setMaximum (countLines (file));	//sets progress bar max to relative num of lines in file
 			JPBStatus2.setValue (0);	// reset line progress bar
 			progressCounter2 = 0;
@@ -965,64 +984,54 @@ public class Main extends JFrame {
 			} else
 				System.out.println(file.getName() + " ext: " + fileExtension);
 			
-			while (fileReader.hasNext()) { //walk over each line in file
+			//current line fetches a new line from file only once, for every other time it get it line from the next line string 
+			Main.this.setString (currLine, new StringBuilder (fileReader.nextLine ())); //get new line from file and set to current line
+			
+			while (fileReader.hasNext() || oneExtraRun-- > 0) { //walk over each line in file
 				if (Thread.currentThread().isInterrupted())	// handle interrupted (cancel button)
 					return;
 				
-				Main.this.setString (currLine, new StringBuilder (fileReader.nextLine ())); //get new line from file and set to current line
-				Main.this.setString (combLine, prevLine, new StringBuilder (" "), currLine); //combine current line with previous line into single line
+				if (fileReader.hasNext())
+					Main.this.setString (nextLine, new StringBuilder (fileReader.nextLine ()));	//get the next line if it exist
+				else
+					nextLine = new StringBuilder ();	//if no more line to read, set empty string to next line
+				
+				Main.this.setString (combLine, currLine, new StringBuilder (" "), nextLine); //combine current line with previous line into single line
 				
 				for (Component comp : HMComponents.values ()) //for each line check whether each active regex search component contains a match
 					if (comp.isActive ()) {
-						//doResult (comp, combLine, fileExtension, file, lineNum);
-						
-						
 						
 						for (Pattern regex : comp.regex) {
-							int prvMchCnt = 0, crrMchCnt = 0, cmbMchCnt = 0;
-							
-							Matcher prvMchr = regex.matcher (prevLine.toString ());
-							while (prvMchr.find ())
-								++prvMchCnt;
+							int crrMchCnt = 0, nxtMchCnt = 0, cmbMchCnt = 0;
 							
 							Matcher crrMchr = regex.matcher (currLine.toString ());
-							while (crrMchr.find ())
-								++crrMchCnt;
-							crrMchr.reset ();
+							crrMchCnt = getMatchCount (crrMchr);
+							
+							Matcher nxtMchr = regex.matcher (nextLine.toString ());
+							nxtMchCnt = getMatchCount (nxtMchr);
 							
 							Matcher cmbMchr = regex.matcher (combLine.toString ());
-							while (cmbMchr.find ())
-								++cmbMchCnt;
-							cmbMchr.reset ();
+							cmbMchCnt = getMatchCount (cmbMchr);
 							
-							if (cmbMchCnt > crrMchCnt + prvMchCnt) {
-								System.out.println ("adding combine line");
+							//System.out.println ("currLine: " + currLine.toString () + " - match count: " + crrMchCnt); //<====for debug !!!
+							//System.out.println ("nextLine: " + nextLine.toString () + " - match count: " + nxtMchCnt); //<====for debug !!!
+							//System.out.println ("combLine: " + combLine.toString () + " - match count: " + cmbMchCnt); //<====for debug !!!
+							
+							if (cmbMchCnt > crrMchCnt + nxtMchCnt) {	//if there is a match in between lines, we get result from the cobine line
+								//System.out.println ("<<<== getting results from combined lines ==>>>"); //<====for debug !!!
 								while (cmbMchr.find ())
-										doResult (comp, combLine, cmbMchr, fileExtension, file, lineNum);
-							} else {
-								System.out.println ("adding current line");
+									doResult (comp, combLine, cmbMchr, fileExtension, file, lineNum);
+							} else if (crrMchCnt > 0) {	//if no match is found in between line, then just get results from the current line
+								//System.out.println ("<<<== getting results from current line ==>>>"); //<====for debug !!!
 								while (crrMchr.find ())
 									doResult (comp, currLine, crrMchr, fileExtension, file, lineNum);
 							}
 							
-							
-							// issue of double counting when match is found between lines. previously added current line gets counted 
-							// again when it becomes the previous of the current itteration, where there is match found in between the
-							// jointed lines. it look like one line look ahead is insufficient, perhaps implement two lines look ahead
-							
-							System.out.println ("prevLine: " + prevLine.toString () + " match cnt: " + prvMchCnt); //<======for debug !!!
-							System.out.println ("currLine: " + currLine.toString () + " match cnt: " + crrMchCnt); //<======for debug !!!
-							System.out.println ("combLine: " + combLine.toString () + " match cnt: " + cmbMchCnt + '\n'); //<======for debug !!!
-							
-							
-							
-						}
-						
-						
-						
-						
+							//System.out.println (); //<====for debug !!!
+						}	
 					}
-				Main.this.setString (prevLine, currLine); //set current line to previous line
+					
+				Main.this.setString (currLine, nextLine); //set next line to current line
 				JPBStatus2.setValue(++progressCounter2);	// update progress bar for single file search, count lines
 				++lineNum;
 			}			
@@ -1364,26 +1373,16 @@ public class Main extends JFrame {
 	 * gets added to otherMatchList. be mindfull of how these two fields are treated differently than others matches
 	 */
 	private void doResult (Component comp, StringBuilder line, Matcher patternMatcher, String fileExt, File file, int lineNum) {
-		//for (Pattern regex : comp.regex) {
-			//Matcher patternMatcher = regex.matcher(line.toString ());
-			
-			//while (patternMatcher.find()) {
-				
-				
-				comp.counter ++;
-				JBTableModel.addRow(new Object[]{comp.counter, comp.SYM, patternMatcher.group(), line.toString(), fileExt, file, lineNum});
-				
-				if (comp.SYM == "SSN" || comp.SYM == "Text") {
-					comp.resultList.add(new Match(comp.counter, comp.SYM, patternMatcher.group(), line.toString(), fileExt, file, lineNum));
-					comp.resultListUnique.add(new Match(comp.counter, comp.SYM, patternMatcher.group(), line.toString(), fileExt, file, lineNum));
-				} else {
-					matchCounter ++; // use for other matches only, not for ssn and textField
-					resultOtherMatchList.add(new Match(comp.counter, comp.SYM, patternMatcher.group(), line.toString(), fileExt, file, lineNum));
-				}
-				
-				
-			//}
-		//}
+		comp.counter ++;
+		JBTableModel.addRow(new Object[]{comp.counter, comp.SYM, patternMatcher.group(), line.toString(), fileExt, file, lineNum});
+		
+		if (comp.SYM == "SSN" || comp.SYM == "Text") {
+			comp.resultList.add(new Match(comp.counter, comp.SYM, patternMatcher.group(), line.toString(), fileExt, file, lineNum));
+			comp.resultListUnique.add(new Match(comp.counter, comp.SYM, patternMatcher.group(), line.toString(), fileExt, file, lineNum));
+		} else {
+			matchCounter ++; // use for other matches only, not for ssn and textField
+			resultOtherMatchList.add(new Match(comp.counter, comp.SYM, patternMatcher.group(), line.toString(), fileExt, file, lineNum));
+		}
 	}
 	
 	/**
@@ -1558,6 +1557,17 @@ public class Main extends JFrame {
 				firstElem = false;
 			} else
 				tempStr.append (arg);
+	}
+	
+	/**
+	 * this method counts the number of matches found on a string
+	 */
+	private int getMatchCount (Matcher matcher) {
+		int count = 0;
+		while (matcher.find ())
+			++count;
+		matcher.reset ();
+		return count;
 	}
 
 /********************************************************************************************************************

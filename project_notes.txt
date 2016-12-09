@@ -38,5 +38,23 @@ cd into current directory with the above items and update the tika jar  like thi
 	
 where u, f and m is flags for update files with manifest
 
+12/08/2016: double match counting issue:
+issue of double counting when match is found between lines. previously added current line gets counted 
+again when it becomes the previous of the current itteration, where there is match found in between the
+jointed lines. it look like one line look ahead is insufficient, perhaps implement two lines look ahead
+
+followup: we look ahead one line to check if match is found in between lines, if a match is found in between lines then
+we get match results of the combined current line and next line. but if no match is found in between, then we just get
+match result from current line and sets the next line to current line and repeat the look ahead process. this also
+results in the current line unable to reach the last line in file because last line was already read by next line and
+the loop couldn't come around to set next line to current line. a oneExtraRun is implemented to allow the loop to run
+one extra time to set next line to current line for normal matching function.
+ 
+update: search algorithm considers higher precedence for matches found in between line than matches found on current line, 
+since matches found in between lines also contains matches on current line. thus this should avoid double counting 
+of current line matches when a between match occurs.
+
 resources:
 https://ant.apache.org/manual/tutorial-HelloWorldWithAnt.html
+performance and memory analysis of strings and string builder
+http://java.globinch.com/java-quick-tips/performance-string-stringbuffer-stringbuilder-memory-runtime-analysis/
