@@ -752,12 +752,22 @@ public class Main extends JFrame {
 				inputFiles = (List <File>) FileUtils.listFiles(dir, null, true);	// parse al in dir and sub dirs
 			else
 				return;
+			
+			int tmpCtr = 0;	//<========== for debug
+			for (File f : inputFiles)
+				System.out.println (++tmpCtr + " - " + f);
+			tmpCtr = 0;	//<========== for debug
 			//inputFiles.forEach ((f) -> {System.out.println (f);});	//<========== for debug
+			
 			totalFiles += inputFiles.size();	// update counter
+			System.out.println ("total files found: " + totalFiles + '\n');	//<========== for debug
+			
 			JPBStatus.setMaximum (totalFiles);	//sets progress bar maximum to relative num of files to process
 			
 			for (File file: inputFiles) {		// process file by file
 				InputStream input = null;
+				
+				System.out.println ("searching file " + ++tmpCtr + " - " + file);	//	//<========== for debug
 				
 				try {
 					String fileName = file.getName();
@@ -934,12 +944,6 @@ public class Main extends JFrame {
 				JPBStatus.setValue(++progressCounter);	// update progress bar for many files search, directory search
 			}
 		}
-
-/**********************************************************************************************************************************
-***********************************************************************************************************************************
-***********************************************************************************************************************************
-***********************************************************************************************************************************
-**********************************************************************************************************************************/
 		
 		/**
 		 * This method does the regular expression matching.
@@ -1040,13 +1044,7 @@ public class Main extends JFrame {
 			publish("printCurrentProgress");
 			fileCounter ++;
 		}
-		
-/**********************************************************************************************************************************
-***********************************************************************************************************************************
-***********************************************************************************************************************************
-***********************************************************************************************************************************
-**********************************************************************************************************************************/
-		
+				
 		private ArrayList getOtherResults(ArrayList<Match> elf) {
 			for (Match pr : resultOtherMatchList) {
 				JBTableModel.addRow(new Object[]{pr.getID(), pr.getConfidence(), pr.getText(), pr.getLine(), pr.getType(), pr.getFile(), pr.getLineNum()});
