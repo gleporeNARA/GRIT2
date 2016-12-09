@@ -34,6 +34,7 @@ import org.apache.tika.parser.pdf.PDFParser;
 import org.apache.tika.parser.rtf.RTFParser;
 import org.apache.tika.parser.txt.TXTParser;
 import org.apache.tika.sax.BodyContentHandler;
+import org.apache.tika.parser.odf.OpenDocumentParser;
 
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -791,6 +792,16 @@ public class Main extends JFrame {
 						WordExtractor extractor = new WordExtractor(doc.getRoot());
 						fileReader = new Scanner(WordExtractor.stripFields(extractor.getText()));
 						doc.close();
+					} else if (fileExtension.equals("odt")) {	// implemented odt support here
+						ContentHandler handler = new BodyContentHandler(-1);
+						input = new FileInputStream(file);
+						Metadata metadata = new Metadata();
+						OpenDocumentParser OpenDocumentParser = new OpenDocumentParser();
+						ParseContext context = new ParseContext();
+
+						OpenDocumentParser.parse(input, handler, metadata, context);
+
+						fileReader = new Scanner(handler.toString());
 					} else if (fileExtension.equals("xlsx")) {
 						OPCPackage pkg = OPCPackage.open(file);
 						XSSFWorkbook wb = new XSSFWorkbook(pkg);
@@ -875,7 +886,7 @@ public class Main extends JFrame {
 					} else {
 						if (JCBAutoParser.isSelected()) {
 							if (skipExtensions.contains(fileExtension)) {
-								//System.out.println("Skipped " + fileExtension);		//<============ for debug
+								System.out.println("Skipped " + fileExtension);		//<============ for debug
 								continue;
 							} else {
 								ContentHandler handler = new BodyContentHandler(-1);
