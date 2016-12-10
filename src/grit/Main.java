@@ -220,7 +220,7 @@ public class Main extends JFrame {
 		
 		skipFiles = new ArrayList<File>();
 		
-		resultOtherMatchList = new ArrayList<Match>();
+		resultOtherMatchList = new ArrayList <Match>();
 		
 		/**
 		 * creates a hash map of search components. 'T' is creates a text box, 'C' creates a check box  
@@ -564,7 +564,7 @@ public class Main extends JFrame {
 				searchTask.getOtherResults(resultOtherMatchList);
 				JBTableModel.fireTableDataChanged();
 				JBRemoveDuplicates.setEnabled(false);
-				JBRemoveDuplicates.setText("Duplicates Removed");
+				//JBRemoveDuplicates.setText("Duplicates Removed");
 				
 				searchTask.getConfidenceTable();
 				searchTask.buildHtmlResult();
@@ -754,21 +754,11 @@ public class Main extends JFrame {
 			else
 				return;
 			
-			int tmpCtr = 0;	//<========== for debug
-			for (File f : inputFiles)
-				System.out.println (++tmpCtr + " - " + f);
-			tmpCtr = 0;	//<========== for debug
-			//inputFiles.forEach ((f) -> {System.out.println (f);});	//<========== for debug
-			
 			totalFiles += inputFiles.size();	// update counter
-			System.out.println ("total files found: " + totalFiles + '\n');	//<========== for debug
-			
 			JPBStatus.setMaximum (totalFiles);	//sets progress bar maximum to relative num of files to process
 			
 			for (File file: inputFiles) {		// process file by file
 				InputStream input = null;
-				
-				System.out.println ("searching file " + ++tmpCtr + " - " + file);	//	//<========== for debug
 				
 				try {
 					String fileName = file.getName();
@@ -999,7 +989,7 @@ public class Main extends JFrame {
 			} else
 				System.out.println(file.getName() + " ext: " + fileExtension);
 			
-			//current line fetches a new line from file only once, for every other time it get it line from the next line string 
+			//current line fetches a new line from file only once, for every other time it get its line from the next line string 
 			Main.this.setString (currLine, new StringBuilder (fileReader.nextLine ())); //get new line from file and set to current line
 			
 			while (fileReader.hasNext() || oneExtraRun-- > 0) { //walk over each line in file
@@ -1013,14 +1003,14 @@ public class Main extends JFrame {
 				
 				Main.this.setString (combLine, currLine, new StringBuilder (" "), nextLine); //combine current line with previous line into single line
 				
-				for (Component comp : HMComponents.values ()) //for each line check whether each active regex search component contains a match
+				for (Component comp : HMComponents.values ()) { //for each line check whether each active regex search component contains a match
+					
 					if (comp.isActive ()) {
-						
 						for (Pattern regex : comp.regex) {
 							int crrMchCnt = 0, nxtMchCnt = 0, cmbMchCnt = 0;
 							
-							Matcher crrMchr = regex.matcher (currLine.toString ());
-							crrMchCnt = getMatchCount (crrMchr);
+							Matcher crrMchr = regex.matcher (currLine.toString ());	//these three blocks counts number of matches found on particular line
+							crrMchCnt = getMatchCount (crrMchr);					//it is needed to determine if a match occur in between line endings
 							
 							Matcher nxtMchr = regex.matcher (nextLine.toString ());
 							nxtMchCnt = getMatchCount (nxtMchr);
@@ -1028,24 +1018,18 @@ public class Main extends JFrame {
 							Matcher cmbMchr = regex.matcher (combLine.toString ());
 							cmbMchCnt = getMatchCount (cmbMchr);
 							
-							//System.out.println ("currLine: " + currLine.toString () + " - match count: " + crrMchCnt); //<====for debug !!!
-							//System.out.println ("nextLine: " + nextLine.toString () + " - match count: " + nxtMchCnt); //<====for debug !!!
-							//System.out.println ("combLine: " + combLine.toString () + " - match count: " + cmbMchCnt); //<====for debug !!!
-							
 							if (cmbMchCnt > crrMchCnt + nxtMchCnt) {	//if there is a match in between lines, we get result from the cobine line
-								//System.out.println ("<<<== getting results from combined lines ==>>>"); //<====for debug !!!
 								while (cmbMchr.find ())
 									doResult (comp, combLine, cmbMchr, fileExtension, file, lineNum);
+								break;	//if a match is found on this line, no need to check remaining regex pattern in list, avoid duplicates match result, this break out of the regex for loop above
 							} else if (crrMchCnt > 0) {	//if no match is found in between line, then just get results from the current line
-								//System.out.println ("<<<== getting results from current line ==>>>"); //<====for debug !!!
 								while (crrMchr.find ())
 									doResult (comp, currLine, crrMchr, fileExtension, file, lineNum);
+								break;	//if a match is found on this line, no need to check remaining regex pattern in list, avoid duplicates match result, this break out of the regex for loop above
 							}
-							
-							//System.out.println (); //<====for debug !!!
-						}	
+						}
 					}
-					
+				}
 				Main.this.setString (currLine, nextLine); //set next line to current line
 				JPBStatus2.setValue(++progressCounter2);	// update progress bar for single file search, count lines
 				++lineNum;
@@ -1055,15 +1039,25 @@ public class Main extends JFrame {
 			publish("printCurrentProgress");
 			fileCounter ++;
 		}
-				
+		
+		/**
+		 * This method is only used by the user entered regex (Text) and the SSN search
+		 * This method is only called from the done() mehtod
+		 */
+		private ArrayList <Match> getResults(Component comp) {			
+			int i = 1;
+			for (Match pr : comp.resultList)
+				Main.this.addToAllRow (false, true, i++, pr, comp.html, comp.csv);
+			
+			comp.counter = comp.resultList.size();
+			return comp.resultList;
+		}
+		
 		private ArrayList getOtherResults(ArrayList<Match> elf) {
-			for (Match pr : resultOtherMatchList) {
-				JBTableModel.addRow(new Object[]{pr.getID(), pr.getConfidence(), pr.getText(), pr.getLine(), pr.getType(), pr.getFile(), pr.getLineNum()});
-				
+			for (Match pr : resultOtherMatchList)
 				for (Component comp : HMComponents.values ())	//itterate over the hashTable to match every symbols
 					if(pr.getConfidence().matches(comp.SYM))
 						Main.this.addToAllRow (false, false, 0, pr, comp.html, comp.csv);
-			}
 			
 			return resultOtherMatchList;
 		}
@@ -1076,9 +1070,8 @@ public class Main extends JFrame {
 			HashSet <Match> uniqList = comp.resultListUnique;		// get reference handler to resultListUnique
 			ArrayList <Match> fnlList = comp.resultListUniqueFinal;	// get reference handler to resultListUniqueFinal
 			
-			for(Match pr : uniqList)
-				if(uniqList.contains(pr))
-					fnlList.add(pr);
+			for(Match pr : uniqList)	//move contents from unique list to final list
+				fnlList.add(pr);
 			
 			Collections.sort(fnlList, new Comparator <Match> () {
 				@Override
@@ -1090,28 +1083,11 @@ public class Main extends JFrame {
 			});
 			
 			int i = 1;
-			for (Match pr : fnlList) {
-				Main.this.addToAllRow (true, true, i, pr, comp.html, comp.csv);
-				i++;
-			}
+			for (Match pr : fnlList)
+				Main.this.addToAllRow (true, true, i++, pr, comp.html, comp.csv);
 			
 			comp.counter = fnlList.size ();
 			return fnlList;
-		}
-		
-		/**
-		 * This method is only used by the user entered regex (Text) and the SSN search
-		 * This method is only called from the done() mehtod
-		 */
-		private ArrayList<Match> getResults(Component comp) {			
-			int i = 1;
-			for (Match pr : comp.resultList) {
-				Main.this.addToAllRow (true, true, i, pr, comp.html, comp.csv);
-				i++;
-			}
-			
-			comp.counter = comp.resultList.size();
-			return comp.resultList;
 		}
 		
 		private void getConfidenceTable() {
@@ -1230,6 +1206,7 @@ public class Main extends JFrame {
 			JPBStatus.setVisible(false);
 			JPBStatus2.setVisible(false);
 			
+			JBTableModel.setRowCount(0);	//<========= for debug, remove later ! this line removes live search result from table and display result stored from list
 			getResults(HMComponents.get ("TxtField"));		// update
 			getResults(HMComponents.get ("SSN"));
 			getOtherResults(resultOtherMatchList);
@@ -1238,7 +1215,7 @@ public class Main extends JFrame {
 			
 			endSearch = new Date();
 			JBRemoveDuplicates.setEnabled(true);
-			JBRemoveDuplicates.setText("Remove Duplicates");
+			//JBRemoveDuplicates.setText("Remove Duplicates");
 			JBRun.setEnabled(true);
 			JBCancel.setEnabled(false);
 			JBTable.setAutoCreateRowSorter(true);
@@ -1263,13 +1240,15 @@ public class Main extends JFrame {
 				printToLog(msg.toString ());
 				JOptionPane.showMessageDialog(Main.this, msg.toString (), title, JOptionPane.INFORMATION_MESSAGE);
 			}
-
+			
 			// prepare result in html format and csv format
 			buildHtmlResult();
 			buildCSVResult();
 
 			// enable save after html result has been prepared
 			JBExport.setEnabled(true);
+			
+			
 		}
 	}
 
@@ -1383,9 +1362,11 @@ public class Main extends JFrame {
 	 */
 	private void doResult (Component comp, StringBuilder line, Matcher patternMatcher, String fileExt, File file, int lineNum) {
 		comp.counter ++;
+		
+		//enable this to see live result updates while searching, but disable the same one in addAllToRow() method to avoid showing duplicate results
 		JBTableModel.addRow(new Object[]{comp.counter, comp.SYM, patternMatcher.group(), line.toString(), fileExt, file, lineNum});
 		
-		if (comp.SYM == "SSN" || comp.SYM == "Text") {
+		if (comp.SYM == "SSN" || comp.SYM == "Text") {			
 			comp.resultList.add(new Match(comp.counter, comp.SYM, patternMatcher.group(), line.toString(), fileExt, file, lineNum));
 			comp.resultListUnique.add(new Match(comp.counter, comp.SYM, patternMatcher.group(), line.toString(), fileExt, file, lineNum));
 		} else {
@@ -1403,9 +1384,11 @@ public class Main extends JFrame {
 	 * @param setIdSwitch - switch on for pr.setID(), off for pr.getID()
 	 * @param i - use for pr.setID() when setIdSwitch is on
 	 */
-	private void addToAllRow (boolean addJBTable, boolean setIdSwitch, int i, Match pr, StringBuilder html, StringBuilder csv) {
-		if (addJBTable)
+	private void addToAllRow (boolean addToTableModel, boolean setIdSwitch, int i, Match pr, StringBuilder html, StringBuilder csv) {
+		//if (addToTableModel) {
 			JBTableModel.addRow (new Object[] {setIdSwitch ? pr.setID(i) : pr.getID(), pr.getConfidence(), pr.getText(), pr.getLine(), pr.getType(), pr.getFile(), pr.getLineNum() });
+		//}
+		
 		html.append (htmlWriter.addTableRow (setIdSwitch ? pr.setID(i) : pr.getID(), pr.getConfidence(), pr.getText(), pr.getLine(), pr.getType(), pr.getFile(), pr.getLineNum()));
 		csv.append (csvWriter.addTableRow (setIdSwitch ? pr.setID(i) : pr.getID(), pr.getConfidence(), pr.getText(), pr.getLine(), pr.getType(), pr.getFile(), pr.getLineNum()));
 	}

@@ -55,23 +55,22 @@ public class Match {
     public int setID(int i) {
         return id = i;
     }
-    @Override
-    public int hashCode(){
-        int hashcode = 0;
-        //hashcode = 30;
-        //hashcode = line_num + 30;
-        hashcode += text.hashCode();
-        return hashcode;
-    }
+	
+	@Override
+	public int hashCode(){
+		int hashcode = Math.abs ((confidence + line_num + line + file.toString()).hashCode());
+		return hashcode;
+	}
      
-    @Override
-    public boolean equals(Object obj){
-        if (obj instanceof Match) {
-            Match pp = (Match) obj;
-            //return (pp.text.equals(this.text));
-            return (pp.text.equals(this.text) && pp.file.equals(this.file));
-        } else {
-            return false;
-        }
-    }
+	@Override
+	public boolean equals(Object obj){
+		if (obj instanceof Match) {
+			Match that = (Match) obj;
+			return this.confidence.equals (that.confidence) && 
+				   this.line_num == that.line_num && 
+				   this.line.equals (that.line) && 
+				   this.file.toString ().equals (that.file.toString ());
+		} else
+			return false;
+	}
 }
