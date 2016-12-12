@@ -754,11 +754,21 @@ public class Main extends JFrame {
 			else
 				return;
 			
+			//************************************** ! for debug ! *************************************************
+			int tmpCtr = 0;
+			for (File file : inputFiles)
+				System.out.println (++tmpCtr + " - " + file.toString ());
+			System.out.println ("\nTotal files: " + tmpCtr  + " <-- files that was added to list\n");
+			tmpCtr = 0;
+			//************************************** ! for debug ! *************************************************
+			
 			totalFiles += inputFiles.size();	// update counter
 			JPBStatus.setMaximum (totalFiles);	//sets progress bar maximum to relative num of files to process
 			
 			for (File file: inputFiles) {		// process file by file
 				InputStream input = null;
+				
+				System.out.println ("parsing file - " + ++tmpCtr + " - " + file.toString ());	//<---- for debug !
 				
 				try {
 					String fileName = file.getName();
