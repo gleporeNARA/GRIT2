@@ -22,6 +22,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.poi.xwpf.extractor.XWPFWordExtractor;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
+import org.apache.tika.detect.DefaultDetector;
 import org.apache.tika.exception.TikaException;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.parser.AutoDetectParser;
@@ -33,6 +34,7 @@ import org.apache.tika.parser.microsoft.JackcessParser;
 import org.apache.tika.parser.pdf.PDFParser;
 import org.apache.tika.parser.rtf.RTFParser;
 import org.apache.tika.parser.txt.TXTParser;
+import org.apache.tika.parser.Parser;
 import org.apache.tika.sax.BodyContentHandler;
 import org.apache.tika.parser.odf.OpenDocumentParser;
 
@@ -781,6 +783,7 @@ public class Main extends JFrame {
 					if (fileExtension.equals("txt")) {
 						input = new FileInputStream(file);	//for txt files we will let java read them natively instead of Tika parser
 						fileReader = new Scanner(input);
+						input.close ();
 					} else if (fileExtension.equals("docx")) {
 						OPCPackage pkg = OPCPackage.open(file);
 						XWPFDocument docx = new XWPFDocument(OPCPackage.open(file));
@@ -788,20 +791,19 @@ public class Main extends JFrame {
 						fileReader = new Scanner(extractor.getText());
 						pkg.close();
 					} else if (fileExtension.equals("doc")) {
-						NPOIFSFileSystem doc = new NPOIFSFileSystem(file);
-						WordExtractor extractor = new WordExtractor(doc.getRoot());
-						fileReader = new Scanner(WordExtractor.stripFields(extractor.getText()));
-						doc.close();
-					} else if (fileExtension.equals("odt")) {	// implemented odt support here
-						ContentHandler handler = new BodyContentHandler(-1);
-						input = new FileInputStream(file);
-						Metadata metadata = new Metadata();
-						OpenDocumentParser OpenDocumentParser = new OpenDocumentParser();
-						ParseContext context = new ParseContext();
-
-						OpenDocumentParser.parse(input, handler, metadata, context);
-
+						input = new FileInputStream(file);	//need a handler on fileInputStream so we could close it later
+						Parser parser = new AutoDetectParser(new DefaultDetector());
+						ContentHandler handler = new BodyContentHandler(-1); 
+						parser.parse(input, handler, new Metadata(), new ParseContext());
 						fileReader = new Scanner(handler.toString());
+						input.close ();	//here we close the fileInputStream using the hanlder reference, to avoid memory leaks!
+					} else if (fileExtension.equals("odt")) {	// implemented odt support here
+						input = new FileInputStream(file);
+						ContentHandler handler = new BodyContentHandler(-1);
+						OpenDocumentParser openDocumentParser = new OpenDocumentParser();
+						openDocumentParser.parse(input, handler, new Metadata(), new ParseContext());
+						fileReader = new Scanner(handler.toString());
+						input.close ();
 					} else if (fileExtension.equals("xlsx")) {
 						OPCPackage pkg = OPCPackage.open(file);
 						XSSFWorkbook wb = new XSSFWorkbook(pkg);
@@ -822,65 +824,47 @@ public class Main extends JFrame {
 						MAPIMessage msg = new MAPIMessage(file.getAbsolutePath());
 						fileReader = new Scanner(msg.getTextBody());
 					} else if ((fileExtension.equals("htm"))||(fileExtension.equals("html"))) {
-						ContentHandler handler = new BodyContentHandler(-1);
 						input = new FileInputStream(file);
-						Metadata metadata = new Metadata();
-						HtmlParser HTMLParser = new HtmlParser();
-						ParseContext context = new ParseContext();
-
-						HTMLParser.parse(input, handler, metadata, context);
-
+						ContentHandler handler = new BodyContentHandler(-1);
+						HtmlParser htmlParser = new HtmlParser();
+						htmlParser.parse(input, handler, new Metadata(), new ParseContext());
 						fileReader = new Scanner(handler.toString());
+						input.close ();
 					} else if (fileExtension.equals("rtf")) {
-						ContentHandler handler = new BodyContentHandler(-1);
 						input = new FileInputStream(file);
-						Metadata metadata = new Metadata();
-						RTFParser RTFParser = new RTFParser();
-						ParseContext context = new ParseContext();
-
-						RTFParser.parse(input, handler, metadata, context);
-
+						ContentHandler handler = new BodyContentHandler(-1);
+						RTFParser rtfParser = new RTFParser();					
+						rtfParser.parse(input, handler, new Metadata(), new ParseContext());
 						fileReader = new Scanner(handler.toString());
+						input.close ();
 					} else if (fileExtension.equals("mbox")) {
-						ContentHandler handler = new BodyContentHandler(-1);
 						input = new FileInputStream(file);
-						Metadata metadata = new Metadata();
-						MboxParser MBOXParser = new MboxParser();
-						ParseContext context = new ParseContext();
-
-						MBOXParser.parse(input, handler, metadata, context);
-
+						ContentHandler handler = new BodyContentHandler(-1);
+						MboxParser mboxParser = new MboxParser();
+						mboxParser.parse(input, handler, new Metadata(), new ParseContext());
 						fileReader = new Scanner(handler.toString());
+						input.close ();
 					} else if (fileExtension.equals("pst")) {
-						ContentHandler handler = new BodyContentHandler(-1);
 						input = new FileInputStream(file);
-						Metadata metadata = new Metadata();
+						ContentHandler handler = new BodyContentHandler(-1);
 						OutlookPSTParser OutlookPSTParser = new OutlookPSTParser();
-						ParseContext context = new ParseContext();
-
-						OutlookPSTParser.parse(input, handler, metadata, context);
-
+						OutlookPSTParser.parse(input, handler, new Metadata(), new ParseContext());
 						fileReader = new Scanner(handler.toString());
+						input.close ();
 					} else if (fileExtension.equals("mdb")) {
-						ContentHandler handler = new BodyContentHandler(-1);
 						input = new FileInputStream(file);
-						Metadata metadata = new Metadata();
-						JackcessParser JackcessParser = new JackcessParser();
-						ParseContext context = new ParseContext();
-
-						JackcessParser.parse(input, handler, metadata, context);
-
+						ContentHandler handler = new BodyContentHandler(-1);
+						JackcessParser jackcessParser = new JackcessParser();
+						jackcessParser.parse(input, handler, new Metadata(), new ParseContext());
 						fileReader = new Scanner(handler.toString());
+						input.close ();
 					} else if (fileExtension.equals("pdf")) {
-						ContentHandler handler = new BodyContentHandler(-1);
 						input = new FileInputStream(file);
-						Metadata metadata = new Metadata();
-						PDFParser PDFParser = new PDFParser();
-						ParseContext context = new ParseContext();
-
-						PDFParser.parse(input, handler, metadata, context);
-
+						ContentHandler handler = new BodyContentHandler(-1);
+						PDFParser pdfParser = new PDFParser();
+						pdfParser.parse(input, handler, new Metadata(), new ParseContext());
 						fileReader = new Scanner(handler.toString());
+						input.close ();
 					} else if (fileExtension.isEmpty()) {
 						fileReader = new Scanner(file);
 					} else {
