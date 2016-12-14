@@ -833,7 +833,9 @@ public class Main extends JFrame {
 						fileReader = new Scanner(extractor.getText());
 						npoifs.close();
 					} else if (fileExtension.isEmpty()) {
-						fileReader = new Scanner(file);
+                        AutoDetectParser parser = new AutoDetectParser();
+                        parser.parse(input, handler, new Metadata(), new ParseContext());
+                        fileReader = new Scanner(handler.toString());
 					} else {
 						if (JCBAutoParser.isSelected()) {
 							if (skipExtensions.contains(fileExtension)) {
