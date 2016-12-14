@@ -756,23 +756,16 @@ public class Main extends JFrame {
 			else
 				return;
 			
-			//************************************** ! for debug ! *************************************************
-			int tmpCtr = 0;
-			for (File file : inputFiles)
-				System.out.println (++tmpCtr + " - " + file.toString ());
-			System.out.println ("\nTotal files: " + tmpCtr  + " <-- files that was added to list\n");
-			tmpCtr = 0;
-			//************************************** ! for debug ! *************************************************
-			
 			totalFiles += inputFiles.size();	// update counter
 			JPBStatus.setMaximum (totalFiles);	//sets progress bar maximum to relative num of files to process
 			
-			for (File file: inputFiles) {		// process file by file
+			for (File file: inputFiles) {		// process file by file				
 				InputStream input = null;
-				
-				System.out.println ("parsing file - " + ++tmpCtr + " - " + file.toString ());	//<---- for debug !
+				ContentHandler handler = null;
 				
 				try {
+					input = new FileInputStream(file);
+					handler = new BodyContentHandler(-1);
 					String fileName = file.getName();
 					String fileExtension = "txt";
 					int i = fileName.lastIndexOf(".");
@@ -781,90 +774,64 @@ public class Main extends JFrame {
 						fileExtension = fileName.substring(i+1);
 					
 					if (fileExtension.equals("txt")) {
-						input = new FileInputStream(file);	//for txt files we will let java read them natively instead of Tika parser
-						fileReader = new Scanner(input);
-						input.close ();
-					} else if (fileExtension.equals("docx")) {
-						OPCPackage pkg = OPCPackage.open(file);
-						XWPFDocument docx = new XWPFDocument(OPCPackage.open(file));
-						XWPFWordExtractor extractor = new XWPFWordExtractor(docx);
-						fileReader = new Scanner(extractor.getText());
-						pkg.close();
-					} else if (fileExtension.equals("doc")) {
-						input = new FileInputStream(file);	//need a handler on fileInputStream so we could close it later
-						Parser parser = new AutoDetectParser(new DefaultDetector());
-						ContentHandler handler = new BodyContentHandler(-1); 
-						parser.parse(input, handler, new Metadata(), new ParseContext());
-						fileReader = new Scanner(handler.toString());
-						input.close ();	//here we close the fileInputStream using the hanlder reference, to avoid memory leaks!
-					} else if (fileExtension.equals("odt")) {	// implemented odt support here
-						input = new FileInputStream(file);
-						ContentHandler handler = new BodyContentHandler(-1);
-						OpenDocumentParser openDocumentParser = new OpenDocumentParser();
-						openDocumentParser.parse(input, handler, new Metadata(), new ParseContext());
-						fileReader = new Scanner(handler.toString());
-						input.close ();
-					} else if (fileExtension.equals("xlsx")) {
-						OPCPackage pkg = OPCPackage.open(file);
-						XSSFWorkbook wb = new XSSFWorkbook(pkg);
-						XSSFExcelExtractor extractor = new XSSFExcelExtractor(wb);
-						extractor.setFormulasNotResults(true);
-						extractor.setIncludeSheetNames(false);
-						fileReader = new Scanner(extractor.getText());
-						pkg.close();
-					} else if (fileExtension.equals("xls")) {
-						NPOIFSFileSystem xls = new NPOIFSFileSystem(file);
-						HSSFWorkbook wb = new HSSFWorkbook(xls.getRoot(), false);
-						ExcelExtractor extractor = new ExcelExtractor(wb);
-						extractor.setFormulasNotResults(true);
-						extractor.setIncludeSheetNames(false);
-						fileReader = new Scanner(extractor.getText());
-						xls.close();
+						fileReader = new Scanner(input);	//for txt files we will let java read them natively instead of Tika parser
 					} else if (fileExtension.equals("msg")) {
 						MAPIMessage msg = new MAPIMessage(file.getAbsolutePath());
 						fileReader = new Scanner(msg.getTextBody());
 					} else if ((fileExtension.equals("htm"))||(fileExtension.equals("html"))) {
-						input = new FileInputStream(file);
-						ContentHandler handler = new BodyContentHandler(-1);
 						HtmlParser htmlParser = new HtmlParser();
 						htmlParser.parse(input, handler, new Metadata(), new ParseContext());
 						fileReader = new Scanner(handler.toString());
-						input.close ();
 					} else if (fileExtension.equals("rtf")) {
-						input = new FileInputStream(file);
-						ContentHandler handler = new BodyContentHandler(-1);
 						RTFParser rtfParser = new RTFParser();					
 						rtfParser.parse(input, handler, new Metadata(), new ParseContext());
 						fileReader = new Scanner(handler.toString());
-						input.close ();
 					} else if (fileExtension.equals("mbox")) {
-						input = new FileInputStream(file);
-						ContentHandler handler = new BodyContentHandler(-1);
 						MboxParser mboxParser = new MboxParser();
 						mboxParser.parse(input, handler, new Metadata(), new ParseContext());
 						fileReader = new Scanner(handler.toString());
-						input.close ();
 					} else if (fileExtension.equals("pst")) {
-						input = new FileInputStream(file);
-						ContentHandler handler = new BodyContentHandler(-1);
 						OutlookPSTParser OutlookPSTParser = new OutlookPSTParser();
 						OutlookPSTParser.parse(input, handler, new Metadata(), new ParseContext());
 						fileReader = new Scanner(handler.toString());
-						input.close ();
 					} else if (fileExtension.equals("mdb")) {
-						input = new FileInputStream(file);
-						ContentHandler handler = new BodyContentHandler(-1);
 						JackcessParser jackcessParser = new JackcessParser();
 						jackcessParser.parse(input, handler, new Metadata(), new ParseContext());
 						fileReader = new Scanner(handler.toString());
-						input.close ();
 					} else if (fileExtension.equals("pdf")) {
-						input = new FileInputStream(file);
-						ContentHandler handler = new BodyContentHandler(-1);
 						PDFParser pdfParser = new PDFParser();
 						pdfParser.parse(input, handler, new Metadata(), new ParseContext());
 						fileReader = new Scanner(handler.toString());
-						input.close ();
+					} else if (fileExtension.equals("odt")) {
+						OpenDocumentParser openDocumentParser = new OpenDocumentParser();
+						openDocumentParser.parse(input, handler, new Metadata(), new ParseContext());
+						fileReader = new Scanner(handler.toString());
+					} else if (fileExtension.equals("doc")) {
+						Parser parser = new AutoDetectParser(new DefaultDetector());
+						parser.parse(input, handler, new Metadata(), new ParseContext());
+						fileReader = new Scanner(handler.toString());
+					} else if (fileExtension.equals("docx")) {
+						OPCPackage opcpkg = OPCPackage.open(file);
+						XWPFDocument docx = new XWPFDocument(opcpkg);
+						XWPFWordExtractor extractor = new XWPFWordExtractor(docx);
+						fileReader = new Scanner(extractor.getText());
+						opcpkg.close();
+					} else if (fileExtension.equals("xlsx")) {
+						OPCPackage opcpkg = OPCPackage.open(file);
+						XSSFWorkbook wb = new XSSFWorkbook(opcpkg);
+						XSSFExcelExtractor extractor = new XSSFExcelExtractor(wb);
+						extractor.setFormulasNotResults(true);
+						extractor.setIncludeSheetNames(false);
+						fileReader = new Scanner(extractor.getText());
+						opcpkg.close();
+					} else if (fileExtension.equals("xls")) {
+						NPOIFSFileSystem npoifs = new NPOIFSFileSystem(file);
+						HSSFWorkbook wb = new HSSFWorkbook(npoifs.getRoot(), false);
+						ExcelExtractor extractor = new ExcelExtractor(wb);
+						extractor.setFormulasNotResults(true);
+						extractor.setIncludeSheetNames(false);
+						fileReader = new Scanner(extractor.getText());
+						npoifs.close();
 					} else if (fileExtension.isEmpty()) {
 						fileReader = new Scanner(file);
 					} else {
@@ -873,27 +840,16 @@ public class Main extends JFrame {
 								System.out.println("Skipped " + fileExtension);		//<============ for debug
 								continue;
 							} else {
-								ContentHandler handler = new BodyContentHandler(-1);
-								input = new FileInputStream(file);
-								Metadata metadata = new Metadata();
 								AutoDetectParser parser = new AutoDetectParser();
-
-								parser.parse(input, handler, metadata);
-
+								parser.parse(input, handler, new Metadata(), new ParseContext());
 								fileReader = new Scanner(handler.toString());
 							}    
-						} else {
+						} else
 							continue;
-						}
 					}
 					
 					matchRegex(file, fileExtension);	// find matching regex in current processing file
-					/*
-					throw new DataFormatException("DataFormatException");
-					
-				} catch (DataFormatException e) {
-					System.out.println("DFE "+e);
-					skipFiles.add(file);*/
+					input.close();	//here we close the fileInputStream using the hanlder reference, to avoid memory leaks!
 				} catch (NullPointerException e) {
 					System.out.println("NULLPE " + e);
 					skipFiles.add(file);
@@ -925,15 +881,7 @@ public class Main extends JFrame {
 					System.out.println("SAX " + e);
 					skipFiles.add(file);
 				} catch (ConcurrentModificationException e) {
-					System.out.println ("Other Exception: " + e);
-				} finally {
-					if (input != null) {
-						try {
-							input.close();
-						} catch(IOException e) {
-							System.out.println("IOE " + e);
-						}
-					}
+					System.out.println ("ConcurrentModificationException: " + e);
 				}
 				
 				JPBStatus.setValue(++progressCounter);	// update progress bar for many files search, directory search
