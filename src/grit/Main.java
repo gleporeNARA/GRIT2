@@ -4,7 +4,6 @@ import javax.swing.*;
 import javax.swing.JTable;
 import javax.swing.border.TitledBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.plaf.basic.BasicProgressBarUI;
 import javax.swing.table.DefaultTableModel;
 
 import org.apache.commons.io.FileUtils;
@@ -33,7 +32,6 @@ import org.apache.tika.parser.mbox.OutlookPSTParser;
 import org.apache.tika.parser.microsoft.JackcessParser;
 import org.apache.tika.parser.pdf.PDFParser;
 import org.apache.tika.parser.rtf.RTFParser;
-import org.apache.tika.parser.txt.TXTParser;
 import org.apache.tika.parser.Parser;
 import org.apache.tika.sax.BodyContentHandler;
 import org.apache.tika.parser.odf.OpenDocumentParser;
@@ -45,7 +43,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
@@ -90,14 +87,14 @@ import java.io.LineNumberReader;
  * - Basic functionality.
  * 
  * Notes: subroutine methods are created to reduce redundant codes. multiple values passed to subroutine needed to 
- * be modified with persistency, thus, method returns would not be feasable for this purpose. to achieve data
- * persistency passed to subroutine, immutable data such as stings and integers are wrapped in class objects and pass
- * as referenceto void return type subroutine for handling.
+ * be modified with persistancy, thus, method returns would not be feasable for this purpose. to achieve data
+ * persistancy passed to subroutine, immutable data such as stings and integers are wrapped in class objects and pass
+ * as reference to void return type subroutine for handling.
  */
 
 public class Main extends JFrame {	
 	public static final String PROGRAM_TITLE = "GRIT";
-	public static final String PROGRAM_VERSION = "0.0.4a";
+	public static final String PROGRAM_VERSION = "0.0.9";
 	public static final int WIN_WIDTH = 1200;
 	public static final int WIN_HEIGHT = 950;
 
@@ -753,14 +750,21 @@ public class Main extends JFrame {
 					String fileName = file.getName();
 					String fileExtension = "txt";
 					int i = fileName.lastIndexOf(".");
-					
-					if (i > 0)
-						fileExtension = fileName.substring(i+1);
+
+					if  (i > 0) {
+                        fileExtension = fileName.substring(i + 1);
+                    }
 					
 					if (skipExtensions.contains(fileExtension)) {	//skip any files that's in the skip extensions list
 						skipFiles.add(file);
 						continue;
 					}
+
+                    double length=file.length();
+                    if (length <= 0){
+                        skipFiles.add(file);
+                        continue;
+                    }
 					
 					if (fileExtension.equals("txt")) {
 						fileReader = new Scanner(input);	//for txt files we will let java read them natively instead of Tika parser
