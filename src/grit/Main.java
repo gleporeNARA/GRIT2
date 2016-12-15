@@ -221,7 +221,6 @@ public class Main extends JFrame {
 		JBTCatModel = new DefaultTableModel(TableWriter.table_cat_data, TableWriter.table_cat_header);
 		
 		skipFiles = new ArrayList<File>();
-		
 		resultOtherMatchList = new ArrayList <Match>();
 		
 		/**
@@ -240,25 +239,10 @@ public class Main extends JFrame {
 		HMComponents.put ("FBISourceCode", new Component ('C', "FBI Source Code", "FBI Source Codes", "AL,AQ,AX,AN,AT,BA,BH,BS,BQ,BU,BT,CE,CG,CI,CV,CO,DL,DN,DE,EP,HN,HO,IP,JN,JK,KC,KX,LV,LR,LA,LS,ME,MM,MI,MP,MO,NK,NH,NO,NR,NY,NF,OC,OM,PH,PX,PG,PD,RH,SC,SL,SU,SA,SD,SF,SJ,SV,SE,SI,TP,WFO,BER,BOG,BON,HON,LON,MAN,MEX,OTT,PAN,PAR,ROM,TOK"));
 		
 		//Prepare Skipped Extensions:
+		String skpExtLst [] = {"mp3", "mp4", "ogg", "flac", "png", "gif", "bmp", "jpg", "jpeg", "avi", "mpg", "mpeg", "tar", "zip", "tz", "gz", "tif", "tiff"};
 		skipExtensions = new HashSet<String>();
-		skipExtensions.add("mp3");
-		skipExtensions.add("mp4");
-		skipExtensions.add("ogg");
-		skipExtensions.add("flac");
-		skipExtensions.add("png");
-		skipExtensions.add("gif");
-		skipExtensions.add("bmp");
-		skipExtensions.add("jpg");
-		skipExtensions.add("jpeg");
-		skipExtensions.add("avi");
-		skipExtensions.add("mpg");
-		skipExtensions.add("mpeg");
-		skipExtensions.add("tar");
-		skipExtensions.add("zip");
-		skipExtensions.add("tz");
-		skipExtensions.add("gz");
-		skipExtensions.add("tif");
-		skipExtensions.add("tiff");
+		for (String s : skpExtLst)
+			skipExtensions.add (s);		
 		
 /********************************************************************************************************************
 *												Built Regex List													*
@@ -773,6 +757,11 @@ public class Main extends JFrame {
 					if (i > 0)
 						fileExtension = fileName.substring(i+1);
 					
+					if (skipExtensions.contains(fileExtension)) {	//skip any files that's in the skip extensions list
+						skipFiles.add(file);
+						continue;
+					}
+					
 					if (fileExtension.equals("txt")) {
 						fileReader = new Scanner(input);	//for txt files we will let java read them natively instead of Tika parser
 					} else if (fileExtension.equals("msg")) {
@@ -838,16 +827,13 @@ public class Main extends JFrame {
                         fileReader = new Scanner(handler.toString());
 					} else {
 						if (JCBAutoParser.isSelected()) {
-							if (skipExtensions.contains(fileExtension)) {
-								System.out.println("Skipped " + fileExtension);		//<============ for debug
-								continue;
-							} else {
-								AutoDetectParser parser = new AutoDetectParser();
-								parser.parse(input, handler, new Metadata(), new ParseContext());
-								fileReader = new Scanner(handler.toString());
-							}    
-						} else
+							AutoDetectParser parser = new AutoDetectParser();
+							parser.parse(input, handler, new Metadata(), new ParseContext());
+							fileReader = new Scanner(handler.toString());    
+						} else { //files added here contains extesions not supported by grit and "Read Additional Format" was not selected 
+							skipFiles.add(file);
 							continue;
+						}
 					}
 					
 					matchRegex(file, fileExtension);	// find matching regex in current processing file
@@ -930,8 +916,8 @@ public class Main extends JFrame {
 			if (fileReader.hasNext()) {			// check if file is readable
 				++readCounter;
 				extCounter.count(fileExtension);
-			} else
-				System.out.println(file.getName() + " ext: " + fileExtension);
+			} else  //<<< wait!, if file is not readable, and then do what?!!! >>>
+				System.out.println(file.getName() + " ext: " + fileExtension);	//<==== should add unreadable files to skipFiles list and return
 			
 			//current line fetches a new line from file only once, for every other time it get its line from the next line string 
 			Main.this.setString (currLine, new StringBuilder (fileReader.nextLine ())); //get new line from file and set to current line
@@ -1105,7 +1091,8 @@ public class Main extends JFrame {
 			
 			if(skipFiles.size() > 0) {
 				postHtmlResult.append (htmlWriter.addOpenPanelTag());
-				postHtmlResult.append (htmlWriter.addAnchorLink("skippedResults", "Unread Files"));
+				postHtmlResult.append (htmlWriter.addAnchorLink("skippedResults", "This program does not search the following file formats: " +
+					"mp3, mp4, ogg, flac, png, gif, bmp, jpg, jpeg, avi, mpg, mpeg, tar, zip, tz, gz, tif, tiff.<br>Additionally, the following files could not be read:"));
 				postHtmlResult.append (htmlWriter.addOpenTableTag("unreadFilesTable"));
 				postHtmlResult.append (htmlWriter.addAltTableHeader());
 				
