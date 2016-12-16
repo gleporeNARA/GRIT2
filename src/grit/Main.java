@@ -755,16 +755,13 @@ public class Main extends JFrame {
                         fileExtension = fileName.substring(i + 1);
                     }
 					
-					if (skipExtensions.contains(fileExtension)) {	//skip any files that's in the skip extensions list
+					if (skipExtensions.contains(fileExtension))	//skip any files that's in the skip extensions list
+						continue;
+					
+					if (file.length() <= 0)	{	//skip zero byte file and add it to list
 						skipFiles.add(file);
 						continue;
 					}
-
-                    double length=file.length();
-                    if (length <= 0){
-                        skipFiles.add(file);
-                        continue;
-                    }
 					
 					if (fileExtension.equals("txt")) {
 						fileReader = new Scanner(input);	//for txt files we will let java read them natively instead of Tika parser
@@ -920,8 +917,11 @@ public class Main extends JFrame {
 			if (fileReader.hasNext()) {			// check if file is readable
 				++readCounter;
 				extCounter.count(fileExtension);
-			} else  //<<< wait!, if file is not readable, and then do what?!!! >>>
-				System.out.println(file.getName() + " ext: " + fileExtension);	//<==== should add unreadable files to skipFiles list and return
+			} else { //if file is not readable, add it to skipList
+				skipFiles.add(file);
+				fileReader.close();
+				return;
+			}
 			
 			//current line fetches a new line from file only once, for every other time it get its line from the next line string 
 			Main.this.setString (currLine, new StringBuilder (fileReader.nextLine ())); //get new line from file and set to current line
