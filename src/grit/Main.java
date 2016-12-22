@@ -142,7 +142,7 @@ public class Main extends JFrame {
 	private JRadioButton JRBDirectory;
 	private JRadioButton JRBFile;
 
-	private JButton JBRemoveDuplicates;
+	//private JButton JBRemoveDuplicates;
 	private JButton JBInput;
 	private JButton JBRun;
 	private JTextField JTAProgressLog;
@@ -329,9 +329,9 @@ public class Main extends JFrame {
 		BGReadMode.add(JRBDirectory);
 		BGReadMode.add(JRBFile);
 
-		JBRemoveDuplicates = new JButton("Remove Duplicates");
-		JBRemoveDuplicates.setToolTipText("Remove Duplicate Results");
-		JBRemoveDuplicates.setEnabled(false);
+		//JBRemoveDuplicates = new JButton("Remove Duplicates");
+		//JBRemoveDuplicates.setToolTipText("Remove Duplicate Results");
+		//JBRemoveDuplicates.setEnabled(false);
 
 		JBInput = new JButton(" Input ");
 		JBInput.setToolTipText("Browses for directory or file to search");
@@ -414,7 +414,7 @@ public class Main extends JFrame {
 		panel3.add(JRBDirectory);
 		panel3.add(JRBFile);
 		panel3.add(JCBAutoParser);
-		panel3.add(JBRemoveDuplicates);
+		//panel3.add(JBRemoveDuplicates);
 
 		//Row1: Panel4: Elements Added
 		JPanel panel4 = new JPanel();
@@ -512,7 +512,7 @@ public class Main extends JFrame {
 		JRBFile.addActionListener(new MyRunModeListener());
 		JRBDirectory.addActionListener(new MyRunModeListener());
 
-		JBRemoveDuplicates.addActionListener(new CleanResultsListener());
+		//JBRemoveDuplicates.addActionListener(new CleanResultsListener());
 
 		JBInput.addActionListener(new MyIOListener());
 		JBRun.addActionListener(new MySearchTaskListener());
@@ -534,7 +534,7 @@ public class Main extends JFrame {
  ********************************************************************************************************************/
 	/**
 	 * listens for user's interaction with the remove duplicates button.
-	 */
+
 	private class CleanResultsListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent event) {
@@ -554,7 +554,7 @@ public class Main extends JFrame {
 				searchTask.buildCSVResult();
 			}
 		}
-	}
+	} */
 
 	/**
 	 * listens for user's interaction with check all option.
@@ -750,6 +750,7 @@ public class Main extends JFrame {
 					String fileName = file.getName();
 					String fileExtension = "";
 					int i = fileName.lastIndexOf(".");
+					//System.out.println("file is " + fileName);
 
 					if  (i > 0)
 						fileExtension = fileName.substring(i + 1);
@@ -1148,7 +1149,7 @@ public class Main extends JFrame {
 			getConfidenceTable();
 
 			endSearch = new Date();
-			JBRemoveDuplicates.setEnabled(true);
+			//JBRemoveDuplicates.setEnabled(true);
 			//JBRemoveDuplicates.setText("Remove Duplicates");
 			JBRun.setEnabled(true);
 			JBCancel.setEnabled(false);
