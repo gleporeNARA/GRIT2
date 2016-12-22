@@ -403,7 +403,7 @@ public class Main extends JFrame {
 		panel2_sub2.add(HMComponents.get("TxtField").text);
 
 		JPanel panel2 = new JPanel();
-		panel2.setLayout(new GridLayout(0,1));
+		panel2.setLayout(new GridLayout(0,1,0,10));
 		panel2.add(panel2_sub1);
 		panel2.add(panel2_sub2);
 
