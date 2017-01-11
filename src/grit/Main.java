@@ -66,7 +66,7 @@ import java.io.FileReader;
 import java.io.LineNumberReader;
 
 /**
- * This program is used to find pre-defined, free text,and wildcard searches in a variety of files.
+ * This program is used to find pre-defined, free text,and wildcard searches in a variety of files. Need to update versioning...
  *
  * @author Tam Tran (tranthientam@comcast.net), Gautam Mehta (gxmehta@gmail.com), Duy L Nguyen (duyl3nguy3n@gmail.com)
  * @version 0.0.4
