@@ -5,7 +5,7 @@ The tool is designed to search through a large number of
 file formats and identify various types of sensitive information.
 Currently the program has complete search programming for: Social
 Security Numbers, Dates of Birth, Mother's Maiden Name, Place of
-Birth, and Alien Registration Numbers.
+Birth, Alien Registration Numbers, and various FBI-specific search terms.
 
 The program allows a user to search through a directory of files, or
 just in a single file. By default the program searches through the
@@ -22,7 +22,4 @@ a series of search terms (delimited by commas or the
 pipe (|)) character. This functionality is currently mostly
 implemented.
 
-See the sent_mail.zip file for sample files to test the code with.
-
-This is a test message from Tam. attempting to push into branch
-grit_0_0_4a
+The sent_mail.zip file contains sample files which contain instances of all current search terms, including Social Security Numbers, and all FBI search terms.
