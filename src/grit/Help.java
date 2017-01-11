@@ -24,6 +24,7 @@ public class Help {
 			"11. PST: Microsoft Outlook format\n" +
 			"12. MDB: Microsoft Access format\n" +
 			"13. PDF: Portable Document format\n" +
+            "14. WPD: WordPerfect, versions 5 and 6\n" +
 			"\n" +
 			"HOW TO USE:\n" +
 			"1. Select the appropriate match mode(s). See below for detailed descriptions of matching algorithms.\n" +
@@ -65,7 +66,7 @@ public class Help {
 			"\n" +
 			"6. Alien Registration Number matches:\n" +
 			"     a. matches either a word boundary or the start of a line, then a capital A or lowercase a, \n" +
-			"     then an optional dash, then either 9 or 7 numbers in a row, with any amount of other dashes \n" +
+			"     then an optional dash, then either 7, 8, or 9 numbers in a row, with any amount of other dashes, spaces, or dots \n" +
 			"     in between, followed by a word boundary or the end of the line.\n" +
 			"\n" +
 			"7. Grand Jury matches:\n" +
