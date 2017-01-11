@@ -66,7 +66,7 @@ import java.io.FileReader;
 import java.io.LineNumberReader;
 
 /**
- * This program is used to find Generalized Retriever of Information Tool.
+ * This program is used to find pre-defined, free text,and wildcard searches in a variety of files.
  *
  * @author Tam Tran (tranthientam@comcast.net), Gautam Mehta (gxmehta@gmail.com), Duy L Nguyen (duyl3nguy3n@gmail.com)
  * @version 0.0.4
@@ -268,8 +268,9 @@ public class Main extends JFrame {
 		addRegexToList("(?i:(POB|Place of Birth|birth place|birthplace|born in|born at|bornin|bornat|place ofbirth))", HMComponents.get("PoB").regex);
 		//mother's maiden name or nee
 		addRegexToList("(?i:(maiden name|mother'?s? maiden name|\\bnee\\s))", HMComponents.get("Maiden").regex);
-		//Alien number regex from healthcare.gov
-		addRegexToList("(\\b|^)(A|a)(-?[0-9]){9}(\\b|$)|(\\b|^)(A|a)(-?[0-9]){7}(\\b|$)", HMComponents.get("Alien").regex);
+		//Alien number regex from healthcare.gov, modified to allow for hyphens, spaces, or dots as separators, and between 7 and 9 numbers
+		addRegexToList("(\\b|^)(A|a)(([- .]+)?[0-9]){7}(\\b|$)|(\\b|^)(A|a)(([- .]+)?[0-9]){8}(\\b|$)|(\\b|^)(A|a)(([- .]+)?[0-9]){9}(\\b|$)", HMComponents.get("Alien").regex);
+		//addRegexToList("(\\b|^)(A|a)(-?[0-9]){9}(\\b|$)|(\\b|^)(A|a)(-?[0-9]){7}(\\b|$)", HMComponents.get("Alien").regex);
 		//Grand Jury
 		addRegexToList("(?i:Grand Jury)", HMComponents.get("GrandJury").regex);
 		//FBI Sources terms for protect identity, informant, psi, si, reliable, confidential
@@ -686,7 +687,7 @@ public class Main extends JFrame {
 		public void actionPerformed(ActionEvent event) {
 			if (event.getSource() == JBRun) {				// RUN BUTTON
 				boolean noneSelected = true;
-				for (Component comp : HMComponents.values ())		//itterate over all search elements and check
+				for (Component comp : HMComponents.values ())		//iterate over all search elements and check
 					if (comp.TYPE == 'T' && !comp.text.getText().isEmpty())	//if any is of them selected
 						noneSelected = false;
 					else if (comp.TYPE == 'C' && comp.checkBox.isSelected())
@@ -733,7 +734,7 @@ public class Main extends JFrame {
 			if (fileChooser.getFileSelectionMode() == JFileChooser.FILES_ONLY)	// if a FILE
 				inputFiles.add(dir);	// add that file to list
 			else if (fileChooser.getFileSelectionMode() == JFileChooser.DIRECTORIES_ONLY)	// if a DIRECTORY
-				inputFiles = (List <File>) FileUtils.listFiles(dir, null, true);	// parse al in dir and sub dirs
+				inputFiles = (List <File>) FileUtils.listFiles(dir, null, true);	// parse all in dir and sub dirs
 			else
 				return;
 
@@ -831,7 +832,7 @@ public class Main extends JFrame {
 							AutoDetectParser parser = new AutoDetectParser();
 							parser.parse(input, handler, new Metadata(), new ParseContext());
 							fileReader = new Scanner(handler.toString());
-						} else { //files added here contains extesions not supported by grit and "Read Additional Format" was not selected
+						} else { //files added here contains extensions not supported by grit and "Read Additional Format" was not selected
 							skipFiles.add(file);
 							continue;
 						}
