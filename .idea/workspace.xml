@@ -1,15 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="3b502ca8-8831-447e-9988-8337b78e40c2" name="Default" comment="added option for wild card searching with tooltip, still analyzing actionlistener to see how to best implement wild card searching without breaking code">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/tika_app_1_14__1_.xml" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/tika_app_1_12.xml" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Grit.jar" afterPath="$PROJECT_DIR$/Grit.jar" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_GRIT.jar" afterPath="$PROJECT_DIR$/_GRIT.jar" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
+    <list default="true" id="3b502ca8-8831-447e-9988-8337b78e40c2" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/NARA-GRIT.iml" afterPath="$PROJECT_DIR$/NARA-GRIT.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/grit/Main.java" afterPath="$PROJECT_DIR$/src/grit/Main.java" />
     </list>
     <ignored path="NARA-GRIT.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -212,8 +205,8 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="1785" />
-    <option name="y" value="88" />
+    <option name="x" value="1899" />
+    <option name="y" value="102" />
     <option name="width" value="1616" />
     <option name="height" value="899" />
   </component>
@@ -568,13 +561,21 @@
       <workItem from="1472916778593" duration="51000" />
       <workItem from="1472916831956" duration="11502000" />
     </task>
+    <task id="LOCAL-00001" summary="added option for wild card searching with tooltip, still analyzing actionlistener to see how to best implement wild card searching without breaking code">
+      <created>1489741257895</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1489741257895</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
     <option name="totallyTimeSpent" value="12129000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="1785" y="88" width="1616" height="899" extended-state="0" />
+    <frame x="1899" y="102" width="1616" height="899" extended-state="0" />
     <editor active="false" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
