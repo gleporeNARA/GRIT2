@@ -241,9 +241,9 @@ public class Main extends JFrame {
 		for (String s : skpExtLst)
 			skipExtensions.add (s);
 
-/********************************************************************************************************************
- *												Built Regex List													*
- ********************************************************************************************************************/
+/*******************************************************************************************************************
+ Built Regex List													*
+ */
 		// perfect old format ssn with hyphens, followed by anything other than a number, dash, or slash
 		addRegexToList("(\\b(?!000)(?!666)(?:[0-6]\\d{2}|7[0-2][0-9]|73[0-3]|7[5-6][0-9]|77[0-2]))-((?!00)\\d{2})-((?!0000)\\d{4})([^0-9-/]|)", HMComponents.get("SSN").regex);
 		// same as above but with a newline in front
@@ -533,8 +533,8 @@ public class Main extends JFrame {
 /********************************************************************************************************************
  *										GUI Action Listeners Class Section											*
  ********************************************************************************************************************/
-	/**
-	 * listens for user's interaction with the remove duplicates button.
+	/*
+	  listens for user's interaction with the remove duplicates button.
 
 	private class CleanResultsListener implements ActionListener {
 		@Override
@@ -565,7 +565,7 @@ public class Main extends JFrame {
 		public void actionPerformed(ActionEvent event) {
 			// DIRECTORY ONLY MODE
 			if (event.getSource() == JCBCheckAll) {
-				if(JCBCheckAll.isSelected() == true) {
+				if(JCBCheckAll.isSelected()) {
 					for (Component comp : HMComponents.values ())
 						if (comp.TYPE == 'C')
 							comp.checkBox.setSelected(true);
@@ -743,7 +743,7 @@ public class Main extends JFrame {
 
 			for (File file: inputFiles) {		// process file by file
 				InputStream input = null;
-				ContentHandler handler = null;
+				ContentHandler handler;
 
 				try {
 					input = new FileInputStream(file);
@@ -942,7 +942,7 @@ public class Main extends JFrame {
 
 					if (comp.isActive ()) {
 						for (Pattern regex : comp.regex) {
-							int crrMchCnt = 0, nxtMchCnt = 0, cmbMchCnt = 0;
+							int crrMchCnt, nxtMchCnt = 0, cmbMchCnt = 0;
 
 							Matcher crrMchr = regex.matcher (currLine.toString ());	//these three blocks counts number of matches found on particular line
 							crrMchCnt = getMatchCount (crrMchr);					//it is needed to determine if a match occur in between line endings
@@ -1188,9 +1188,9 @@ public class Main extends JFrame {
 		}
 	}
 
-/********************************************************************************************************************
- *									Miscelaneous Helper Method and Classes Section									*
- ********************************************************************************************************************/
+/*******************************************************************************************************************
+ Miscellaneous Helper Method and Classes Section									*
+ */
 	/**
 	 * Originally codes has redundancy due to increased search elements, the purpose of this wrapper class is
 	 * to redundancy by grouping related data elements and achieve data persistency for immutable
