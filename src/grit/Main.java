@@ -242,7 +242,7 @@ public class Main extends JFrame {
 		for (String s : skpExtLst)
 			skipExtensions.add (s);
 
-/*******************************************************************************************************************
+/******************************************************************************************************************
  Built Regex List													*
  */
 		// perfect old format ssn with hyphens, followed by anything other than a number, dash, or slash
@@ -535,9 +535,9 @@ public class Main extends JFrame {
 		return "*** " + PROGRAM_TITLE + " version " + PROGRAM_VERSION + " ***\n\n" + Help.showHelp ();
 	}
 
-/********************************************************************************************************************
- *										GUI Action Listeners Class Section											*
- ********************************************************************************************************************/
+/******************************************************************************************************************
+ GUI Action Listeners Class Section											*
+ */
 	/*
 	  listens for user's interaction with the remove duplicates button.
 
@@ -747,7 +747,7 @@ public class Main extends JFrame {
 			JPBStatus.setMaximum (totalFiles);	//sets progress bar maximum to relative num of files to process
 
 			for (File file: inputFiles) {		// process file by file
-				InputStream input = null;
+				InputStream input;
 				ContentHandler handler;
 
 				try {
@@ -1503,9 +1503,9 @@ public class Main extends JFrame {
 		return count;
 	}
 
-/********************************************************************************************************************
- *												The Main Method														*
- ********************************************************************************************************************/
+/*******************************************************************************************************************
+ The Main Method														*
+ */
 	/**
 	 * This is the main function that run this program/main class.
 	 */
