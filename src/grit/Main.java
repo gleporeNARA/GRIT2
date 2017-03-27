@@ -141,6 +141,7 @@ public class Main extends JFrame {
 
 	private JRadioButton JRBDirectory;
 	private JRadioButton JRBFile;
+	private JRadioButton JRBWildCard;
 
 	//private JButton JBRemoveDuplicates;
 	private JButton JBInput;
@@ -323,12 +324,15 @@ public class Main extends JFrame {
 		JRBDirectory.setToolTipText("Searches all files under a directory.");
 		JRBDirectory.setSelected(true);
 
+		JRBWildCard = new JRadioButton("Wild card searching");
+		JRBWildCard.setToolTipText("Allow for Wild card searching using *, ? \n   " + "Examples:\n  " + "1) *.*\n  " + "2) text.*\n  " + "3) *.text\n  " + "4) te?t.text \n  " + "5) text.te?t\n  ");
 		JRBFile = new JRadioButton("One File");
 		JRBFile.setToolTipText("Single file search");
 
 		ButtonGroup BGReadMode = new ButtonGroup();		//adding radio button to group
 		BGReadMode.add(JRBDirectory);
 		BGReadMode.add(JRBFile);
+
 
 		//JBRemoveDuplicates = new JButton("Remove Duplicates");
 		//JBRemoveDuplicates.setToolTipText("Remove Duplicate Results");
@@ -402,6 +406,7 @@ public class Main extends JFrame {
 		panel2_sub2.setBorder(BorderFactory.createTitledBorder("Other Match Mode"));
 		panel2_sub2.setLayout(new BoxLayout(panel2_sub2, BoxLayout.PAGE_AXIS));
 		panel2_sub2.add(HMComponents.get("TxtField").text);
+		panel2_sub2.add(JRBWildCard);
 
 		JPanel panel2 = new JPanel();
 		panel2.setLayout(new GridLayout(0,1,0,10));
