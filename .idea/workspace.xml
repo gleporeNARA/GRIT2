@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="3b502ca8-8831-447e-9988-8337b78e40c2" name="Default" comment="">
+    <list default="true" id="3b502ca8-8831-447e-9988-8337b78e40c2" name="Default" comment="Minor updates.">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_GRIT.jar" afterPath="$PROJECT_DIR$/_GRIT.jar" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/NARA-GRIT/grit/Main$CheckAllOptionsListener.class" afterPath="$PROJECT_DIR$/out/production/NARA-GRIT/grit/Main$CheckAllOptionsListener.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/NARA-GRIT/grit/Main$SearchTask.class" afterPath="$PROJECT_DIR$/out/production/NARA-GRIT/grit/Main$SearchTask.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/grit/Main.java" afterPath="$PROJECT_DIR$/src/grit/Main.java" />
     </list>
@@ -32,10 +30,10 @@
       <file leaf-file-name="Main.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/grit/Main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="228">
-              <caret line="682" column="13" lean-forward="true" selection-start-line="682" selection-start-column="13" selection-end-line="682" selection-end-column="13" />
+            <state relative-caret-position="570">
+              <caret line="539" column="0" lean-forward="true" selection-start-line="539" selection-start-column="0" selection-end-line="539" selection-end-column="0" />
               <folding>
-                <element signature="docComment;class#Main#0" expanded="false" />
+                <element signature="imports" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -64,9 +62,15 @@
       <find>JRBFile</find>
       <find>action</find>
       <find>initNewSearch</find>
+      <find>JRBWildCard</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
+    <option name="PREVIOUS_COMMIT_AUTHORS">
+      <list>
+        <option value="gleporeNARA &lt;gregory.lepore@nara.gov&gt;" />
+      </list>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GradleLocalSettings">
@@ -95,8 +99,11 @@
     <option name="width" value="1928" />
     <option name="height" value="1035" />
   </component>
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
   <component name="ProjectView">
-    <navigator currentView="ProjectPane" proportions="" version="1">
+    <navigator proportions="" version="1">
       <flattenPackages />
       <showMembers />
       <showModules />
@@ -109,57 +116,7 @@
       <manualOrder />
       <foldersAlwaysOnTop value="true" />
     </navigator>
-    <panes>
-      <pane id="Scope" />
-      <pane id="ProjectPane">
-        <subPane>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="NARA-GRIT2" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="NARA-GRIT2" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="NARA-GRIT2" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="NARA-GRIT2" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="NARA-GRIT2" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="NARA-GRIT2" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="grit" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-        </subPane>
-      </pane>
-      <pane id="Scratches" />
-      <pane id="PackagesPane" />
-    </panes>
+    <panes />
   </component>
   <component name="PropertiesComponent">
     <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
@@ -170,643 +127,6 @@
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/tika-app-1.14 (1).jar!/" />
     <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file:///Volumes/Ferrari/Code/NARA/NARA-GRIT/NARA-GRIT.iml" />
-  </component>
-  <component name="RestoreUpdateTree" date="Moments ago" ActionInfo="_Update">
-    <UpdatedFiles>
-      <FILE-GROUP>
-        <option name="myUpdateName" value="Updated from server" />
-        <option name="myStatusName" value="Changed on server" />
-        <option name="mySupportsDeletion" value="false" />
-        <option name="myCanBeAbsent" value="false" />
-        <option name="myId" value="CHANGED_ON_SERVER" />
-        <FILE-GROUP>
-          <option name="myUpdateName" value="Updated" />
-          <option name="myStatusName" value="Changed" />
-          <option name="mySupportsDeletion" value="false" />
-          <option name="myCanBeAbsent" value="false" />
-          <option name="myId" value="UPDATED" />
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/.idea/misc.xml</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/.idea/workspace.xml</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/NARA-GRIT.iml</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/_GRIT.jar</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/src/grit/Main.java</PATH>
-        </FILE-GROUP>
-        <FILE-GROUP>
-          <option name="myUpdateName" value="Created" />
-          <option name="myStatusName" value="Created" />
-          <option name="mySupportsDeletion" value="false" />
-          <option name="myCanBeAbsent" value="false" />
-          <option name="myId" value="CREATED" />
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/.gitattributes</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/.idea/libraries/tika_app_1_14__1_.xml</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/Grit.jar</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/Grit_.jar</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/out/production/NARA-GRIT/grit/CSVWriter.class</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/out/production/NARA-GRIT/grit/ExtensionCounter.class</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/out/production/NARA-GRIT/grit/HTMLWriter.class</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/out/production/NARA-GRIT/grit/Help.class</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/out/production/NARA-GRIT/grit/Main$1.class</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/out/production/NARA-GRIT/grit/Main$2.class</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/out/production/NARA-GRIT/grit/Main$CheckAllOptionsListener.class</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/out/production/NARA-GRIT/grit/Main$Component.class</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/out/production/NARA-GRIT/grit/Main$MyIOListener.class</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/out/production/NARA-GRIT/grit/Main$MyRunModeListener.class</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/out/production/NARA-GRIT/grit/Main$MySearchTaskListener.class</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/out/production/NARA-GRIT/grit/Main$SearchTask$1.class</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/out/production/NARA-GRIT/grit/Main$SearchTask.class</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/out/production/NARA-GRIT/grit/Main.class</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/out/production/NARA-GRIT/grit/Match.class</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/out/production/NARA-GRIT/grit/TableWriter.class</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/1.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/10.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/100.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/101.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/102.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/103.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/104.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/105.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/106.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/107.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/108.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/109.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/11.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/110.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/111.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/112.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/113.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/114.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/115.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/116.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/117.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/118.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/119.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/12.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/120.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/121.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/122.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/123.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/124.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/125.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/126.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/127.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/128.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/129.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/13.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/130.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/131.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/132.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/133.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/134.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/135.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/136.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/137.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/138.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/139.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/14.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/140.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/141.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/142.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/143.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/144.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/145.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/146.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/147.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/148.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/149.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/15.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/150.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/151.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/152.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/153.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/154.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/155.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/156.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/157.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/158.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/159.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/16.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/160.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/161.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/162.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/163.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/164.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/165.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/166.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/167.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/168.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/169.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/17.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/170.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/171.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/172.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/173.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/174.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/175.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/176.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/177.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/178.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/179.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/18.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/180.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/181.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/182.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/183.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/184.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/185.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/186.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/187.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/188.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/189.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/19.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/190.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/191.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/192.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/193.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/194.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/195.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/196.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/197.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/198.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/199.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/2.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/20.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/200.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/201.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/202.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/203.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/204.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/205.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/206.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/207.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/208.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/209.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/21.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/210.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/211.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/212.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/213.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/214.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/215.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/216.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/217.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/218.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/219.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/22.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/220.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/221.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/222.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/223.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/224.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/225.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/227.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/228.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/229.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/23.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/230.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/231.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/232.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/233.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/234.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/235.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/236.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/237.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/238.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/239.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/24.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/240.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/241.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/242.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/243.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/244.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/245.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/246.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/247.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/248.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/249.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/25.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/250.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/251.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/252.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/253.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/254.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/255.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/256.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/257.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/258.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/259.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/26.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/260.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/261.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/262.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/263.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/264.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/265.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/266.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/267.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/268.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/269.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/27.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/270.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/271.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/272.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/273.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/274.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/275.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/276.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/277.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/278.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/279.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/28.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/280.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/281.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/282.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/283.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/284.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/285.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/286.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/287.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/288.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/289.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/29.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/290.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/291.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/292.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/293.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/294.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/295.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/296.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/297.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/298.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/299.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/3.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/30.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/300.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/301.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/302.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/303.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/304.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/305.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/306.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/307.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/308.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/309.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/31.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/310.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/311.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/312.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/313.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/314.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/315.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/316.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/317.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/318.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/319.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/32.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/320.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/321.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/322.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/323.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/324.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/325.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/326.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/327.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/328.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/329.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/33.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/330.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/331.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/332.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/333.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/334.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/335.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/336.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/337.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/338.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/339.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/34.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/340.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/341.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/342.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/343.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/344.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/345.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/346.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/347.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/348.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/349.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/35.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/350.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/351.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/352.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/353.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/354.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/355.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/356.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/357.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/358.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/359.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/36.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/360.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/361.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/362.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/363.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/364.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/365.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/366.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/367.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/368.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/369.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/37.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/370.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/371.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/372.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/373.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/374.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/375.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/376.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/377.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/378.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/379.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/38.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/380.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/381.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/382.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/383.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/384.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/385.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/386.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/387.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/388.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/389.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/39.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/390.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/391.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/392.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/393.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/394.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/395.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/396.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/397.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/398.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/399.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/4.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/40.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/400.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/401.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/402.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/403.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/404.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/405.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/406.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/407.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/408.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/409.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/41.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/410.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/411.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/412.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/413.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/414.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/415.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/416.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/417.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/418.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/419.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/42.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/420.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/421.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/422.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/423.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/424.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/425.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/426.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/427.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/428.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/429.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/43.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/430.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/431.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/432.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/433.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/434.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/435.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/436.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/437.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/438.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/439.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/44.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/440.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/441.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/442.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/443.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/444.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/445.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/446.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/447.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/448.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/449.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/45.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/450.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/451.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/452.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/453.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/454.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/455.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/456.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/457.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/458.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/459.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/46.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/460.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/461.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/462.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/463.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/464.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/465.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/466.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/467.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/468.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/469.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/47.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/470.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/471.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/472.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/473.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/474.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/475.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/476.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/477.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/478.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/479.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/48.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/480.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/481.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/482.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/483.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/484.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/485.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/486.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/487.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/488.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/489.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/49.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/490.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/491.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/492.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/493.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/494.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/495.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/496.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/497.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/498.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/499.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/5.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/50.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/500.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/501.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/51.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/52.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/53.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/54.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/55.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/56.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/57.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/58.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/59.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/6.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/60.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/61.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/62.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/63.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/64.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/65.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/66.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/67.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/68.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/69.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/7.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/70.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/71.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/72.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/73.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/74.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/75.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/76.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/77.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/78.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/79.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/8.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/80.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/81.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/82.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/83.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/84.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/85.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/86.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/87.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/88.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/89.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/9.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/90.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/91.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/92.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/93.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/94.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/95.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/96.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/97.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/98.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/sent_mail/99.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/test.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/tika-app-1.14 (1).jar</PATH>
-        </FILE-GROUP>
-        <FILE-GROUP>
-          <option name="myUpdateName" value="Deleted" />
-          <option name="myStatusName" value="Deleted" />
-          <option name="mySupportsDeletion" value="false" />
-          <option name="myCanBeAbsent" value="true" />
-          <option name="myId" value="REMOVED_FROM_REPOSITORY" />
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/.idea/libraries/tika_app_1_12.xml</PATH>
-        </FILE-GROUP>
-        <FILE-GROUP>
-          <option name="myUpdateName" value="Restored" />
-          <option name="myStatusName" value="Will be restored" />
-          <option name="mySupportsDeletion" value="false" />
-          <option name="myCanBeAbsent" value="false" />
-          <option name="myId" value="RESTORED" />
-        </FILE-GROUP>
-      </FILE-GROUP>
-      <FILE-GROUP>
-        <option name="myUpdateName" value="Modified" />
-        <option name="myStatusName" value="Modified" />
-        <option name="mySupportsDeletion" value="false" />
-        <option name="myCanBeAbsent" value="false" />
-        <option name="myId" value="MODIFIED" />
-      </FILE-GROUP>
-      <FILE-GROUP>
-        <option name="myUpdateName" value="Skipped" />
-        <option name="myStatusName" value="Skipped" />
-        <option name="mySupportsDeletion" value="false" />
-        <option name="myCanBeAbsent" value="false" />
-        <option name="myId" value="SKIPPED" />
-      </FILE-GROUP>
-      <FILE-GROUP>
-        <option name="myUpdateName" value="Merged with conflicts" />
-        <option name="myStatusName" value="Will be merged with conflicts" />
-        <option name="mySupportsDeletion" value="false" />
-        <option name="myCanBeAbsent" value="false" />
-        <option name="myId" value="MERGED_WITH_CONFLICTS" />
-      </FILE-GROUP>
-      <FILE-GROUP>
-        <option name="myUpdateName" value="Merged with tree conflicts" />
-        <option name="myStatusName" value="Merged with tree conflicts" />
-        <option name="mySupportsDeletion" value="false" />
-        <option name="myCanBeAbsent" value="false" />
-        <option name="myId" value="MERGED_WITH_TREE_CONFLICT" />
-      </FILE-GROUP>
-      <FILE-GROUP>
-        <option name="myUpdateName" value="Merged with property conflicts" />
-        <option name="myStatusName" value="Will be merged with property conflicts" />
-        <option name="mySupportsDeletion" value="false" />
-        <option name="myCanBeAbsent" value="false" />
-        <option name="myId" value="MERGED_WITH_PROPERTY_CONFLICT" />
-      </FILE-GROUP>
-      <FILE-GROUP>
-        <option name="myUpdateName" value="Merged" />
-        <option name="myStatusName" value="Will be merged" />
-        <option name="mySupportsDeletion" value="false" />
-        <option name="myCanBeAbsent" value="false" />
-        <option name="myId" value="MERGED" />
-      </FILE-GROUP>
-      <FILE-GROUP>
-        <option name="myUpdateName" value="Not in repository" />
-        <option name="myStatusName" value="Not in repository" />
-        <option name="mySupportsDeletion" value="true" />
-        <option name="myCanBeAbsent" value="false" />
-        <option name="myId" value="UNKNOWN" />
-      </FILE-GROUP>
-      <FILE-GROUP>
-        <option name="myUpdateName" value="Locally added" />
-        <option name="myStatusName" value="Locally added" />
-        <option name="mySupportsDeletion" value="false" />
-        <option name="myCanBeAbsent" value="false" />
-        <option name="myId" value="LOCALLY_ADDED" />
-      </FILE-GROUP>
-      <FILE-GROUP>
-        <option name="myUpdateName" value="Locally removed" />
-        <option name="myStatusName" value="Locally removed" />
-        <option name="mySupportsDeletion" value="false" />
-        <option name="myCanBeAbsent" value="false" />
-        <option name="myId" value="LOCALLY_REMOVED" />
-      </FILE-GROUP>
-      <FILE-GROUP>
-        <option name="myUpdateName" value="Switched" />
-        <option name="myStatusName" value="Switched" />
-        <option name="mySupportsDeletion" value="false" />
-        <option name="myCanBeAbsent" value="false" />
-        <option name="myId" value="SWITCHED" />
-      </FILE-GROUP>
-    </UpdatedFiles>
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -1102,7 +422,14 @@
       <option name="project" value="LOCAL" />
       <updated>1489741257895</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Minor updates.">
+      <created>1490621181190</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1490621181190</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -1110,59 +437,36 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-4" y="-4" width="1928" height="1035" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Nl-Palette" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32952183" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32615715" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26372445" sideWeight="0.50416666" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26372445" sideWeight="0.49583334" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32938644" sideWeight="0.49791667" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17291667" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3991684" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Nl-Palette" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25511304" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.26790452" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.42655367" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32702702" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2554054" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.26790452" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.42655367" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -1178,7 +482,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="added option for wild card searching with tooltip, still analyzing actionlistener to see how to best implement wild card searching without breaking code" />
-    <option name="LAST_COMMIT_MESSAGE" value="added option for wild card searching with tooltip, still analyzing actionlistener to see how to best implement wild card searching without breaking code" />
+    <MESSAGE value="Minor updates." />
+    <option name="LAST_COMMIT_MESSAGE" value="Minor updates." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1196,7 +501,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="docComment;class#Main#0" expanded="false" />
+            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1206,7 +511,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="docComment;class#Main#0" expanded="false" />
+            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1216,7 +521,7 @@
         <state relative-caret-position="315">
           <caret line="77" column="17" lean-forward="false" selection-start-line="77" selection-start-column="17" selection-end-line="77" selection-end-column="17" />
           <folding>
-            <element signature="docComment;class#Main#0" expanded="false" />
+            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1276,7 +581,7 @@
         <state relative-caret-position="114">
           <caret line="94" column="13" lean-forward="false" selection-start-line="94" selection-start-column="13" selection-end-line="94" selection-end-column="13" />
           <folding>
-            <element signature="docComment;class#Main#0" expanded="false" />
+            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1286,7 +591,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="docComment;class#Main#0" expanded="false" />
+            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1295,7 +600,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="68">
           <caret line="4" column="13" lean-forward="false" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1303,7 +607,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1717">
           <caret line="101" column="0" lean-forward="false" selection-start-line="101" selection-start-column="0" selection-end-line="101" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1311,7 +614,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="238">
           <caret line="14" column="0" lean-forward="false" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1319,24 +621,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="238">
           <caret line="14" column="19" lean-forward="false" selection-start-line="14" selection-start-column="19" selection-end-line="14" selection-end-column="19" />
-          <folding>
-            <element signature="e#733#734#0" expanded="false" />
-            <element signature="e#758#759#0" expanded="false" />
-            <element signature="e#794#795#0" expanded="false" />
-            <element signature="e#827#828#0" expanded="false" />
-            <element signature="e#857#858#0" expanded="false" />
-            <element signature="e#884#885#0" expanded="false" />
-            <element signature="e#914#915#0" expanded="false" />
-            <element signature="e#941#942#0" expanded="false" />
-            <element signature="e#971#972#0" expanded="false" />
-            <element signature="e#998#999#0" expanded="false" />
-            <element signature="e#1026#1027#0" expanded="false" />
-            <element signature="e#1053#1054#0" expanded="false" />
-            <element signature="e#1083#1084#0" expanded="false" />
-            <element signature="e#1114#1115#0" expanded="false" />
-            <element signature="e#1149#1150#0" expanded="false" />
-            <element signature="e#1178#1179#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1344,7 +628,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="204">
           <caret line="12" column="0" lean-forward="false" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1352,37 +635,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="204">
           <caret line="14" column="0" lean-forward="false" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#271#272#0" expanded="false" />
-            <element signature="e#307#308#0" expanded="false" />
-            <element signature="e#350#351#0" expanded="false" />
-            <element signature="e#387#388#0" expanded="false" />
-            <element signature="e#444#445#0" expanded="false" />
-            <element signature="e#500#501#0" expanded="false" />
-            <element signature="e#544#545#0" expanded="false" />
-            <element signature="e#582#583#0" expanded="false" />
-            <element signature="e#626#627#0" expanded="false" />
-            <element signature="e#675#676#0" expanded="false" />
-            <element signature="e#718#719#0" expanded="false" />
-            <element signature="e#754#755#0" expanded="false" />
-            <element signature="e#794#795#0" expanded="false" />
-            <element signature="e#846#847#0" expanded="false" />
-            <element signature="e#887#888#0" expanded="false" />
-            <element signature="e#923#924#0" expanded="false" />
-            <element signature="e#965#966#0" expanded="false" />
-            <element signature="e#999#1000#0" expanded="false" />
-            <element signature="e#1042#1043#0" expanded="false" />
-            <element signature="e#1077#1078#0" expanded="false" />
-            <element signature="e#1119#1120#0" expanded="false" />
-            <element signature="e#1153#1154#0" expanded="false" />
-            <element signature="e#1196#1197#0" expanded="false" />
-            <element signature="e#1231#1232#0" expanded="false" />
-            <element signature="e#1274#1275#0" expanded="false" />
-            <element signature="e#1312#1313#0" expanded="false" />
-            <element signature="e#1357#1358#0" expanded="false" />
-            <element signature="e#1396#1397#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1391,7 +643,7 @@
         <state relative-caret-position="20672">
           <caret line="1216" column="28" lean-forward="false" selection-start-line="1216" selection-start-column="28" selection-end-line="1216" selection-end-column="28" />
           <folding>
-            <element signature="docComment;class#Main#0" expanded="false" />
+            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1400,7 +652,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="68">
           <caret line="4" column="13" lean-forward="false" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1408,7 +659,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1717">
           <caret line="101" column="0" lean-forward="false" selection-start-line="101" selection-start-column="0" selection-end-line="101" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1416,7 +666,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="238">
           <caret line="14" column="0" lean-forward="false" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1424,24 +673,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#733#734#0" expanded="false" />
-            <element signature="e#758#759#0" expanded="false" />
-            <element signature="e#794#795#0" expanded="false" />
-            <element signature="e#827#828#0" expanded="false" />
-            <element signature="e#857#858#0" expanded="false" />
-            <element signature="e#884#885#0" expanded="false" />
-            <element signature="e#914#915#0" expanded="false" />
-            <element signature="e#941#942#0" expanded="false" />
-            <element signature="e#971#972#0" expanded="false" />
-            <element signature="e#998#999#0" expanded="false" />
-            <element signature="e#1026#1027#0" expanded="false" />
-            <element signature="e#1053#1054#0" expanded="false" />
-            <element signature="e#1083#1084#0" expanded="false" />
-            <element signature="e#1114#1115#0" expanded="false" />
-            <element signature="e#1149#1150#0" expanded="false" />
-            <element signature="e#1178#1179#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1449,7 +680,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="204">
           <caret line="12" column="0" lean-forward="false" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1457,37 +687,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="204">
           <caret line="14" column="0" lean-forward="false" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#271#272#0" expanded="false" />
-            <element signature="e#307#308#0" expanded="false" />
-            <element signature="e#350#351#0" expanded="false" />
-            <element signature="e#387#388#0" expanded="false" />
-            <element signature="e#444#445#0" expanded="false" />
-            <element signature="e#500#501#0" expanded="false" />
-            <element signature="e#544#545#0" expanded="false" />
-            <element signature="e#582#583#0" expanded="false" />
-            <element signature="e#626#627#0" expanded="false" />
-            <element signature="e#675#676#0" expanded="false" />
-            <element signature="e#718#719#0" expanded="false" />
-            <element signature="e#754#755#0" expanded="false" />
-            <element signature="e#794#795#0" expanded="false" />
-            <element signature="e#846#847#0" expanded="false" />
-            <element signature="e#887#888#0" expanded="false" />
-            <element signature="e#923#924#0" expanded="false" />
-            <element signature="e#965#966#0" expanded="false" />
-            <element signature="e#999#1000#0" expanded="false" />
-            <element signature="e#1042#1043#0" expanded="false" />
-            <element signature="e#1077#1078#0" expanded="false" />
-            <element signature="e#1119#1120#0" expanded="false" />
-            <element signature="e#1153#1154#0" expanded="false" />
-            <element signature="e#1196#1197#0" expanded="false" />
-            <element signature="e#1231#1232#0" expanded="false" />
-            <element signature="e#1274#1275#0" expanded="false" />
-            <element signature="e#1312#1313#0" expanded="false" />
-            <element signature="e#1357#1358#0" expanded="false" />
-            <element signature="e#1396#1397#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1496,7 +695,7 @@
         <state relative-caret-position="20672">
           <caret line="1216" column="28" lean-forward="false" selection-start-line="1216" selection-start-column="28" selection-end-line="1216" selection-end-column="28" />
           <folding>
-            <element signature="docComment;class#Main#0" expanded="false" />
+            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1505,7 +704,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="68">
           <caret line="4" column="13" lean-forward="false" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1513,7 +711,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1717">
           <caret line="101" column="0" lean-forward="false" selection-start-line="101" selection-start-column="0" selection-end-line="101" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1521,7 +718,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="238">
           <caret line="14" column="0" lean-forward="false" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1529,24 +725,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#733#734#0" expanded="false" />
-            <element signature="e#758#759#0" expanded="false" />
-            <element signature="e#794#795#0" expanded="false" />
-            <element signature="e#827#828#0" expanded="false" />
-            <element signature="e#857#858#0" expanded="false" />
-            <element signature="e#884#885#0" expanded="false" />
-            <element signature="e#914#915#0" expanded="false" />
-            <element signature="e#941#942#0" expanded="false" />
-            <element signature="e#971#972#0" expanded="false" />
-            <element signature="e#998#999#0" expanded="false" />
-            <element signature="e#1026#1027#0" expanded="false" />
-            <element signature="e#1053#1054#0" expanded="false" />
-            <element signature="e#1083#1084#0" expanded="false" />
-            <element signature="e#1114#1115#0" expanded="false" />
-            <element signature="e#1149#1150#0" expanded="false" />
-            <element signature="e#1178#1179#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1554,7 +732,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="204">
           <caret line="12" column="0" lean-forward="false" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1562,36 +739,15 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="204">
           <caret line="14" column="0" lean-forward="false" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/grit/Main.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#271#272#0" expanded="false" />
-            <element signature="e#307#308#0" expanded="false" />
-            <element signature="e#350#351#0" expanded="false" />
-            <element signature="e#387#388#0" expanded="false" />
-            <element signature="e#444#445#0" expanded="false" />
-            <element signature="e#500#501#0" expanded="false" />
-            <element signature="e#544#545#0" expanded="false" />
-            <element signature="e#582#583#0" expanded="false" />
-            <element signature="e#626#627#0" expanded="false" />
-            <element signature="e#675#676#0" expanded="false" />
-            <element signature="e#718#719#0" expanded="false" />
-            <element signature="e#754#755#0" expanded="false" />
-            <element signature="e#794#795#0" expanded="false" />
-            <element signature="e#846#847#0" expanded="false" />
-            <element signature="e#887#888#0" expanded="false" />
-            <element signature="e#923#924#0" expanded="false" />
-            <element signature="e#965#966#0" expanded="false" />
-            <element signature="e#999#1000#0" expanded="false" />
-            <element signature="e#1042#1043#0" expanded="false" />
-            <element signature="e#1077#1078#0" expanded="false" />
-            <element signature="e#1119#1120#0" expanded="false" />
-            <element signature="e#1153#1154#0" expanded="false" />
-            <element signature="e#1196#1197#0" expanded="false" />
-            <element signature="e#1231#1232#0" expanded="false" />
-            <element signature="e#1274#1275#0" expanded="false" />
-            <element signature="e#1312#1313#0" expanded="false" />
-            <element signature="e#1357#1358#0" expanded="false" />
-            <element signature="e#1396#1397#0" expanded="false" />
+            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1601,17 +757,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="docComment;class#Main#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/grit/Main.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="docComment;class#Main#0" expanded="false" />
+            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1621,7 +767,7 @@
         <state relative-caret-position="315">
           <caret line="77" column="17" lean-forward="false" selection-start-line="77" selection-start-column="17" selection-end-line="77" selection-end-column="17" />
           <folding>
-            <element signature="docComment;class#Main#0" expanded="false" />
+            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1674,37 +820,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="204">
           <caret line="14" column="0" lean-forward="false" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#271#272#0" expanded="false" />
-            <element signature="e#307#308#0" expanded="false" />
-            <element signature="e#350#351#0" expanded="false" />
-            <element signature="e#387#388#0" expanded="false" />
-            <element signature="e#444#445#0" expanded="false" />
-            <element signature="e#500#501#0" expanded="false" />
-            <element signature="e#544#545#0" expanded="false" />
-            <element signature="e#582#583#0" expanded="false" />
-            <element signature="e#626#627#0" expanded="false" />
-            <element signature="e#675#676#0" expanded="false" />
-            <element signature="e#718#719#0" expanded="false" />
-            <element signature="e#754#755#0" expanded="false" />
-            <element signature="e#794#795#0" expanded="false" />
-            <element signature="e#846#847#0" expanded="false" />
-            <element signature="e#887#888#0" expanded="false" />
-            <element signature="e#923#924#0" expanded="false" />
-            <element signature="e#965#966#0" expanded="false" />
-            <element signature="e#999#1000#0" expanded="false" />
-            <element signature="e#1042#1043#0" expanded="false" />
-            <element signature="e#1077#1078#0" expanded="false" />
-            <element signature="e#1119#1120#0" expanded="false" />
-            <element signature="e#1153#1154#0" expanded="false" />
-            <element signature="e#1196#1197#0" expanded="false" />
-            <element signature="e#1231#1232#0" expanded="false" />
-            <element signature="e#1274#1275#0" expanded="false" />
-            <element signature="e#1312#1313#0" expanded="false" />
-            <element signature="e#1357#1358#0" expanded="false" />
-            <element signature="e#1396#1397#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1712,7 +827,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="204">
           <caret line="12" column="0" lean-forward="false" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1720,7 +834,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="238">
           <caret line="14" column="0" lean-forward="false" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1728,7 +841,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1717">
           <caret line="101" column="0" lean-forward="false" selection-start-line="101" selection-start-column="0" selection-end-line="101" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1736,7 +848,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="68">
           <caret line="4" column="13" lean-forward="false" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1744,33 +855,15 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="238">
           <caret line="14" column="19" lean-forward="false" selection-start-line="14" selection-start-column="19" selection-end-line="14" selection-end-column="19" />
-          <folding>
-            <element signature="e#733#734#0" expanded="false" />
-            <element signature="e#758#759#0" expanded="false" />
-            <element signature="e#794#795#0" expanded="false" />
-            <element signature="e#827#828#0" expanded="false" />
-            <element signature="e#857#858#0" expanded="false" />
-            <element signature="e#884#885#0" expanded="false" />
-            <element signature="e#914#915#0" expanded="false" />
-            <element signature="e#941#942#0" expanded="false" />
-            <element signature="e#971#972#0" expanded="false" />
-            <element signature="e#998#999#0" expanded="false" />
-            <element signature="e#1026#1027#0" expanded="false" />
-            <element signature="e#1053#1054#0" expanded="false" />
-            <element signature="e#1083#1084#0" expanded="false" />
-            <element signature="e#1114#1115#0" expanded="false" />
-            <element signature="e#1149#1150#0" expanded="false" />
-            <element signature="e#1178#1179#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/grit/Main.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="228">
-          <caret line="682" column="13" lean-forward="true" selection-start-line="682" selection-start-column="13" selection-end-line="682" selection-end-column="13" />
+        <state relative-caret-position="570">
+          <caret line="539" column="0" lean-forward="true" selection-start-line="539" selection-start-column="0" selection-end-line="539" selection-end-column="0" />
           <folding>
-            <element signature="docComment;class#Main#0" expanded="false" />
+            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>

@@ -87,7 +87,7 @@ import java.io.LineNumberReader;
  * - Basic functionality.
  *
  * Notes: subroutine methods are created to reduce redundant codes. multiple values passed to subroutine needed to 
- * be modified with persistancy, thus, method returns would not be feasable for this purpose. to achieve data
+ * be modified with persistancy, thus, method returns would not be feasible for this purpose. to achieve data
  * persistancy passed to subroutine, immutable data such as stings and integers are wrapped in class objects and pass
  * as reference to void return type subroutine for handling.
  */
@@ -537,8 +537,7 @@ public class Main extends JFrame {
 
 /******************************************************************************************************************
  GUI Action Listeners Class Section											*
- */
-	/*
+
 	  listens for user's interaction with the remove duplicates button.
 
 	private class CleanResultsListener implements ActionListener {
@@ -734,7 +733,7 @@ public class Main extends JFrame {
 		 * @param dir - directory that need to be processed
 		 */
 		public void runSearch(File dir) {
-			List <File> inputFiles = new ArrayList<File>();		// build list of input files
+			List <File> inputFiles = new ArrayList<>();		// build list of input files
 
 			if (fileChooser.getFileSelectionMode() == JFileChooser.FILES_ONLY)	// if a FILE
 				inputFiles.add(dir);	// add that file to list
@@ -844,7 +843,7 @@ public class Main extends JFrame {
 					}
 
 					matchRegex(file, fileExtension);	// find matching regex in current processing file
-					input.close();	//here we close the fileInputStream using the hanlder reference, to avoid memory leaks!
+					input.close();	//here we close the fileInputStream using the handler reference, to avoid memory leaks!
 				} catch (NullPointerException e) {
 					System.out.println("NULLPE " + e);
 					skipFiles.add(file);
@@ -891,7 +890,7 @@ public class Main extends JFrame {
 		 * Note! redundant issue where previous line is read twice. find ways to fix!
 		 *
 		 * Note! issue of double counting when match is found between lines. previously added current line gets counted
-		 * again when it becomes the previous of the current itteration, where there is match found in between the
+		 * again when it becomes the previous of the current iteration, where there is match found in between the
 		 * jointed lines. it look like one line look ahead is insufficient, perhaps implement two lines look ahead
 		 *
 		 * Note! we look ahead one line to check if match is found in between lines, if a match is found in between lines then
@@ -910,7 +909,7 @@ public class Main extends JFrame {
 			int oneExtraRun = 1;	//causes the line reader to run one extra time when last line in file is reached so that
 			//next line can be reassign to current line for matching on current line
 
-			StringBuilder currLine = new StringBuilder ();	//between the end of the privous line and start at the beginning of the next line
+			StringBuilder currLine = new StringBuilder ();	//between the end of the previous line and start at the beginning of the next line
 			StringBuilder nextLine = new StringBuilder ();	//look ahead line check if match is found between joined line to avoid double counting
 			StringBuilder combLine = new StringBuilder ();	//this is the combine line of the previous line and the current line
 
@@ -947,7 +946,7 @@ public class Main extends JFrame {
 
 					if (comp.isActive ()) {
 						for (Pattern regex : comp.regex) {
-							int crrMchCnt, nxtMchCnt = 0, cmbMchCnt = 0;
+							int crrMchCnt, nxtMchCnt, cmbMchCnt;
 
 							Matcher crrMchr = regex.matcher (currLine.toString ());	//these three blocks counts number of matches found on particular line
 							crrMchCnt = getMatchCount (crrMchr);					//it is needed to determine if a match occur in between line endings
@@ -958,7 +957,7 @@ public class Main extends JFrame {
 							Matcher cmbMchr = regex.matcher (combLine.toString ());
 							cmbMchCnt = getMatchCount (cmbMchr);
 
-							if (cmbMchCnt > crrMchCnt + nxtMchCnt) {	//if there is a match in between lines, we get result from the cobine line
+							if (cmbMchCnt > crrMchCnt + nxtMchCnt) {	//if there is a match in between lines, we get result from the combine line
 								while (cmbMchr.find ())
 									doResult (comp, combLine, cmbMchr, fileExtension, file, lineNum);
 								break;	//if a match is found on this line, no need to check remaining regex pattern in list, avoid duplicates match result, this break out of the regex for loop above
@@ -982,7 +981,7 @@ public class Main extends JFrame {
 
 		/**
 		 * This method is only used by the user entered regex (Text) and the SSN search
-		 * This method is only called from the done() mehtod
+		 * This method is only called from the done() method
 		 */
 		private ArrayList <Match> getResults(Component comp) {
 			int i = 1;
@@ -995,7 +994,7 @@ public class Main extends JFrame {
 
 		private ArrayList getOtherResults(ArrayList<Match> elf) {
 			for (Match pr : resultOtherMatchList)
-				for (Component comp : HMComponents.values ())	//itterate over the hashTable to match every symbols
+				for (Component comp : HMComponents.values ())	//iterate over the hashTable to match every symbols
 					if(pr.getConfidence().matches(comp.SYM))
 						Main.this.addToAllRow (false, false, 0, pr, comp.html, comp.csv);
 
@@ -1204,7 +1203,7 @@ public class Main extends JFrame {
 	 * The constructor takes in four arguments to create the object and and initializes all related data members
 	 * @param type - character that specifies object will be check box or a text area, C = check box, T = text area
 	 * @param sym - the symbol use to represent this object, can be use as web links or for web links label
-	 * @param label - the label that will be displayed next to the check box in the java GUI applicaiton
+	 * @param label - the label that will be displayed next to the check box in the java GUI application
 	 * @param tip - the tool tip text that will be displayed when the user hover mouse cursor over this GUI element
 	 */
 	private class Component {
@@ -1276,7 +1275,7 @@ public class Main extends JFrame {
 	 * initialize the progress bar to count the progress accurately.
 	 * !note: since we don't know how many lines in is a large file and counting through each one is inefficient,
 	 * we skip the largest number of lines possible and the lineNumberReader will tell us how many lines it
-	 * actually has, this saves computational time in counting thorugh all the lines in between.
+	 * actually has, this saves computational time in counting through all the lines in between.
 	 */
 	public int countLines(File file) {
 		int lines = 0;
@@ -1299,7 +1298,7 @@ public class Main extends JFrame {
 	 * This subroutine method is use for writing found regex matches to result list
 	 *
 	 * Note! originally TextField and SSN results are added to List and ListUnique linkedList, for everything else
-	 * gets added to otherMatchList. be mindfull of how these two fields are treated differently than others matches
+	 * gets added to otherMatchList. be mindful of how these two fields are treated differently than others matches
 	 */
 	private void doResult (Component comp, StringBuilder line, Matcher patternMatcher, String fileExt, File file, int lineNum) {
 		comp.counter ++;
@@ -1503,9 +1502,6 @@ public class Main extends JFrame {
 		return count;
 	}
 
-/*******************************************************************************************************************
- The Main Method														*
- */
 	/**
 	 * This is the main function that run this program/main class.
 	 */
