@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="NARA-GRIT:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/NARA_GRIT_jar</output-path>
+    <root id="archive" name="NARA-GRIT.jar">
+      <element id="module-output" name="NARA-GRIT" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/dependencies/tika-app-1.17.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
