@@ -1,0 +1,8 @@
+File: test_edits.txt
+Author: Brian W (Bwilso1@umbc.edu)
+About: dummy file to test Intellij / Github integration.
+
+other editors can feel free to edit this file to verify they can push changes to the repository. This file is not used by the GRIT application.
+
+
+--- end
