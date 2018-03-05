@@ -12,7 +12,6 @@ import org.apache.poi.hsmf.MAPIMessage;
 import org.apache.poi.hsmf.exceptions.ChunkNotFoundException;
 import org.apache.poi.hssf.extractor.ExcelExtractor;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.hwpf.extractor.WordExtractor;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.poifs.filesystem.NPOIFSFileSystem;
@@ -93,10 +92,10 @@ import java.io.LineNumberReader;
  */
 
 public class Main extends JFrame {
-	public static final String PROGRAM_TITLE = "GRIT";
-	public static final String PROGRAM_VERSION = "0.0.10";
-	public static final int WIN_WIDTH = 1200;
-	public static final int WIN_HEIGHT = 950;
+	private static final String PROGRAM_TITLE = "GRIT";
+	private static final String PROGRAM_VERSION = "0.0.10";
+	private static final int WIN_WIDTH = 1200;
+	private static final int WIN_HEIGHT = 850;
 
 	private File userInput;
 	private File textFileInput;
@@ -141,7 +140,6 @@ public class Main extends JFrame {
 
 	private JRadioButton JRBDirectory;
 	private JRadioButton JRBFile;
-	private JCheckBox JRBWildCard; // private JRadioButton JRBWildCard;
 
 	//private JButton JBRemoveDuplicates;
 	private JButton JBInput;
@@ -221,10 +219,12 @@ public class Main extends JFrame {
 		skipFiles = new ArrayList<File>();
 		resultOtherMatchList = new ArrayList <Match>();
 
-		/**
+		/*
 		 * creates a hash map of search components. 'T' is creates a text box, 'C' creates a check box
+		 * See private class Component for more info
 		 */
 		HMComponents = new HashMap <String, Component> ();
+
 		HMComponents.put ("TxtField", new Component ('T', "Text", "", "Enter your own regular expression here"));
 		HMComponents.put ("SSN", new Component ('C', "SSN", "SSN Match", "Matches (SSN#, SS#, SSN, 555-55-5555). Most likely to match SSNs. Fewest false positives."));
 		HMComponents.put ("DoB", new Component ('C', "DoB", "Date of Birth", "(Birth, Born, DOB with a date) Matches terms related to date of birth."));
@@ -235,16 +235,16 @@ public class Main extends JFrame {
 		HMComponents.put ("FBIInfoFile", new Component ('C', "FBI Info File", "FBI Info Files", "FBI information files beginning with numbers beginning on 134, 137, 170"));
 		HMComponents.put ("FBISource", new Component ('C', "FBI Source", "FBI Sources", "Find matches for protect identity, informant, psi, si, reliable, confidential"));
 		HMComponents.put ("FBISourceCode", new Component ('C', "FBI Source Code", "FBI Source Codes", "AL,AQ,AX,AN,AT,BA,BH,BS,BQ,BU,BT,CE,CG,CI,CV,CO,DL,DN,DE,EP,HN,HO,IP,JN,JK,KC,KX,LV,LR,LA,LS,ME,MM,MI,MP,MO,NK,NH,NO,NR,NY,NF,OC,OM,PH,PX,PG,PD,RH,SC,SL,SU,SA,SD,SF,SJ,SV,SE,SI,TP,WFO,BER,BOG,BON,HON,LON,MAN,MEX,OTT,PAN,PAR,ROM,TOK, followed by a dash or space, and between 1 and 5 numbers."));
-
+		HMComponents.put ("WildCard", new Component( 'C',"WildCard","Wild card searching","Allow for Wild card searching using * and ?  Example *.doc  w??d.txt"));
 		//Prepare Skipped Extensions:
 		String skpExtLst [] = {"mp3", "mp4", "ogg", "flac", "png", "gif", "bmp", "jpg", "jpeg", "avi", "mpg", "mpeg", "tar", "zip", "tz", "gz", "tif", "tiff", "wav"};
 		skipExtensions = new HashSet<String>();
 		for (String s : skpExtLst)
 			skipExtensions.add (s);
 
-/******************************************************************************************************************
- Built Regex List													*
- */
+		/* *****************************************************************************************************************
+		 Build Regex List													*
+		 */
 		// perfect old format ssn with hyphens, followed by anything other than a number, dash, or slash
 		addRegexToList("(\\b(?!000)(?!666)(?:[0-6]\\d{2}|7[0-2][0-9]|73[0-3]|7[5-6][0-9]|77[0-2]))-((?!00)\\d{2})-((?!0000)\\d{4})([^0-9-/]|)", HMComponents.get("SSN").regex);
 		// same as above but with a newline in front
@@ -324,8 +324,6 @@ public class Main extends JFrame {
 		JRBDirectory.setToolTipText("Searches all files under a directory.");
 		JRBDirectory.setSelected(true);
 
-		JRBWildCard = new JCheckBox("Wild card searching"); //JRBWildCard = new JRadioButton("Wild card searching");
-		JRBWildCard.setToolTipText("Allow for Wild card searching using *, ? \n   " + "Examples:\n  " + "1) *.*\n  " + "2) text.*\n  " + "3) *.text\n  " + "4) te?t.text \n  " + "5) text.te?t\n  ");
 		JRBFile = new JRadioButton("One File");
 		JRBFile.setToolTipText("Single file search");
 
@@ -404,9 +402,14 @@ public class Main extends JFrame {
 		panel2_sub1.add(HMComponents.get("FBISourceCode").checkBox);
 
 		panel2_sub2.setBorder(BorderFactory.createTitledBorder("Other Match Mode"));
-		panel2_sub2.setLayout(new BoxLayout(panel2_sub2, BoxLayout.PAGE_AXIS));
-		panel2_sub2.add(HMComponents.get("TxtField").text);
-		panel2_sub2.add(JRBWildCard);
+		panel2_sub2.setLayout(new BoxLayout(panel2_sub2, BoxLayout.Y_AXIS));
+		panel2_sub2.add(HMComponents.get("TxtField").text); //HERE
+
+		//only way I could get checkbox to align left was more sub panels...
+		JPanel sub2_sub = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		sub2_sub.add(HMComponents.get("WildCard").checkBox);
+		panel2_sub2.add(sub2_sub);
+
 
 		JPanel panel2 = new JPanel();
 		panel2.setLayout(new GridLayout(0,1,0,10));
@@ -535,10 +538,10 @@ public class Main extends JFrame {
 		return "*** " + PROGRAM_TITLE + " version " + PROGRAM_VERSION + " ***\n\n" + Help.showHelp ();
 	}
 
-/******************************************************************************************************************
- GUI Action Listeners Class Section											*
+	/******************************************************************************************************************
+	 GUI Action Listeners Class Section											*
 
-	  listens for user's interaction with the remove duplicates button.
+	listens for user's interaction with the remove duplicates button.
 
 	private class CleanResultsListener implements ActionListener {
 		@Override
@@ -621,7 +624,7 @@ public class Main extends JFrame {
 						outputFileHTML = new File(fileSaver.getSelectedFile() + ".html");
 						if (outputFileHTML != null && outputFileHTML.exists()) {
 							StringBuilder msg = new StringBuilder ("The file " + outputFileHTML.getName() + " already exists. Do you want to replace the existing file?");
-							StringBuilder title = new StringBuilder ("Ovewrite file?");
+							StringBuilder title = new StringBuilder ("Overwrite file?");
 							int userRespond2 = JOptionPane.showConfirmDialog(Main.this, msg.toString (), title.toString (), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 
 							if (userRespond2 != JOptionPane.YES_OPTION)	// user choose NO
@@ -1053,7 +1056,7 @@ public class Main extends JFrame {
 					postCSVResult.append (comp.csv.toString ());
 		}
 
-		/**
+		/* *
 		 * This method prepares search results in html format which can be saved later.
 		 */
 		private void buildHtmlResult() {
@@ -1192,19 +1195,16 @@ public class Main extends JFrame {
 		}
 	}
 
-/*******************************************************************************************************************
+/* ******************************************************************************************************************
  Miscellaneous Helper Method and Classes Section									*
  */
-	/**
+	/** Component Class
 	 * Originally codes has redundancy due to increased search elements, the purpose of this wrapper class is
 	 * to redundancy by grouping related data elements and achieve data persistency for immutable
 	 * data such as strings and integers, as a result data members of class are meant to be accessed directly
 	 * without encapsulation implemented.
 	 * The constructor takes in four arguments to create the object and and initializes all related data members
-	 * @param type - character that specifies object will be check box or a text area, C = check box, T = text area
-	 * @param sym - the symbol use to represent this object, can be use as web links or for web links label
-	 * @param label - the label that will be displayed next to the check box in the java GUI application
-	 * @param tip - the tool tip text that will be displayed when the user hover mouse cursor over this GUI element
+	 * See constructor JavaDoc for specific input parameters.
 	 */
 	private class Component {
 		final char TYPE;	//C = check box, T = text box
@@ -1221,6 +1221,13 @@ public class Main extends JFrame {
 		HashSet <Match> resultListUnique;
 		ArrayList <Match> resultListUniqueFinal;
 
+		/** Constructor
+		 * This constructor takes in four arguments to create the object and and initializes all related data members
+		 * @param type - character that specifies object will be check box or a text area, C = check box, T = text area
+		 * @param sym - the symbol use to represent this object, can be use as web links or for web links label
+		 * @param label - the label that will be displayed next to the check box in the java GUI application
+		 * @param tip - the tool tip text that will be displayed when the user hover mouse cursor over this GUI element
+		 */
 		public Component (char type, String sym, String label, String tip) {
 			this.TYPE = type;
 			this.SYM = sym;
@@ -1306,7 +1313,8 @@ public class Main extends JFrame {
 		//enable this to see live result updates while searching, but disable the same one in addAllToRow() method to avoid showing duplicate results
 		JBTableModel.addRow(new Object[]{comp.counter, comp.SYM, patternMatcher.group(), line.toString(), fileExt, file, lineNum});
 
-		if (comp.SYM == "SSN" || comp.SYM == "Text") {
+		//NOTE: switched from comp.SYM == "SSN" to line below
+		if (comp.SYM.equals("SSN") || comp.SYM.equals("Text")) {
 			comp.resultList.add(new Match(comp.counter, comp.SYM, patternMatcher.group(), line.toString(), fileExt, file, lineNum));
 			comp.resultListUnique.add(new Match(comp.counter, comp.SYM, patternMatcher.group(), line.toString(), fileExt, file, lineNum));
 		} else {
@@ -1320,7 +1328,7 @@ public class Main extends JFrame {
 	 * this method is created to reduce code redundancy. This method can act as either getter or
 	 * setter, which is determine by the setIdSwitch parameter. if setIdSwitch is enable, then index i argument can be
 	 * used.
-	 * @param addJBTable - switch to add a new row to JBTableModel
+	 * @param addToTableModel - switch to add a new row to JBTableModel
 	 * @param setIdSwitch - switch on for pr.setID(), off for pr.getID()
 	 * @param i - use for pr.setID() when setIdSwitch is on
 	 */
@@ -1435,22 +1443,22 @@ public class Main extends JFrame {
 		long diff = end - start;
 
 		// time unit in millisecond
-		final long SECONDUNIT = 1000;
-		final long MINUTEUNIT = SECONDUNIT * 60;
-		final long HOURUNIT = MINUTEUNIT * 60;
-		//final long DAYUNIT = HOURUNIT * 24;
+		final long SECOND_UNIT = 1000;
+		final long MINUTE_UNIT = SECOND_UNIT * 60;
+		final long HOUR_UNIT = MINUTE_UNIT * 60;
+		//final long DAYUNIT = HOUR_UNIT * 24;
 
 		// calculate elapsed time
 		//String days = String.valueOf(diff / DAYUNIT);
 		//diff = diff % DAYUNIT;
-		String hours = String.valueOf(diff / HOURUNIT);
-		diff = diff % HOURUNIT;
-		String minutes = String.valueOf(diff / MINUTEUNIT);
-		diff = diff % MINUTEUNIT;
-		String seconds = String.valueOf(diff / SECONDUNIT);
-		String elapsedTime = hours + "h:" + minutes + "m:" + seconds + "s";
+		String hours = String.valueOf(diff / HOUR_UNIT);
+		diff = diff % HOUR_UNIT;
+		String minutes = String.valueOf(diff / MINUTE_UNIT);
+		diff = diff % MINUTE_UNIT;
+		String seconds = String.valueOf(diff / SECOND_UNIT);
+		//String elapsedTime = hours + "h:" + minutes + "m:" + seconds + "s";
 
-		return elapsedTime;
+		return hours + "h:" + minutes + "m:" + seconds + "s";
 	}
 
 	/**
