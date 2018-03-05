@@ -219,11 +219,12 @@ public class Main extends JFrame {
 		skipFiles = new ArrayList<File>();
 		resultOtherMatchList = new ArrayList <Match>();
 
-		/*
-		 * creates a hash map of search components. 'T' is creates a text box, 'C' creates a check box
-		 * See private class Component for more info
+		/* HashMap <String, Component>();
+		 *
+		 * creates a hash map of search Components. 'T' is creates a text box, 'C' creates a check box
+		 * See private class "Component" below, for more details on methods and attributes.
 		 */
-		HMComponents = new HashMap <String, Component> ();
+        HMComponents = new HashMap<>();
 
 		HMComponents.put ("TxtField", new Component ('T', "Text", "", "Enter your own regular expression here"));
 		HMComponents.put ("SSN", new Component ('C', "SSN", "SSN Match", "Matches (SSN#, SS#, SSN, 555-55-5555). Most likely to match SSNs. Fewest false positives."));
