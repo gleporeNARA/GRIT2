@@ -98,7 +98,6 @@ public class Main extends JFrame {
 	private static final int WIN_HEIGHT = 850;
 
 	private File userInput;
-	private File textFileInput;
 	private File outputFileHTML;
 	private File outputFileCSV;
 
@@ -140,6 +139,9 @@ public class Main extends JFrame {
 
 	private JRadioButton JRBDirectory;
 	private JRadioButton JRBFile;
+	private JRadioButton regex;
+	private JRadioButton wildcard;
+	private ButtonGroup searchSelectGroup;
 
 	//private JButton JBRemoveDuplicates;
 	private JButton JBInput;
@@ -167,6 +169,8 @@ public class Main extends JFrame {
 	private HashMap <String, Component> HMComponents;
 	//private JButton JBClear;
 
+
+
 	/**
 	 * The Main class constructor
 	 */
@@ -177,7 +181,6 @@ public class Main extends JFrame {
 
 	private void initSystemComponents() {
 		userInput = null;
-		textFileInput = null;
 		outputFileHTML = null;
 		outputFileCSV = null;
 
@@ -224,7 +227,7 @@ public class Main extends JFrame {
 		 * creates a hash map of search Components. 'T' is creates a text box, 'C' creates a check box
 		 * See private class "Component" below, for more details on methods and attributes.
 		 */
-        HMComponents = new HashMap<>();
+		HMComponents = new HashMap<>();
 
 		HMComponents.put ("TxtField", new Component ('T', "Text", "", "Enter your own regular expression here"));
 		HMComponents.put ("SSN", new Component ('C', "SSN", "SSN Match", "Matches (SSN#, SS#, SSN, 555-55-5555). Most likely to match SSNs. Fewest false positives."));
@@ -236,7 +239,9 @@ public class Main extends JFrame {
 		HMComponents.put ("FBIInfoFile", new Component ('C', "FBI Info File", "FBI Info Files", "FBI information files beginning with numbers beginning on 134, 137, 170"));
 		HMComponents.put ("FBISource", new Component ('C', "FBI Source", "FBI Sources", "Find matches for protect identity, informant, psi, si, reliable, confidential"));
 		HMComponents.put ("FBISourceCode", new Component ('C', "FBI Source Code", "FBI Source Codes", "AL,AQ,AX,AN,AT,BA,BH,BS,BQ,BU,BT,CE,CG,CI,CV,CO,DL,DN,DE,EP,HN,HO,IP,JN,JK,KC,KX,LV,LR,LA,LS,ME,MM,MI,MP,MO,NK,NH,NO,NR,NY,NF,OC,OM,PH,PX,PG,PD,RH,SC,SL,SU,SA,SD,SF,SJ,SV,SE,SI,TP,WFO,BER,BOG,BON,HON,LON,MAN,MEX,OTT,PAN,PAR,ROM,TOK, followed by a dash or space, and between 1 and 5 numbers."));
-		HMComponents.put ("WildCard", new Component( 'C',"WildCard","Wild card searching","Allow for Wild card searching using * and ?  Example *.doc  w??d.txt"));
+		//HMComponents.put ("WildCard", new Component( 'C',"WildCard","Wild card searching","Allow for Wild card searching using * and ?  Example *.doc  w??d.txt"));
+		//HMComponents.put ("Regex", new Component())
+
 		//Prepare Skipped Extensions:
 		String skpExtLst [] = {"mp3", "mp4", "ogg", "flac", "png", "gif", "bmp", "jpg", "jpeg", "avi", "mpg", "mpeg", "tar", "zip", "tz", "gz", "tif", "tiff", "wav"};
 		skipExtensions = new HashSet<String>();
@@ -328,6 +333,15 @@ public class Main extends JFrame {
 		JRBFile = new JRadioButton("One File");
 		JRBFile.setToolTipText("Single file search");
 
+		regex = new JRadioButton("Regex");
+		regex.setToolTipText("Search with regular expressions");
+		wildcard = new JRadioButton("Wildcard");
+		wildcard.setToolTipText("Search using * and ?  Example *.doc  w??d.txt\"");
+		searchSelectGroup = new ButtonGroup();
+		searchSelectGroup.add(regex);
+		searchSelectGroup.add(wildcard);
+
+
 		ButtonGroup BGReadMode = new ButtonGroup();		//adding radio button to group
 		BGReadMode.add(JRBDirectory);
 		BGReadMode.add(JRBFile);
@@ -392,8 +406,12 @@ public class Main extends JFrame {
 		panel1.add(HMComponents.get("Alien").checkBox);
 
 		//Row1: Panel2: Elements Added
+		//NOTE: HERE
 		JPanel panel2_sub1 = new JPanel();	//to get proper alignment of new check boxes above "Other Match mode"
+		panel2_sub1.setPreferredSize(new Dimension(WIN_WIDTH/4,125));
+		panel2_sub1.setMaximumSize(new Dimension(WIN_WIDTH/4,125));
 		JPanel panel2_sub2 = new JPanel();	//two sub panels are placed inside of panel2 using grid layout
+		panel2_sub2.setPreferredSize(new Dimension(WIN_WIDTH/4, 74));
 
 		panel2_sub1.setBorder(BorderFactory.createTitledBorder("PII Match Modes"));
 		panel2_sub1.setLayout(new BoxLayout(panel2_sub1, BoxLayout.PAGE_AXIS));
@@ -403,17 +421,21 @@ public class Main extends JFrame {
 		panel2_sub1.add(HMComponents.get("FBISourceCode").checkBox);
 
 		panel2_sub2.setBorder(BorderFactory.createTitledBorder("Other Match Mode"));
-		panel2_sub2.setLayout(new BoxLayout(panel2_sub2, BoxLayout.Y_AXIS));
 		panel2_sub2.add(HMComponents.get("TxtField").text); //HERE
-
-		//only way I could get checkbox to align left was more sub panels...
+		panel2_sub2.setLayout(new BoxLayout(panel2_sub2, BoxLayout.Y_AXIS));
 		JPanel sub2_sub = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		sub2_sub.add(HMComponents.get("WildCard").checkBox);
+		//sub2_sub.add(HMComponents.get("WildCard").checkBox);
+		sub2_sub.add(regex);
+		sub2_sub.add(wildcard);
+		regex.setSelected(true);
 		panel2_sub2.add(sub2_sub);
 
 
 		JPanel panel2 = new JPanel();
-		panel2.setLayout(new GridLayout(0,1,0,10));
+		//panel2.setLayout(new GridLayout(2,1,0,10));
+		panel2.setMaximumSize(new Dimension(WIN_WIDTH/4,125));
+		//panel2.setLayout(new BoxLayout(panel2,BoxLayout.Y_AXIS));
+
 		panel2.add(panel2_sub1);
 		panel2.add(panel2_sub2);
 
@@ -439,9 +461,11 @@ public class Main extends JFrame {
 
 		//Row1: Elements Populated
 		JPanel row1 = new JPanel();
-		row1.setMinimumSize(new Dimension(Integer.MAX_VALUE, 100));
-		row1.setMaximumSize(new Dimension(Integer.MAX_VALUE, 200));
+		row1.setMinimumSize(new Dimension(Integer.MAX_VALUE, 200));
+		row1.setPreferredSize((new Dimension(WIN_WIDTH,210)));
+		row1.setMaximumSize(new Dimension(Integer.MAX_VALUE, 300));
 		row1.setLayout(new GridLayout(0, 4));
+		//row1.setLayout(new FlowLayout(FlowLayout.LEFT));
 		row1.add(panel1);
 		row1.add(panel2);
 		row1.add(panel3);
@@ -921,6 +945,7 @@ public class Main extends JFrame {
 			JPBStatus2.setValue (0);	// reset line progress bar
 			progressCounter2 = 0;
 
+			//HERE
 			addTextToRegex(HMComponents.get("TxtField").text.getText()); //<<< possible redundancy >>> adding the same user input regex to list on each file searched
 
 			if (fileReader.hasNext()) {			// check if file is readable
@@ -1376,10 +1401,14 @@ public class Main extends JFrame {
 		regexList.add(pattern);
 	}
 
-	/**
+	/** addTextToRegex()
+	 *
 	 * This method is used for handling user input regex. parses user regex input into pattern
 	 * and adds it to the regexText list. the regexText list is cleared on every new search
+	 *
+	 * @param text - the text to add to regex list
 	 */
+	//NOTE: HERE
 	private void addTextToRegex(String text) {
 		HashSet<String> tempTextList = new HashSet<>();
 		tempTextList.clear();
