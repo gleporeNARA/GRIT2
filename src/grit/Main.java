@@ -141,6 +141,7 @@ public class Main extends JFrame {
 	private JRadioButton JRBFile;
 	private JRadioButton regex;
 	private JRadioButton wildcard;
+	private JRadioButton plainText;
 	private ButtonGroup searchSelectGroup;
 
 	//private JButton JBRemoveDuplicates;
@@ -337,9 +338,12 @@ public class Main extends JFrame {
 		regex.setToolTipText("Search with regular expressions");
 		wildcard = new JRadioButton("Wildcard");
 		wildcard.setToolTipText("Search using * and ?  Example *.doc  w??d.txt\"");
+		plainText = new JRadioButton("Plain Text");
+		plainText.setToolTipText("Search using exact matching text");
 		searchSelectGroup = new ButtonGroup();
 		searchSelectGroup.add(regex);
 		searchSelectGroup.add(wildcard);
+		searchSelectGroup.add(plainText);
 
 
 		ButtonGroup BGReadMode = new ButtonGroup();		//adding radio button to group
@@ -427,6 +431,7 @@ public class Main extends JFrame {
 		//sub2_sub.add(HMComponents.get("WildCard").checkBox);
 		sub2_sub.add(regex);
 		sub2_sub.add(wildcard);
+		sub2_sub.add(plainText);
 		regex.setSelected(true);
 		panel2_sub2.add(sub2_sub);
 
