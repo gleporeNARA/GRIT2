@@ -139,9 +139,9 @@ public class Main extends JFrame {
 
 	private JRadioButton JRBDirectory;
 	private JRadioButton JRBFile;
-	private JRadioButton regex;
-	private JRadioButton wildcard;
-	private JRadioButton plainText;
+	private JRadioButton regexButton;
+	private JRadioButton wildcardButton;
+	private JRadioButton plainTextButton;
 	private ButtonGroup searchSelectGroup;
 
 	//private JButton JBRemoveDuplicates;
@@ -334,16 +334,16 @@ public class Main extends JFrame {
 		JRBFile = new JRadioButton("One File");
 		JRBFile.setToolTipText("Single file search");
 
-		regex = new JRadioButton("Regex");
-		regex.setToolTipText("Search with regular expressions");
-		wildcard = new JRadioButton("Wildcard");
-		wildcard.setToolTipText("Search using * and ?  Example *.doc  w??d.txt\"");
-		plainText = new JRadioButton("Plain Text");
-		plainText.setToolTipText("Search using exact matching text");
+		regexButton = new JRadioButton("Regex");
+		regexButton.setToolTipText("Search with regular expressions");
+		wildcardButton = new JRadioButton("Wildcard");
+		wildcardButton.setToolTipText("Search using * and ?  Example *.doc  w??d.txt\"");
+		plainTextButton = new JRadioButton("Plain Text");
+		plainTextButton.setToolTipText("Search using exact matching text");
 		searchSelectGroup = new ButtonGroup();
-		searchSelectGroup.add(regex);
-		searchSelectGroup.add(wildcard);
-		searchSelectGroup.add(plainText);
+		searchSelectGroup.add(regexButton);
+		searchSelectGroup.add(wildcardButton);
+		searchSelectGroup.add(plainTextButton);
 
 
 		ButtonGroup BGReadMode = new ButtonGroup();		//adding radio button to group
@@ -427,19 +427,20 @@ public class Main extends JFrame {
 		panel2_sub2.setBorder(BorderFactory.createTitledBorder("Other Match Mode"));
 		panel2_sub2.add(HMComponents.get("TxtField").text); //HERE
 		panel2_sub2.setLayout(new BoxLayout(panel2_sub2, BoxLayout.Y_AXIS));
+
 		JPanel sub2_sub = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		//sub2_sub.add(HMComponents.get("WildCard").checkBox);
-		sub2_sub.add(regex);
-		sub2_sub.add(wildcard);
-		sub2_sub.add(plainText);
-		regex.setSelected(true);
+		sub2_sub.add(regexButton);
+		sub2_sub.add(wildcardButton);
+		sub2_sub.add(plainTextButton);
+		regexButton.setSelected(true);
 		panel2_sub2.add(sub2_sub);
 
 
 		JPanel panel2 = new JPanel();
 		//panel2.setLayout(new GridLayout(2,1,0,10));
-		panel2.setMaximumSize(new Dimension(WIN_WIDTH/4,125));
 		//panel2.setLayout(new BoxLayout(panel2,BoxLayout.Y_AXIS));
+		panel2.setMaximumSize(new Dimension(WIN_WIDTH/4,125));
 
 		panel2.add(panel2_sub1);
 		panel2.add(panel2_sub2);
@@ -468,7 +469,7 @@ public class Main extends JFrame {
 		JPanel row1 = new JPanel();
 		row1.setMinimumSize(new Dimension(Integer.MAX_VALUE, 200));
 		row1.setPreferredSize((new Dimension(WIN_WIDTH,210)));
-		row1.setMaximumSize(new Dimension(Integer.MAX_VALUE, 300));
+		row1.setMaximumSize(new Dimension(Integer.MAX_VALUE, 300)); //NOTE: here
 		row1.setLayout(new GridLayout(0, 4));
 		//row1.setLayout(new FlowLayout(FlowLayout.LEFT));
 		row1.add(panel1);
@@ -979,6 +980,7 @@ public class Main extends JFrame {
 				for (Component comp : HMComponents.values ()) { //for each line check whether each active regex search component contains a match
 
 					if (comp.isActive ()) {
+						//iterate through arrayList 'regex' in Component class.
 						for (Pattern regex : comp.regex) {
 							int crrMchCnt, nxtMchCnt, cmbMchCnt;
 
@@ -1411,23 +1413,52 @@ public class Main extends JFrame {
 	 * This method is used for handling user input regex. parses user regex input into pattern
 	 * and adds it to the regexText list. the regexText list is cleared on every new search
 	 *
-	 * @param text - the text to add to regex list
+	 * @param input - the text to add to regex list
 	 */
-	//NOTE: HERE
-	private void addTextToRegex(String text) {
-		HashSet<String> tempTextList = new HashSet<>();
-		tempTextList.clear();
+	private void addTextToRegex(String input) {
+		Pattern pattern = null;
+		//String[] tempText = text.split("(,)|(\\|)"); //split text entry on commas|(\\s), pipes or blank spaces (including line breaks)
+		String[] tempText = input.split(","); //split text entry on commas
 
-		String[] tempText = text.split("(,)|(\\|)"); //split text entry on commas|(\\s), pipes or blank spaces (including line breaks)
-		for (int i = 0; i < tempText.length; i++) {
-			if (!tempText[i].matches("")) {
-				tempText[i] = tempText[i].trim();
-				tempTextList.add(tempText[i]);
-			}
+		//finding which radio button is selected.
+		int type = -1;
+		if(regexButton.isSelected()) {
+			type = 0;
+			pattern = Pattern.compile(input);
+			HMComponents.get ("TxtField").regex.add(pattern);
+		}else if(wildcardButton.isSelected()) {
+			type = 1;
+		}else if (plainTextButton.isSelected()){
+			type = 2;
+		}else{
+			System.out.println("fatal logic error @addTextToRegex()\nButtonSelected = " + type + " \tInput:\n" + input);
 		}
 
-		Pattern pattern = Pattern.compile("\\b(" + StringUtils.join(tempTextList,"|") + ")\\b", Pattern.DOTALL);
-		HMComponents.get ("TxtField").regex.add(pattern);
+
+		if(type != 0) {
+
+			for (int i = 0; i < tempText.length; i++) {
+				//check for empty indexes
+				tempText[i] = tempText[i].trim();
+				if (!tempText[i].matches("")) {
+
+					if (type == 1) {
+						String temp = tempText[i];
+						temp = temp.replaceAll("\\?", "\\\\w");
+						temp = temp.replaceAll("\\*", "\\\\w+");
+						pattern = Pattern.compile(temp);
+					} else if (type == 2) {
+						pattern = Pattern.compile(tempText[i], Pattern.LITERAL);
+					} else {
+						System.out.println("logic error, @addTextToRegex - parsing tempText\nType: " + type);
+					}
+					HMComponents.get ("TxtField").regex.add(pattern);
+				}//end if empty
+			}//end tempText iteration
+		}//end if type != 0
+
+		//Pattern pattern = Pattern.compile("\\b(" + StringUtils.join(tempTextList,"|") + ")\\b", Pattern.DOTALL);
+		//HMComponents.get ("TxtField").regex.add(pattern);
 	}
 
 	/**
