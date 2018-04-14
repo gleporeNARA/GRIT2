@@ -7,7 +7,6 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hsmf.MAPIMessage;
 import org.apache.poi.hsmf.exceptions.ChunkNotFoundException;
 import org.apache.poi.hssf.extractor.ExcelExtractor;
@@ -52,6 +51,7 @@ import java.util.Scanner;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 import java.util.zip.ZipException;
 import java.io.BufferedWriter;
 import java.io.EOFException;
@@ -142,11 +142,12 @@ public class Main extends JFrame {
 	private JRadioButton regexButton;
 	private JRadioButton wildcardButton;
 	private JRadioButton plainTextButton;
-	private ButtonGroup searchSelectGroup;
+	//private ButtonGroup searchSelectGroup;
 
 	//private JButton JBRemoveDuplicates;
 	private JButton JBInput;
 	private JButton JBRun;
+	private JButton ClearButton;
 	private JTextField JTAProgressLog;
 	private JButton JBCancel;
 	private JButton JBExport;
@@ -168,7 +169,6 @@ public class Main extends JFrame {
 	private ArrayList <File> skipFiles;
 	private HashSet <String> skipExtensions;
 	private HashMap <String, Component> HMComponents;
-	//private JButton JBClear;
 
 
 
@@ -226,11 +226,11 @@ public class Main extends JFrame {
 		/* HashMap <String, Component>();
 		 *
 		 * creates a hash map of search Components. 'T' is creates a text box, 'C' creates a check box
-		 * See private class "Component" below, for more details on methods and attributes.
+		 * See java class "Component" for more details on methods and attributes.
 		 */
 		HMComponents = new HashMap<>();
-
-		HMComponents.put ("TxtField", new Component ('T', "Text", "", "Enter your own regular expression here"));
+		//  <Key(String),  Component>
+		HMComponents.put ("TextSearchArea", new Component ('T', "Text", "", "Enter your own search text here"));
 		HMComponents.put ("SSN", new Component ('C', "SSN", "SSN Match", "Matches (SSN#, SS#, SSN, 555-55-5555). Most likely to match SSNs. Fewest false positives."));
 		HMComponents.put ("DoB", new Component ('C', "DoB", "Date of Birth", "(Birth, Born, DOB with a date) Matches terms related to date of birth."));
 		HMComponents.put ("Maiden", new Component ('C', "Maiden", "Mother's Maiden Name or Nee", "Matches terms related to maiden names."));
@@ -321,53 +321,16 @@ public class Main extends JFrame {
 	 */
 	private void initGUIComponents() {
 		//Row1: Elements
-		JCBCheckAll = new JCheckBox("Check All Options");
-		JCBCheckAll.setToolTipText("(All Options Activated)");
 
-		JCBAutoParser = new JCheckBox("Read Additional Formats");
-		JCBAutoParser.setToolTipText("The program will attempt to read additional file formats.");
+		JPanel row1 = new JPanel();
+		buildRow_1(row1);
 
-		JRBDirectory = new JRadioButton("One Directory");
-		JRBDirectory.setToolTipText("Searches all files under a directory.");
-		JRBDirectory.setSelected(true);
-
-		JRBFile = new JRadioButton("One File");
-		JRBFile.setToolTipText("Single file search");
-
-		regexButton = new JRadioButton("Regex");
-		regexButton.setToolTipText("Search with regular expressions");
-		wildcardButton = new JRadioButton("Wildcard");
-		wildcardButton.setToolTipText("Search using * and ?  Example *.doc  w??d.txt\"");
-		plainTextButton = new JRadioButton("Plain Text");
-		plainTextButton.setToolTipText("Search using exact matching text");
-		searchSelectGroup = new ButtonGroup();
-		searchSelectGroup.add(regexButton);
-		searchSelectGroup.add(wildcardButton);
-		searchSelectGroup.add(plainTextButton);
-
-
-		ButtonGroup BGReadMode = new ButtonGroup();		//adding radio button to group
-		BGReadMode.add(JRBDirectory);
-		BGReadMode.add(JRBFile);
 
 
 		//JBRemoveDuplicates = new JButton("Remove Duplicates");
 		//JBRemoveDuplicates.setToolTipText("Remove Duplicate Results");
 		//JBRemoveDuplicates.setEnabled(false);
 
-		JBInput = new JButton(" Input ");
-		JBInput.setToolTipText("Browses for directory or file to search");
-
-		JBRun = new JButton("  Run  ");
-		JBRun.setToolTipText("Starts search");
-
-		JBCancel = new JButton("Cancel Search");
-		JBCancel.setToolTipText("Cancels running search. Results can still be saved");
-		JBCancel.setEnabled(false);
-
-		JBExport = new JButton("Export Result");
-		JBExport.setToolTipText("Saves last searched results as HTML or CSV file");
-		JBExport.setEnabled(false);
 
 		//Row2: Elements
 		JTAProgressLog = new JTextField("");
@@ -398,84 +361,13 @@ public class Main extends JFrame {
 		JTAResultLog.setLineWrap(true);
 		JTAResultLog.setWrapStyleWord(true);
 
-		//Row1: Panel1: Elements Added
-		JPanel panel1 = new JPanel();
-		panel1.setBorder(BorderFactory.createTitledBorder("PII Match Modes"));
-		panel1.setLayout(new BoxLayout(panel1, BoxLayout.PAGE_AXIS));
-		panel1.add(JCBCheckAll);
-		panel1.add(HMComponents.get("SSN").checkBox);
-		panel1.add(HMComponents.get("DoB").checkBox);
-		panel1.add(HMComponents.get("Maiden").checkBox);
-		panel1.add(HMComponents.get("PoB").checkBox);
-		panel1.add(HMComponents.get("Alien").checkBox);
 
-		//Row1: Panel2: Elements Added
-		//NOTE: HERE
-		JPanel panel2_sub1 = new JPanel();	//to get proper alignment of new check boxes above "Other Match mode"
-		panel2_sub1.setPreferredSize(new Dimension(WIN_WIDTH/4,125));
-		panel2_sub1.setMaximumSize(new Dimension(WIN_WIDTH/4,125));
-		JPanel panel2_sub2 = new JPanel();	//two sub panels are placed inside of panel2 using grid layout
-		panel2_sub2.setPreferredSize(new Dimension(WIN_WIDTH/4, 74));
-
-		panel2_sub1.setBorder(BorderFactory.createTitledBorder("PII Match Modes"));
-		panel2_sub1.setLayout(new BoxLayout(panel2_sub1, BoxLayout.PAGE_AXIS));
-		panel2_sub1.add(HMComponents.get("GrandJury").checkBox);
-		panel2_sub1.add(HMComponents.get("FBIInfoFile").checkBox);
-		panel2_sub1.add(HMComponents.get("FBISource").checkBox);
-		panel2_sub1.add(HMComponents.get("FBISourceCode").checkBox);
-
-		panel2_sub2.setBorder(BorderFactory.createTitledBorder("Other Match Mode"));
-		panel2_sub2.add(HMComponents.get("TxtField").text); //HERE
-		panel2_sub2.setLayout(new BoxLayout(panel2_sub2, BoxLayout.Y_AXIS));
-
-		JPanel sub2_sub = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		//sub2_sub.add(HMComponents.get("WildCard").checkBox);
-		sub2_sub.add(regexButton);
-		sub2_sub.add(wildcardButton);
-		sub2_sub.add(plainTextButton);
-		regexButton.setSelected(true);
-		panel2_sub2.add(sub2_sub);
-
-
-		JPanel panel2 = new JPanel();
-		//panel2.setLayout(new GridLayout(2,1,0,10));
-		//panel2.setLayout(new BoxLayout(panel2,BoxLayout.Y_AXIS));
-		panel2.setMaximumSize(new Dimension(WIN_WIDTH/4,125));
-
-		panel2.add(panel2_sub1);
-		panel2.add(panel2_sub2);
-
-		//Row1: Panel3: Elements Added
-		JPanel panel3 = new JPanel();
-		panel3.setBorder(BorderFactory.createTitledBorder("Read Mode"));
-		panel3.setLayout(new BoxLayout(panel3, BoxLayout.PAGE_AXIS));
-		panel3.add(JRBDirectory);
-		panel3.add(JRBFile);
-		panel3.add(JCBAutoParser);
-		//panel3.add(JBRemoveDuplicates);
-
-		//Row1: Panel4: Elements Added
-		JPanel panel4 = new JPanel();
-		panel4.setBorder(BorderFactory.createTitledBorder("Run Mode"));
-		panel4.setLayout(new BoxLayout(panel4, BoxLayout.LINE_AXIS));
-		panel4.setBackground(new Color(224,242,247));
-		panel4.setLayout(new GridLayout(2, 2, 0, 0));
-		panel4.add(JBInput);
-		panel4.add(JBRun);
-		panel4.add(JBCancel);
-		panel4.add(JBExport);
-
-		//Row1: Elements Populated
-		JPanel row1 = new JPanel();
 		row1.setMinimumSize(new Dimension(Integer.MAX_VALUE, 200));
 		row1.setPreferredSize((new Dimension(WIN_WIDTH,210)));
 		row1.setMaximumSize(new Dimension(Integer.MAX_VALUE, 300)); //NOTE: here
 		row1.setLayout(new GridLayout(0, 4));
 		//row1.setLayout(new FlowLayout(FlowLayout.LEFT));
-		row1.add(panel1);
-		row1.add(panel2);
-		row1.add(panel3);
-		row1.add(panel4);
+
 
 		//Row2: Panel5: Elements Added
 		JPanel panel5 = new JPanel();
@@ -559,8 +451,166 @@ public class Main extends JFrame {
 		JBCancel.addActionListener(new MySearchTaskListener());
 		JBExport.addActionListener(new MyIOListener());
 		pack();
+	}  //end initGUIComponents()
+
+	private void buildRow_1(JPanel input) {
+		build_PII_1(input); //panel 1
+		build_PII_2(input); //panel 2
+		buildTextSearch(input);//panel 3
+		//buildReadMode(input); //old panel 3
+		buildPan_4(input); //Read + Run mode panels
+
 	}
 
+	private void build_PII_1(JPanel input) {
+		JPanel panel1 = new JPanel();
+		panel1.setBorder(BorderFactory.createTitledBorder("PII Match Modes"));
+		panel1.setLayout(new BoxLayout(panel1, BoxLayout.PAGE_AXIS));
+		JCBCheckAll = new JCheckBox("Check All Options");
+		JCBCheckAll.setToolTipText("(All Options Activated)");
+		panel1.add(JCBCheckAll);
+		panel1.add(HMComponents.get("SSN").checkBox);
+		panel1.add(HMComponents.get("DoB").checkBox);
+		panel1.add(HMComponents.get("Maiden").checkBox);
+		panel1.add(HMComponents.get("PoB").checkBox);
+		panel1.add(HMComponents.get("Alien").checkBox);
+		input.add(panel1);
+
+	}
+
+	private void buildTextSearch(JPanel input) {
+		JPanel panel = new JPanel();	//two sub panels are placed inside of panel_2 using grid layout
+		panel.setLayout(new GridLayout(2,2,0,0));
+
+		panel.setBorder(BorderFactory.createTitledBorder("Text Search Mode"));
+
+		panel.add(HMComponents.get("TextSearchArea").text);
+
+
+
+		regexButton = new JRadioButton("Regex");
+		regexButton.setToolTipText("Search with regular expressions");
+		wildcardButton = new JRadioButton("Wildcard");
+		wildcardButton.setToolTipText("Search using * and ?  Example *.doc  w??d.txt\"");
+		plainTextButton = new JRadioButton("Plain Text");
+		plainTextButton.setToolTipText("Search using exact matching text");
+
+		ButtonGroup searchSelectGroup = new ButtonGroup();
+		searchSelectGroup.add(regexButton);
+		searchSelectGroup.add(wildcardButton);
+		searchSelectGroup.add(plainTextButton);
+
+		//JPanel sub_pan1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		JPanel sub_pan1 = new JPanel();
+		JPanel radioButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+
+		sub_pan1.setLayout(new BoxLayout(sub_pan1,BoxLayout.Y_AXIS));
+
+		radioButtonPanel.add(plainTextButton);
+		radioButtonPanel.add(wildcardButton);
+		radioButtonPanel.add(regexButton);
+		plainTextButton.setSelected(true);
+
+		ClearButton = new JButton("Clear");
+		sub_pan1.add(radioButtonPanel);
+		sub_pan1.add(ClearButton);
+		ClearButton.addActionListener(new MySearchTaskListener());
+
+		panel.add(sub_pan1);
+		input.add(panel);
+	}
+	private void build_PII_2(JPanel input) {
+
+		JPanel sub1 = new JPanel();	//to get proper alignment of new check boxes above "Other Match mode"
+		sub1.setPreferredSize(new Dimension(WIN_WIDTH/4,125));
+		sub1.setMaximumSize(new Dimension(WIN_WIDTH/4,125));
+
+		//JPanel sub2 = new JPanel();	//two sub panels are placed inside of panel_2 using grid layout
+
+		//sub2.setPreferredSize(new Dimension(WIN_WIDTH/4, 74));
+
+
+		sub1.setBorder(BorderFactory.createTitledBorder("PII Match Modes"));
+		sub1.setLayout(new BoxLayout(sub1, BoxLayout.PAGE_AXIS));
+		sub1.add(HMComponents.get("GrandJury").checkBox);
+		sub1.add(HMComponents.get("FBIInfoFile").checkBox);
+		sub1.add(HMComponents.get("FBISource").checkBox);
+		sub1.add(HMComponents.get("FBISourceCode").checkBox);
+
+
+		JPanel panel_2 = new JPanel();
+		//panel_2.setLayout(new GridLayout(2,1,0,10));
+		//panel_2.setLayout(new BoxLayout(panel_2,BoxLayout.Y_AXIS));
+		//panel_2.setMaximumSize(new Dimension(WIN_WIDTH/4,125));
+
+		panel_2.add(sub1);
+		//panel_2.add(sub2);
+		input.add(panel_2);
+
+	}
+
+	private void buildReadMode(JPanel input) {
+		JPanel panel_3 = new JPanel();
+		JRBDirectory = new JRadioButton("One Directory");
+		JRBDirectory.setToolTipText("Searches all files under a directory.");
+		JRBDirectory.setSelected(true);
+
+		JRBFile = new JRadioButton("One File");
+		JRBFile.setToolTipText("Single file search");
+
+		JCBAutoParser = new JCheckBox("Read Additional Formats");
+		JCBAutoParser.setToolTipText("The program will attempt to read additional file formats.");
+
+		ButtonGroup BGReadMode = new ButtonGroup();		//adding radio button to group
+		BGReadMode.add(JRBDirectory);
+		BGReadMode.add(JRBFile);
+
+		panel_3.setBorder(BorderFactory.createTitledBorder("Read Mode"));
+		panel_3.setLayout(new BoxLayout(panel_3, BoxLayout.PAGE_AXIS));
+		panel_3.add(JRBDirectory);
+		panel_3.add(JRBFile);
+		panel_3.add(JCBAutoParser);
+
+		input.add(panel_3);
+	}
+
+	private void buildPan_4(JPanel input) {
+		JPanel panel_4 = new JPanel();
+		panel_4.setLayout(new GridLayout(2, 1, 0, 0));
+		JPanel sub1 = new JPanel();
+
+		sub1.setLayout(new GridLayout(2,2,0,0));
+		sub1.setBorder(BorderFactory.createTitledBorder("Run Mode"));
+
+
+		JBInput = new JButton(" Input ");
+		JBInput.setToolTipText("Browses for directory or file to search");
+
+		JBRun = new JButton("  Run  ");
+		JBRun.setToolTipText("Starts search");
+
+		JBCancel = new JButton("Cancel Search");
+		JBCancel.setToolTipText("Cancels running search. Results can still be saved");
+		JBCancel.setEnabled(false);
+
+		JBExport = new JButton("Export Result");
+		JBExport.setToolTipText("Saves last searched results as HTML or CSV file");
+		JBExport.setEnabled(false);
+		sub1.add(JBInput);
+		sub1.add(JBRun);
+		sub1.add(JBCancel);
+		sub1.add(JBExport);
+
+//		panel_4.setBorder(BorderFactory.createTitledBorder("Run Mode"));
+//		panel_4.setLayout(new BoxLayout(panel_4, BoxLayout.LINE_AXIS));
+//		panel_4.add(JBInput);
+//		panel_4.add(JBRun);
+//		panel_4.add(JBCancel);
+//		panel_4.add(JBExport);
+		panel_4.add(sub1);
+		buildReadMode(panel_4); // re-using old pan3 function.  pan3 is new sub1
+		input.add(panel_4);
+	}
 	/**
 	 * the help tutorial method, this is the information
 	 * text that is displayed in the result set window when the app starts up
@@ -568,32 +618,6 @@ public class Main extends JFrame {
 	private String getTutorial() {
 		return "*** " + PROGRAM_TITLE + " version " + PROGRAM_VERSION + " ***\n\n" + Help.showHelp ();
 	}
-
-	/******************************************************************************************************************
-	 GUI Action Listeners Class Section											*
-
-	listens for user's interaction with the remove duplicates button.
-
-	private class CleanResultsListener implements ActionListener {
-		@Override
-		public void actionPerformed(ActionEvent event) {
-			if (event.getSource() == JBRemoveDuplicates) {
-				initNewExport();
-				JBTableModel.setRowCount(0);
-
-				searchTask.cleanResults(HMComponents.get("TxtField"));
-				searchTask.cleanResults(HMComponents.get("SSN"));
-				searchTask.getOtherResults(resultOtherMatchList);
-				JBTableModel.fireTableDataChanged();
-				JBRemoveDuplicates.setEnabled(false);
-				//JBRemoveDuplicates.setText("Duplicates Removed");
-
-				searchTask.getConfidenceTable();
-				searchTask.buildHtmlResult();
-				searchTask.buildCSVResult();
-			}
-		}
-	} */
 
 	/**
 	 * listens for user's interaction with check all option.
@@ -725,11 +749,14 @@ public class Main extends JFrame {
 		public void actionPerformed(ActionEvent event) {
 			if (event.getSource() == JBRun) {				// RUN BUTTON
 				boolean noneSelected = true;
-				for (Component comp : HMComponents.values ())		//iterate over all search elements and check
-					if (comp.TYPE == 'T' && !comp.text.getText().isEmpty())	//if any is of them selected
+				for (Component comp : HMComponents.values ()) {        //iterate over all search elements and check
+					if (comp.TYPE == 'T' && !comp.text.getText().isEmpty()) {   //if any is of them selected
 						noneSelected = false;
-					else if (comp.TYPE == 'C' && comp.checkBox.isSelected())
+					}
+					else if (comp.TYPE == 'C' && comp.checkBox.isSelected()) {
 						noneSelected = false;
+					}
+				}//end iteration
 
 				if (noneSelected) {	// check if no match mode is selected, show an error and stop
 					JOptionPane.showMessageDialog(Main.this, "ERROR: No match mode is selected");
@@ -739,6 +766,22 @@ public class Main extends JFrame {
 				if (userInput == null) {		// check if there is an input file/directory
 					JOptionPane.showMessageDialog(Main.this, "ERROR: No input file/directory");
 					return; // stop here
+				}
+
+				//validate and add User Text to regex list in HMComponents
+				List<Pattern> temp = buildTextRegexList(HMComponents.get("TextSearchArea").text.getText());
+				if(temp != null) {
+					if(temp.isEmpty() ) {
+						JOptionPane.showMessageDialog(Main.this, "ERROR: Please enter non-whitespace characters in Text Search Area or use 'Clear' button.");
+						return;
+					}else {
+						HMComponents.get("TextSearchArea").regex = temp;
+					}
+				}else {
+					//do nothing except quit
+					//if (temp == NULL) there was a regex error with user input
+					// buildTextRegexList()  should display error & description to user.
+					return;
 				}
 
 				initNewSearch();
@@ -754,11 +797,13 @@ public class Main extends JFrame {
 			} else if (event.getSource() == JBCancel) {		// CANCEL BUTTON
 				searchTask.cancel(true);
 				//System.exit(0);
+			} else if (event.getSource() == ClearButton) {
+				HMComponents.get("TextSearchArea").text.setText("");
 			}
 		}
 	}
 
-	/********************************************************************************************************************
+	/* *******************************************************************************************************************
 	 *											The Search Task Section													*
 	 ********************************************************************************************************************/
 	private class SearchTask extends SwingWorker<Void, String> {
@@ -779,6 +824,7 @@ public class Main extends JFrame {
 			totalFiles += inputFiles.size();	// update counter
 			JPBStatus.setMaximum (totalFiles);	//sets progress bar maximum to relative num of files to process
 
+			//buildTextRegexList(); //Done in JBRun action listener
 			for (File file: inputFiles) {		// process file by file
 				InputStream input;
 				ContentHandler handler;
@@ -951,8 +997,9 @@ public class Main extends JFrame {
 			JPBStatus2.setValue (0);	// reset line progress bar
 			progressCounter2 = 0;
 
-			//HERE
-			addTextToRegex(HMComponents.get("TxtField").text.getText()); //<<< possible redundancy >>> adding the same user input regex to list on each file searched
+			//removed, this calls numerous times and duplicates entries in the regex list
+			//causing longer search times.
+			//addTextToRegex(HMComponents.get("TextSearchArea").text.getText()); //<<< possible redundancy >>> adding the same user input regex to list on each file searched
 
 			if (fileReader.hasNext()) {			// check if file is readable
 				++readCounter;
@@ -981,6 +1028,9 @@ public class Main extends JFrame {
 
 					if (comp.isActive ()) {
 						//iterate through arrayList 'regex' in Component class.
+						if(comp.TYPE == 'T') {
+							System.out.println("textbox");
+						}
 						for (Pattern regex : comp.regex) {
 							int crrMchCnt, nxtMchCnt, cmbMchCnt;
 
@@ -1071,7 +1121,7 @@ public class Main extends JFrame {
 			for (Component comp : HMComponents.values ())
 				JBTCatModel.addRow(new Object[]{comp.LABEL, comp.counter});
 
-			JBTCatModel.addRow(new Object[]{"Total Matches", HMComponents.get ("TxtField").counter + HMComponents.get ("SSN").counter + matchCounter});
+			JBTCatModel.addRow(new Object[]{"Total Matches", HMComponents.get ("TextSearchArea").counter + HMComponents.get ("SSN").counter + matchCounter});
 		}
 
 		private void getExtensionTable() {
@@ -1118,7 +1168,7 @@ public class Main extends JFrame {
 			postHtmlResult.append (htmlWriter.addOpenCenterTag());
 			postHtmlResult.append (htmlWriter.addOpenNavTag());
 			postHtmlResult.append (htmlWriter.addOpenNavULTag());	// ********* !! possible bug !! why line below only considers ssnCounter and textCounter? **********
-			postHtmlResult.append (htmlWriter.addResultNote(skipFiles.size(), readCounter, totalFiles, HMComponents.get ("TxtField").counter + HMComponents.get ("SSN").counter + matchCounter, calculateElapsedTime()));
+			postHtmlResult.append (htmlWriter.addResultNote(skipFiles.size(), readCounter, totalFiles, HMComponents.get ("TextSearchArea").counter + HMComponents.get ("SSN").counter + matchCounter, calculateElapsedTime()));
 			postHtmlResult.append (htmlWriter.addExtNote(extCounter));
 			postHtmlResult.append (htmlWriter.addCloseNavULTag());
 			postHtmlResult.append (htmlWriter.addCloseNavTag());
@@ -1169,7 +1219,7 @@ public class Main extends JFrame {
 
 			for (String msg : msgList)
 				if (msg.equals("printCurrentProgress"))
-					printToProgress("Completed " + fileCounter + " / " + totalFiles + " files." + " Results: " + (HMComponents.get ("TxtField").counter + HMComponents.get ("SSN").counter + matchCounter) );
+					printToProgress("Completed " + fileCounter + " / " + totalFiles + " files." + " Results: " + (HMComponents.get ("TextSearchArea").counter + HMComponents.get ("SSN").counter + matchCounter) );
 				else
 					printToLog(msg);
 		}
@@ -1183,7 +1233,7 @@ public class Main extends JFrame {
 			JPBStatus2.setVisible(false);
 
 			JBTableModel.setRowCount(0);	//<========= for debug, remove later ! this line removes live search result from table and display result stored from list
-			getResults(HMComponents.get ("TxtField"));		// update
+			getResults(HMComponents.get ("TextSearchArea"));		// update
 			getResults(HMComponents.get ("SSN"));
 			getOtherResults(resultOtherMatchList);
 			getExtensionTable();
@@ -1200,7 +1250,7 @@ public class Main extends JFrame {
 
 			// build result messages
 			StringBuilder msg = new StringBuilder ("*Readable: " + readCounter + " files / " + totalFiles + " files.\n" +
-					"*Found: " + (HMComponents.get ("TxtField").counter + HMComponents.get ("SSN").counter + matchCounter) + " matches.\n" +
+					"*Found: " + (HMComponents.get ("TextSearchArea").counter + HMComponents.get ("SSN").counter + matchCounter) + " matches.\n" +
 					"*Elapsed Time: " + calculateElapsedTime() + "\n");
 
 			if (isCancelled()) {
@@ -1228,86 +1278,11 @@ public class Main extends JFrame {
 		}
 	}
 
+
 /* ******************************************************************************************************************
  Miscellaneous Helper Method and Classes Section									*
  */
-	/** Component Class
-	 * Originally codes has redundancy due to increased search elements, the purpose of this wrapper class is
-	 * to redundancy by grouping related data elements and achieve data persistency for immutable
-	 * data such as strings and integers, as a result data members of class are meant to be accessed directly
-	 * without encapsulation implemented.
-	 * The constructor takes in four arguments to create the object and and initializes all related data members
-	 * See constructor JavaDoc for specific input parameters.
-	 */
-	private class Component {
-		final char TYPE;	//C = check box, T = text box
-		final String SYM;
-		final String LABEL;
-		JCheckBox checkBox;
-		JTextArea text;
-		int counter;
-		StringBuilder html;
-		StringBuilder csv;
 
-		List <Pattern> regex;
-		ArrayList <Match> resultList;
-		HashSet <Match> resultListUnique;
-		ArrayList <Match> resultListUniqueFinal;
-
-		/** Constructor
-		 * This constructor takes in four arguments to create the object and and initializes all related data members
-		 * @param type - character that specifies object will be check box or a text area, C = check box, T = text area
-		 * @param sym - the symbol use to represent this object, can be use as web links or for web links label
-		 * @param label - the label that will be displayed next to the check box in the java GUI application
-		 * @param tip - the tool tip text that will be displayed when the user hover mouse cursor over this GUI element
-		 */
-		public Component (char type, String sym, String label, String tip) {
-			this.TYPE = type;
-			this.SYM = sym;
-			this.LABEL = label;
-
-			if (type == 'C') {
-				checkBox = new JCheckBox (label);
-				checkBox.setToolTipText(tip);
-			} else if (type == 'T') {
-				text = new JTextArea (label);
-				text.setToolTipText(tip);
-				text.setLineWrap(true);
-				text.setWrapStyleWord(true);
-			}
-
-			regex = new ArrayList<Pattern>();
-			resultList = new ArrayList<Match>();
-			resultListUnique = new HashSet<Match>();
-			resultListUniqueFinal = new ArrayList<Match>();
-
-			initValues ();
-			clrExport ();
-		}
-
-		void initValues () {
-			counter = 0;
-			if (this.TYPE == 'T')		//we only want to clear the user input regex content of the text box,
-				regex.clear ();			//all other regex contents should remain intact after each search
-			resultList.clear ();
-			resultListUnique.clear ();
-			resultListUniqueFinal.clear ();
-		}
-
-		void clrExport () {
-			html = new StringBuilder ();
-			csv = new StringBuilder ();
-		}
-
-		boolean isActive () {
-			if (TYPE == 'T')
-				return !text.getText().isEmpty();
-			else if (TYPE == 'C')
-				return checkBox.isSelected();
-			else
-				return false;
-		}
-	}
 
 	/**
 	 * this method is use to determine the number of lines in a file, it is initially created as helper
@@ -1408,6 +1383,56 @@ public class Main extends JFrame {
 		regexList.add(pattern);
 	}
 
+	private List<Pattern> buildTextRegexList(String input) {
+		List<Pattern> result = new ArrayList<>();
+		Pattern pattern = null;
+		String[] tempText = input.split(","); //split text entry on commas
+		int type = -1;
+		input.trim();
+		//try to parse string into a List
+		try {
+			if (regexButton.isSelected()) {
+				type = 0;
+				pattern = Pattern.compile(input);
+				result.add(pattern);
+			}
+			else if (wildcardButton.isSelected()) {
+				type = 1;
+			}else if(plainTextButton.isSelected()) {
+				type = 2;
+			}else {
+				System.out.println("fatal logic error @addTextToRegex()\nButtonSelected = " + type + " \tInput:\n" + input);
+			}//end radio button check
+
+			//begin parsing Plain & Wilcard types
+			if(type != 0) {
+
+				for (int i = 0; i < tempText.length; i++) {
+					//check for empty indexes
+					tempText[i] = tempText[i].trim();
+					if (!tempText[i].matches("")) {
+
+						if (type == 1) {
+							String temp = tempText[i];
+							temp = temp.replaceAll("\\?", "\\\\w");
+							temp = temp.replaceAll("\\*", "\\\\w+");
+							pattern = Pattern.compile(temp);
+						} else if (type == 2) {
+							pattern = Pattern.compile(tempText[i], Pattern.LITERAL);
+						} else {
+							System.out.println("logic error, @addTextToRegex - parsing tempText\nType: " + type);
+						}
+						result.add(pattern);
+
+					}//end if empty
+				}//end tempText iteration
+			}//end if type != 0
+		}catch (PatternSyntaxException e){
+			JOptionPane.showMessageDialog(Main.this, "ERROR in Search Pattern\n" + e.getDescription());
+			result = null;
+		}
+		return result;
+	}
 	/** addTextToRegex()
 	 *
 	 * This method is used for handling user input regex. parses user regex input into pattern
@@ -1416,49 +1441,8 @@ public class Main extends JFrame {
 	 * @param input - the text to add to regex list
 	 */
 	private void addTextToRegex(String input) {
-		Pattern pattern = null;
-		//String[] tempText = text.split("(,)|(\\|)"); //split text entry on commas|(\\s), pipes or blank spaces (including line breaks)
-		String[] tempText = input.split(","); //split text entry on commas
+		//removed because this code was
 
-		//finding which radio button is selected.
-		int type = -1;
-		if(regexButton.isSelected()) {
-			type = 0;
-			pattern = Pattern.compile(input);
-			HMComponents.get ("TxtField").regex.add(pattern);
-		}else if(wildcardButton.isSelected()) {
-			type = 1;
-		}else if (plainTextButton.isSelected()){
-			type = 2;
-		}else{
-			System.out.println("fatal logic error @addTextToRegex()\nButtonSelected = " + type + " \tInput:\n" + input);
-		}
-
-
-		if(type != 0) {
-
-			for (int i = 0; i < tempText.length; i++) {
-				//check for empty indexes
-				tempText[i] = tempText[i].trim();
-				if (!tempText[i].matches("")) {
-
-					if (type == 1) {
-						String temp = tempText[i];
-						temp = temp.replaceAll("\\?", "\\\\w");
-						temp = temp.replaceAll("\\*", "\\\\w+");
-						pattern = Pattern.compile(temp);
-					} else if (type == 2) {
-						pattern = Pattern.compile(tempText[i], Pattern.LITERAL);
-					} else {
-						System.out.println("logic error, @addTextToRegex - parsing tempText\nType: " + type);
-					}
-					HMComponents.get ("TxtField").regex.add(pattern);
-				}//end if empty
-			}//end tempText iteration
-		}//end if type != 0
-
-		//Pattern pattern = Pattern.compile("\\b(" + StringUtils.join(tempTextList,"|") + ")\\b", Pattern.DOTALL);
-		//HMComponents.get ("TxtField").regex.add(pattern);
 	}
 
 	/**
