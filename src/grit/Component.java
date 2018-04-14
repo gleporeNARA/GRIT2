@@ -51,10 +51,10 @@ public class Component {
 			text.setWrapStyleWord(true);
 		}
 
-		regex = new ArrayList<Pattern>();
-		resultList = new ArrayList<Match>();
-		resultListUnique = new HashSet<Match>();
-		resultListUniqueFinal = new ArrayList<Match>();
+		regex = new ArrayList<>();
+		resultList = new ArrayList<>();
+		resultListUnique = new HashSet<>();
+		resultListUniqueFinal = new ArrayList<>();
 
 		initValues ();
 		clrExport ();
@@ -62,8 +62,14 @@ public class Component {
 
 	void initValues () {
 		counter = 0;
+	/*
+		// this is handled in the action listener now.  When the run button is hit
+		// the buildTextRegexList() function is used to overwrite the regex list of
+		// any Components.  If the list is not cleared/overwritten, it keeps old regex patterns
+
 		if (this.TYPE == 'T')		//we only want to clear the user input regex content of the text box,
 			regex.clear ();			//all other regex contents should remain intact after each search
+	*/
 		resultList.clear ();
 		resultListUnique.clear ();
 		resultListUniqueFinal.clear ();
@@ -75,10 +81,12 @@ public class Component {
 	}
 
 	boolean isActive () {
-		if (TYPE == 'T')
+		if (TYPE == 'T') {
 			return !text.getText().isEmpty();
-		else if (TYPE == 'C')
+		}
+		else if (TYPE == 'C') {
 			return checkBox.isSelected();
+		}
 		else
 			return false;
 	}
