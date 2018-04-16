@@ -453,6 +453,12 @@ public class Main extends JFrame {
 		pack();
 	}  //end initGUIComponents()
 
+	/** buildRow_1()
+	 *  This function calls other sub functions to build all the panels and content in Row1
+	 *  The purpose is just to aid in code folding and making the Main class easier to navigate.
+	 *
+	 * @param input - Panel to add content too.
+	 */
 	private void buildRow_1(JPanel input) {
 		build_PII_1(input); //panel 1
 		build_PII_2(input); //panel 2
@@ -462,6 +468,11 @@ public class Main extends JFrame {
 
 	}
 
+	/** build_PII_1()
+	 *  A utility function that builds and adds all content to PII Match Mode 1 Panel
+	 *
+	 * @param input - The panel to add content to
+	 */
 	private void build_PII_1(JPanel input) {
 		JPanel panel1 = new JPanel();
 		panel1.setBorder(BorderFactory.createTitledBorder("PII Match Modes"));
@@ -478,6 +489,12 @@ public class Main extends JFrame {
 
 	}
 
+	/** buildTextSearch()
+	 *
+	 * This function builds all needed items and sub-panels to manage the layout for the User Text Search panel.
+	 *
+	 * @param input - Panel to add content to
+	 */
 	private void buildTextSearch(JPanel input) {
 		JPanel panel = new JPanel();	//two sub panels are placed inside of panel_2 using grid layout
 		panel.setLayout(new GridLayout(2,2,0,0));
@@ -751,6 +768,24 @@ public class Main extends JFrame {
 				boolean noneSelected = true;
 				for (Component comp : HMComponents.values ()) {        //iterate over all search elements and check
 					if (comp.TYPE == 'T' && !comp.text.getText().isEmpty()) {   //if any is of them selected
+						//validate and add User Text to regex list in HMComponents
+						List<Pattern> temp = buildTextRegexList(HMComponents.get("TextSearchArea").text.getText());
+						if(temp == null) {
+							// temp is null only if buildTextRegexList() had a regex error
+							// buildTextRegexList() should display error
+							// need to quit due to invalid text
+
+							return; // stop here
+						}else {
+							if(temp.isEmpty() ) {
+								//  buildTextRegexList() returns empty array if only whitespace was entered in box.
+								JOptionPane.showMessageDialog(Main.this, "ERROR: Please enter non-whitespace characters in Text Search Area or use 'Clear' button.");
+								return;
+							}else {
+								// user entered a valid pattern/text
+								HMComponents.get("TextSearchArea").regex = temp;
+							}
+						}
 						noneSelected = false;
 					}
 					else if (comp.TYPE == 'C' && comp.checkBox.isSelected()) {
@@ -766,22 +801,6 @@ public class Main extends JFrame {
 				if (userInput == null) {		// check if there is an input file/directory
 					JOptionPane.showMessageDialog(Main.this, "ERROR: No input file/directory");
 					return; // stop here
-				}
-
-				//validate and add User Text to regex list in HMComponents
-				List<Pattern> temp = buildTextRegexList(HMComponents.get("TextSearchArea").text.getText());
-				if(temp != null) {
-					if(temp.isEmpty() ) {
-						JOptionPane.showMessageDialog(Main.this, "ERROR: Please enter non-whitespace characters in Text Search Area or use 'Clear' button.");
-						return;
-					}else {
-						HMComponents.get("TextSearchArea").regex = temp;
-					}
-				}else {
-					//do nothing except quit
-					//if (temp == NULL) there was a regex error with user input
-					// buildTextRegexList()  should display error & description to user.
-					return;
 				}
 
 				initNewSearch();
@@ -1383,6 +1402,21 @@ public class Main extends JFrame {
 		regexList.add(pattern);
 	}
 
+
+	/** buildTextRegexList()
+	 *
+	 * This function processes input text from User Search Area.  If a pattern can not be compiled
+	 * a pop up error message is displayed showing the error.
+	 *
+	 * If "Regex" is selected, the string is processed as one entry
+	 * If "Plain Text" is selected, the string is tokenized by commas ',' and a list is returned
+	 * If "Wild Card" is selected, the list is tokenized by commas, and the ? and * are replaced with \w and \w+
+	 *
+	 * Upon error, a NULL pointer is returned.  Upon success a list of Regex patterns is returned.
+	 *
+	 * @param input - Text to convert to a regex search pattern
+	 * @return - List of regex search patterns
+	 */
 	private List<Pattern> buildTextRegexList(String input) {
 		List<Pattern> result = new ArrayList<>();
 		Pattern pattern = null;
