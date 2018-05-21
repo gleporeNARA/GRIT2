@@ -9,6 +9,8 @@
     <list id="488ac970-2a20-4153-ac9c-46f2914b4d84" name="Revert: " comment="" />
     <list default="true" id="3b502ca8-8831-447e-9988-8337b78e40c2" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change beforePath="$PROJECT_DIR$/out/production/NARA-GRIT/grit/Main$SearchTask.class" afterPath="$PROJECT_DIR$/out/production/NARA-GRIT/grit/Main$SearchTask.class" />
+      <change beforePath="$PROJECT_DIR$/out/production/NARA-GRIT/grit/Main.class" afterPath="$PROJECT_DIR$/out/production/NARA-GRIT/grit/Main.class" />
       <change beforePath="$PROJECT_DIR$/src/grit/Main.java" afterPath="$PROJECT_DIR$/src/grit/Main.java" />
     </list>
     <ignored path="NARA-GRIT.iws" />
@@ -38,41 +40,11 @@
       <file leaf-file-name="Main.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/grit/Main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="409">
-              <caret line="274" column="61" lean-forward="false" selection-start-line="274" selection-start-column="61" selection-end-line="274" selection-end-column="61" />
+            <state relative-caret-position="382">
+              <caret line="277" column="68" lean-forward="false" selection-start-line="277" selection-start-column="68" selection-end-line="277" selection-end-column="68" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Match.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/grit/Match.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="494">
-              <caret line="26" column="4" lean-forward="false" selection-start-line="26" selection-start-column="4" selection-end-line="26" selection-end-column="4" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Component.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/grit/Component.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="228">
-              <caret line="16" column="13" lean-forward="false" selection-start-line="16" selection-start-column="13" selection-end-line="16" selection-end-column="13" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Help.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/grit/Help.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1748">
-              <caret line="92" column="77" lean-forward="false" selection-start-line="92" selection-start-column="77" selection-end-line="92" selection-end-column="77" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -546,7 +518,14 @@
       <option name="project" value="LOCAL" />
       <updated>1526903234388</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Update regular expression for DOB search to make word quantifier possessive, not greedy.">
+      <created>1526904379950</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1526904379950</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -643,7 +622,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/grit/Main.java</url>
-          <line>364</line>
+          <line>367</line>
           <properties />
           <option name="timeStamp" value="16" />
         </line-breakpoint>
@@ -985,8 +964,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/grit/Main.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="409">
-          <caret line="274" column="61" lean-forward="false" selection-start-line="274" selection-start-column="61" selection-end-line="274" selection-end-column="61" />
+        <state relative-caret-position="382">
+          <caret line="277" column="68" lean-forward="false" selection-start-line="277" selection-start-column="68" selection-end-line="277" selection-end-column="68" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
