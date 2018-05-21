@@ -89,8 +89,8 @@ public class Help {
 			"     a. matches either a word boundary or the start of a line, then the abbreviations, \n" +
             "     AL, AQ, AX, AN, AT, BA, BH, BS, BQ, BU, BT, CE, CG, CI, CV, CO, DL, DN, DE, EP, HN, HO, IP, JN, JK, KC, \n" +
             "     KX, LV, LR, LA, LS, ME, MM, MI, MP, MO, NK, NH, NO, NR, NY, NF, OC, OM, PH, PX, PG, PD, RH, SC, SL, SU, \n" +
-            "     SA, SD, SF, SJ, SV, SE, SI, TP, WFO, BER, BOG, BON, HON, LON, MAN, MEX, OTT, PAN, PAR, ROM, or TOK \n" +
-			"     only in all capitalization \n" +
+            "     SA, SD, SF, SJ, SV, SE, SI, TP, WFO, BER, BOG, BON, HON, LON, MAN, MEX, OTT, PAN, PAR, ROM, or TOK, \n" +
+			"     followed by a space or dash, and between 1 and 5 numbers. All capitalization \n" +
 			"\n" +
 
 
