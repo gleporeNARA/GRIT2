@@ -555,7 +555,7 @@ public class Main extends JFrame {
 		//sub2.setPreferredSize(new Dimension(WIN_WIDTH/4, 74));
 
 
-		sub1.setBorder(BorderFactory.createTitledBorder("PII Match Modes"));
+		sub1.setBorder(BorderFactory.createTitledBorder("FBI Match Modes"));
 		sub1.setLayout(new BoxLayout(sub1, BoxLayout.PAGE_AXIS));
 		sub1.add(HMComponents.get("GrandJury").checkBox);
 		sub1.add(HMComponents.get("FBIInfoFile").checkBox);
