@@ -220,8 +220,8 @@ public class Main extends JFrame {
 		JBTFileExtModel = new DefaultTableModel(TableWriter.table_ext_data, TableWriter.table_ext_header);
 		JBTCatModel = new DefaultTableModel(TableWriter.table_cat_data, TableWriter.table_cat_header);
 
-		skipFiles = new ArrayList<File>();
-		resultOtherMatchList = new ArrayList <Match>();
+		skipFiles = new ArrayList<>();
+		resultOtherMatchList = new ArrayList <>();
 
 		/* HashMap <String, Component>();
 		 *
@@ -245,7 +245,7 @@ public class Main extends JFrame {
 
 		//Prepare Skipped Extensions:
 		String skpExtLst [] = {"mp3", "mp4", "ogg", "flac", "png", "gif", "bmp", "jpg", "jpeg", "avi", "mpg", "mpeg", "tar", "zip", "tz", "gz", "tif", "tiff", "wav"};
-		skipExtensions = new HashSet<String>();
+		skipExtensions = new HashSet<>();
 		for (String s : skpExtLst)
 			skipExtensions.add (s);
 
@@ -292,6 +292,9 @@ public class Main extends JFrame {
 		addRegexToList("\\b(134-\\d*|137-\\d*|170-\\d*)\\b", HMComponents.get("FBIInfoFile").regex);
 		//FBI source codes
 		addRegexToList("\\b(AL|AQ|AX|AN|AT|BA|BH|BS|BQ|BU|BT|CE|CG|CI|CV|CO|DL|DN|DE|EP|HN|HO|IP|JN|JK|KC|KX|LV|LR|LA|LS|ME|MM|MI|MP|MO|NK|NH|NO|NR|NY|NF|OC|OM|PH|PX|PG|PD|RH|SC|SL|SU|SA|SD|SF|SJ|SV|SE|SI|TP|WFO|BER|BOG|BON|HON|LON|MAN|MEX|OTT|PAN|PAR|ROM|TOK)(\\s|-)\\d{1,5}\\b", HMComponents.get("FBISourceCode").regex);
+
+		// reluctant vs greedy vs possessive
+		// https://stackoverflow.com/questions/5319840/greedy-vs-reluctant-vs-possessive-quantifiers
 
 		// setting for file chooser
 		textFileChooser = new JFileChooser();
@@ -1146,8 +1149,11 @@ public class Main extends JFrame {
 			JBTCatModel.setRowCount(0);
 
 			for (Component comp : HMComponents.values ())
-				JBTCatModel.addRow(new Object[]{comp.LABEL, comp.counter});
-
+				if( comp.TYPE == 'T') {
+					JBTCatModel.addRow(new Object[]{"Text Search", comp.counter});
+				}else {
+					JBTCatModel.addRow(new Object[]{comp.LABEL, comp.counter});
+				}
 			JBTCatModel.addRow(new Object[]{"Total Matches", HMComponents.get ("TextSearchArea").counter + HMComponents.get ("SSN").counter + matchCounter});
 		}
 
@@ -1428,9 +1434,9 @@ public class Main extends JFrame {
 	private List<Pattern> buildTextRegexList(String input) {
 		List<Pattern> result = new ArrayList<>();
 		Pattern pattern = null;
+		input = input.trim();
 		String[] tempText = input.split(","); //split text entry on commas
 		int type = -1;
-		input.trim();
 		//try to parse string into a List
 		try {
 			if (regexButton.isSelected()) {

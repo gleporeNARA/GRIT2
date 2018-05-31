@@ -1,5 +1,7 @@
 package grit;
 
+import com.drew.lang.annotations.SuppressWarnings;
+
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -80,6 +82,8 @@ public class Component {
 		csv = new StringBuilder ();
 	}
 
+
+	@java.lang.SuppressWarnings("SimplifiableIfStatement")
 	boolean isActive () {
 		if (TYPE == 'T') {
 			return !text.getText().isEmpty();
@@ -87,7 +91,8 @@ public class Component {
 		else if (TYPE == 'C') {
 			return checkBox.isSelected();
 		}
-		else
+		else {
 			return false;
+		}
 	}
 }
