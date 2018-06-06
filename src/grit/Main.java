@@ -265,17 +265,39 @@ public class Main extends JFrame {
 		// group of 3, 2, 4 separated by a . a / or - bounded by something other than a number, hyphen or slash
 		addRegexToList("([^0-9.-/]|^)\\d{3}[./-]\\d{2}[./-]\\d{4}([^0-9-/]|$)", HMComponents.get("SSN").regex);
 
+		//pre regex fix attempts...
+		/*
 		//"birth" or "born" or "DOB" within 5 words of mm/dd/yy, mm-dd-yy, mm.dd.yy, mm dd yy, mm/dd/yyyy, mm-dd-yyyy ,mm.dd.yyyy ,mm dd yyyy
-		addRegexToList("\\b(?i:(birth|born|DOB))\\W+(?:\\w+\\W+){0,5}((\\D+|^)(?:(1[0-2]|0?[1-9])([- /.]+)(3[01]|[12][0-9]|0?[1-9])|(3[01]|[12][0-9]|0?[1-9])([- /.]+)(1[0-2]|0?[1-9]))([- /.]+)(?:19|20)?\\d\\d)", HMComponents.get("DoB").regex);
+		addRegexToList("\\b(?i:(birth|born|DOB))\\W*(?:\\w*\\W*){1,5}((\\D+|^)(?:(1[0-2]|0?[1-9])([- /.]+)(3[01]|[12][0-9]|0?[1-9])|(3[01]|[12][0-9]|0?[1-9])([- /.]+)(1[0-2]|0?[1-9]))([- /.]+)(?:19|20)?\\d\\d)", HMComponents.get("DoB").regex);
 		//"birth" or "born" or "DOB" within 5 words of yyyy/mm/dd, yyyy-mm-dd, yyyy.mm.dd, yyyy mm dd
-		//addRegexToList("\\b(?i:(birth|born|DOB))\\W*(?:\\w*\\W*){1,5}((19|20)\\d\\d([- /.]+)(0[1-9]|1[012])([- /.]+)(0[1-9]|[12][0-9]|3[01]))", HMComponents.get("DoB").regex);
-		addRegexToList("\\b(?i:(birth|born|DOB))\\W+(?:\\w+\\W+){0,5}((19|20)\\d\\d([- /.]+)(0[1-9]|1[012])([- /.]+)(0[1-9]|[12][0-9]|3[01]))", HMComponents.get("DoB").regex);
-        //"birth" or "born" or "DOB" within F5 words of a month spelled out date, with or without period, allows for 1st, 2nd, 3rd, 4th, etc.
-		//addRegexToList("\\b(?i:(birth|born|DOB)\\W*(?:\\w*\\W*){1,5}((?:Jan\\.?(?:uary)?|Feb\\.?(?:ruary)?|Mar\\.?(?:ch)?|Apr\\.?(?:il)?|May|Jun\\.?(?:e)?|Jul\\.(?:y)?|Aug\\.?(?:ust)?|Sep\\.?(?:t\\.?(?:ember)?)?|Oct\\.?(?:ober)?|Nov\\.?(?:ember)?|Dec\\.?(?:ember)?)[ ][0-3]?\\d(?:st|rd|nd|th)?,?[ ](?:19|20)\\d\\d))", HMComponents.get("DoB").regex);
-		addRegexToList("\\b(?i:(birth|born|DOB)\\W+(?:\\w+\\W+){0,5}((?:Jan\\.?(?:uary)?|Feb\\.?(?:ruary)?|Mar\\.?(?:ch)?|Apr\\.?(?:il)?|May|Jun\\.?(?:e)?|Jul\\.(?:y)?|Aug\\.?(?:ust)?|Sep\\.?(?:t\\.?(?:ember)?)?|Oct\\.?(?:ober)?|Nov\\.?(?:ember)?|Dec\\.?(?:ember)?)[ ][0-3]?\\d(?:st|rd|nd|th)?,?[ ](?:19|20)\\d\\d))", HMComponents.get("DoB").regex);
-        //"birth" or "born" or "DOB" within 5 words of a numeric day and a month spelled out (i.e. born on 31 December)
-		//addRegexToList("\\b(?i:(birth|born|DOB)\\W*(?:\\w*\\W*){1,5}(0?[1-9]|[12][0-9]|3[01]) (?:Jan\\.?(?:uary)?|Feb\\.?(?:ruary)?|Mar\\.?(?:ch)?|Apr\\.?(?:il)?|May|Jun\\.?(?:e)?|Jul\\.(?:y)?|Aug\\.?(?:ust)?|Sep\\.?(?:t\\.?(?:ember)?)?|Oct\\.?(?:ober)?|Nov\\.?(?:ember)?|Dec\\.?(?:ember)?))", HMComponents.get("DoB").regex);
-        addRegexToList("\\b(?i:(birth|born|DOB)\\W+(?:\\w+\\W+){0,5}(0?[1-9]|[12][0-9]|3[01]) (?:Jan\\.?(?:uary)?|Feb\\.?(?:ruary)?|Mar\\.?(?:ch)?|Apr\\.?(?:il)?|May|Jun\\.?(?:e)?|Jul\\.(?:y)?|Aug\\.?(?:ust)?|Sep\\.?(?:t\\.?(?:ember)?)?|Oct\\.?(?:ober)?|Nov\\.?(?:ember)?|Dec\\.?(?:ember)?))", HMComponents.get("DoB").regex);
+		addRegexToList("\\b(?i:(birth|born|DOB))\\W*(?:\\w*\\W*){1,5}((19|20)\\d\\d([- /.]+)(0[1-9]|1[012])([- /.]+)(0[1-9]|[12][0-9]|3[01]))", HMComponents.get("DoB").regex);
+		//"birth" or "born" or "DOB" within 5 words of a month spelled out date, with or without period, allows for 1st, 2nd, 3rd, 4th, etc.
+		addRegexToList("\\b(?i:(birth|born|DOB)\\W*(?:\\w*\\W*){1,5}((?:Jan\\.?(?:uary)?|Feb\\.?(?:ruary)?|Mar\\.?(?:ch)?|Apr\\.?(?:il)?|May|Jun\\.?(?:e)?|Jul\\.(?:y)?|Aug\\.?(?:ust)?|Sep\\.?(?:t\\.?(?:ember)?)?|Oct\\.?(?:ober)?|Nov\\.?(?:ember)?|Dec\\.?(?:ember)?)[ ][0-3]?\\d(?:st|rd|nd|th)?,?[ ](?:19|20)\\d\\d))", HMComponents.get("DoB").regex);
+		//"birth" or "born" or "DOB" within 5 words of a numeric day and a month spelled out (i.e. born on 31 December)
+		addRegexToList("\\b(?i:(birth|born|DOB)\\W*(?:\\w*\\W*){1,5}(0?[1-9]|[12][0-9]|3[01]) (?:Jan\\.?(?:uary)?|Feb\\.?(?:ruary)?|Mar\\.?(?:ch)?|Apr\\.?(?:il)?|May|Jun\\.?(?:e)?|Jul\\.(?:y)?|Aug\\.?(?:ust)?|Sep\\.?(?:t\\.?(?:ember)?)?|Oct\\.?(?:ober)?|Nov\\.?(?:ember)?|Dec\\.?(?:ember)?))", HMComponents.get("DoB").regex);
+		*/
+		//end old pre-regex fix attempts
+
+		//begin new re-written regex patterns ----------------- vv
+
+		//match dob,bday,birth..etc, within (120 whitespace/Non-Alpha/underscore) OR (0-20 words separated by 1-5 spaces each) with DATE format (mm dd yy) or (mm dd yyy) delimited by 1-2 (whitespace/Non-alpha/newline)
+		addRegexToList("(?i:(dob|born|birth|b.?day|b\\.))(([\\s\\W_]{0,120}?)|(\\s?([a-z,A-Z]+\\s{1,5}){0,20}))((1[0-2])|(0?[1-9]))[\\s\\W_]{1,5}((3[0-1])|(2[0-9])|(1[0-9])|(0[1-9])|([0-9]))[\\s\\W_]{1,5}((18|19|20)?(\\d\\d))", HMComponents.get("DoB").regex);
+
+		//same as previous line, but matches yyyy mm dd
+		addRegexToList("(?i:(dob|born|birth|b.?day|b\\.))(([\\s\\W_]{0,120}?)|(\\s?([a-z,A-Z]+\\s{1,5}){0,20}))((18|19|20)(\\d\\d)[\\s\\W_]{1,5})((1[0-2])|(0?[1-9]))[\\s\\W_]{1,2}((3[0-1])|(2[0-9])|(1[0-9])|(0[1-9])|([0-9]))", HMComponents.get("DoB").regex);
+
+		//match DOB...etc within (120 whitespace/Non-Alpha/underscore) OR (0-20 words separated by 1-5 spaces each) with DATE format Month Day year.
+		// month can be abbreviated, days have 'st, 'nd, or 'rd,  year can be " 'yy " or "yyyy"
+		addRegexToList("(?i:(dob|born|birth|b.?day|b\\.))(([\\s\\W_]{0,120}?)|(\\s?([a-z,A-Z]+\\s{1,5}){0,20}))(?i:(Jan(\\.|uary)?|Feb(\\.|ruary)?|Mar(\\.|ch)?|Apr(\\.|il)?|May|Jun(\\.|e)?|Jul(\\.|y)?|Aug(\\.|ust)?|(Sept(\\.|ember)?|Sep(\\.|tember)?)|Oct(\\.|ober)?)|Nov(\\.|ember)?|Dec(\\.|ember)?)[\\s\\W_]{1,5}(((2|3)?1st)|(2?2nd)|(2?3rd)|(20th)|(1[0-9]th)|([4-9]th))[\\s\\W_]{1,5}((18|19|20)(\\d\\d)|\\d\\d)", HMComponents.get("DoB").regex);
+
+		//same as before but without the 'th, 'nd, and 'rd
+		addRegexToList("(?i:(dob|born|birth|b.?day|b\\.))(([\\s\\W_]{0,120}?)|(\\s?([a-z,A-Z]+\\s{1,5}){0,20}))(?i:(Jan(\\.|uary)?|Feb(\\.|ruary)?|Mar(\\.|ch)?|Apr(\\.|il)?|May|Jun(\\.|e)?|Jul(\\.|y)?|Aug(\\.|ust)?|(Sept(\\.|ember)?|Sep(\\.|tember)?)|Oct(\\.|ober)?)|Nov(\\.|ember)?|Dec(\\.|ember)?)[\\s\\W_]{1,5}(31|30|([0-3]?[0-9])[\\s\\W_]{1,5}((18|19|20)(\\d\\d)|\\d\\d))", HMComponents.get("DoB").regex);
+
+		//same as before but matches dob...etc dd Month (yyyy) optional
+		addRegexToList("(?i:(dob|born|birth|b.?day|b\\.))(([\\s\\W_]{0,120}?)|(\\s?([a-z,A-Z]+\\s{1,5}){0,20}))(31|30|([0-3]?[0-9]))[\\s\\W_]{1,5}(?i:(Jan(\\.|uary)?|Feb(\\.|ruary)?|Mar(\\.|ch)?|Apr(\\.|il)?|May|Jun(\\.|e)?|Jul(\\.|y)?|Aug(\\.|ust)?|(Sept(\\.|ember)?|Sep(\\.|tember)?)|Oct(\\.|ober)?)|Nov(\\.|ember)?|Dec(\\.|ember)?)[\\s\\W_]{1,5}((18|19|20)(\\d\\d))?", HMComponents.get("DoB").regex);
+
+		//end new re-written regex patterns ----------------- ^^
+
 
 		//Place of Birth
 		addRegexToList("(?i:(POB|Place of Birth|birth place|birthplace|born in|born at|bornin|bornat|place ofbirth))", HMComponents.get("PoB").regex);
@@ -1412,7 +1434,7 @@ public class Main extends JFrame {
 	 * @param regexList - pattern list where regex will be added to
 	 */
 	private void addRegexToList(String regex, List <Pattern> regexList) {
-		Pattern pattern = Pattern.compile(regex, Pattern.DOTALL);
+		Pattern pattern = Pattern.compile(regex, Pattern.DOTALL); //TODO - check here to possibly get rid of 3 concat searches
 		regexList.add(pattern);
 	}
 
