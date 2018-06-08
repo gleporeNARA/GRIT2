@@ -296,10 +296,10 @@ public class Main extends JFrame {
 		//same as before but matches dob...etc dd Month (yyyy) optional
 		addRegexToList("(?i:(?<!\\w)((dob[\\s\\W_])|(born(on)?[\\s\\W_])|(birth(day)?[\\s\\W_])|(b.?day[\\s\\W_]))).{0,120}?(31|30|([0-3]?[0-9]))[\\s\\/-_\\.,]{1,3}(?i:(Jan(\\.|uary)?|Feb(\\.|ruary)?|Mar(\\.|ch)?|Apr(\\.|il)?|May|Jun(\\.|e)?|Jul(\\.|y)?|Aug(\\.|ust)?|(Sept(\\.|ember)?|Sep(\\.|tember)?)|Oct(\\.|ober)?)|Nov(\\.|ember)?|Dec(\\.|ember)?)[\\s\\/-_\\.,]{1,3}((19|20)(\\d\\d))?", HMComponents.get("DoB").regex);
 
+		//separate pattenr for b. mm dd yyyy
 		addRegexToList("(?i:((?<![.,-\\_\\w])b\\.))[\\s\\.\\(\\)-_\\/]{0,5}?((?<!\\d)((1[0-2])|(0?[1-9]))[\\s\\/-_\\.,]{1,3}((3[0-1])|(2[0-9])|(1[0-9])|(0[1-9])|([0-9]))[\\s\\/-_\\.,]{1,3}((19|20)?(\\d\\d)))", HMComponents.get("DoB").regex);
 
 		//end new re-written regex patterns ----------------- ^^
-
 
 		//Place of Birth
 		addRegexToList("(?i:(POB|Place of Birth|birth place|birthplace|born in|born at|bornin|bornat|place ofbirth))", HMComponents.get("PoB").regex);
