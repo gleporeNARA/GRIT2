@@ -7,21 +7,14 @@
   </component>
   <component name="ChangeListManager">
     <list id="488ac970-2a20-4153-ac9c-46f2914b4d84" name="Revert: " comment="" />
-    <list default="true" id="3b502ca8-8831-447e-9988-8337b78e40c2" name="Default" comment="Initial set of test files, to be updated and tested against. Note that not all dob formats currently match these dates. That's allright for now.">
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+    <list default="true" id="3b502ca8-8831-447e-9988-8337b78e40c2" name="Default" comment="Initial rebase to GRIT2, with my regular expressions.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NARA-GRIT.iml" beforeDir="false" afterPath="$PROJECT_DIR$/NARA-GRIT.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dependencies/tika-app-1.17.jar" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/NARA-GRIT/grit/CSVWriter.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/NARA-GRIT/grit/CSVWriter.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/NARA-GRIT/grit/ExtensionCounter.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/NARA-GRIT/grit/ExtensionCounter.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/NARA-GRIT/grit/HTMLWriter.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/NARA-GRIT/grit/HTMLWriter.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/NARA-GRIT/grit/Help.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/NARA-GRIT/grit/Help.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/NARA-GRIT/grit/Main$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/NARA-GRIT/grit/Main$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/NARA-GRIT/grit/Main$CheckAllOptionsListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/NARA-GRIT/grit/Main$CheckAllOptionsListener.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/NARA-GRIT/grit/Main$MyIOListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/NARA-GRIT/grit/Main$MyIOListener.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/NARA-GRIT/grit/Main$MyRunModeListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/NARA-GRIT/grit/Main$MyRunModeListener.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/NARA-GRIT/grit/Main$MySearchTaskListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/NARA-GRIT/grit/Main$MySearchTaskListener.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/NARA-GRIT/grit/Main$SearchTask$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/NARA-GRIT/grit/Main$SearchTask$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/NARA-GRIT/grit/Main$SearchTask.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/NARA-GRIT/grit/Main$SearchTask.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/NARA-GRIT/grit/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/NARA-GRIT/grit/Main.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/NARA-GRIT/grit/Match.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/NARA-GRIT/grit/Match.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/NARA-GRIT/grit/TableWriter.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/NARA-GRIT/grit/TableWriter.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/grit/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/grit/Main.java" afterDir="false" />
@@ -58,8 +51,8 @@
       <file leaf-file-name="Main.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/grit/Main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="460">
-              <caret line="327" lean-forward="true" selection-start-line="327" selection-end-line="327" />
+            <state relative-caret-position="-687">
+              <caret line="266" lean-forward="true" selection-start-line="266" selection-end-line="266" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -106,12 +99,17 @@
   <component name="Git.Settings">
     <option name="PREVIOUS_COMMIT_AUTHORS">
       <list>
-        <option value="Brian Wilson &lt;bwilso1@umbc.edu&gt;" />
         <option value="gleporeNARA &lt;gregory.lepore@nara.gov&gt;" />
+        <option value="Brian Wilson &lt;bwilso1@umbc.edu&gt;" />
       </list>
     </option>
     <option name="UPDATE_TYPE" value="REBASE" />
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="grit_0_0_4a" />
+      </map>
+    </option>
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
@@ -144,14 +142,17 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
             <path>
               <item name="NARA-GRIT2" type="b2602c69:ProjectViewProjectNode" />
               <item name="NARA-GRIT2" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="NARA-GRIT2" type="b2602c69:ProjectViewProjectNode" />
+              <item name="NARA-GRIT2" type="462c0819:PsiDirectoryNode" />
+              <item name="dependencies" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="NARA-GRIT2" type="b2602c69:ProjectViewProjectNode" />
@@ -164,16 +165,13 @@
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="grit" type="462c0819:PsiDirectoryNode" />
             </path>
-            <path>
-              <item name="NARA-GRIT2" type="b2602c69:ProjectViewProjectNode" />
-              <item name="NARA-GRIT2" type="462c0819:PsiDirectoryNode" />
-              <item name="test_data" type="462c0819:PsiDirectoryNode" />
-            </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="PackagesPane" />
       <pane id="AndroidView" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -181,7 +179,7 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/dependencies" />
-    <property name="project.structure.last.edited" value="Problems" />
+    <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
@@ -427,7 +425,21 @@
       <option name="project" value="LOCAL" />
       <updated>1528373986300</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="Initial rebase to GRIT2, with my regular expressions.">
+      <created>1528719616006</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1528719616007</updated>
+    </task>
+    <task id="LOCAL-00015" summary="Updated Tika app.">
+      <created>1528722102389</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1528722102389</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -439,17 +451,18 @@
     <layout>
       <window_info anchor="right" id="Palette" order="3" />
       <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Messages" order="8" weight="0.2775378" />
       <window_info id="Palette&#9;" order="7" />
       <window_info id="Image Layers" order="4" />
       <window_info anchor="right" id="Capture Analysis" order="9" />
       <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.5025" side_tool="true" weight="0.32984293" />
       <window_info anchor="right" id="Maven Projects" order="4" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.3315335" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.3315335" />
       <window_info anchor="bottom" id="Version Control" order="10" sideWeight="0.4975" weight="0.33189654" />
       <window_info anchor="bottom" id="Terminal" order="9" />
       <window_info id="Capture Tool" order="2" />
       <window_info anchor="right" id="Designer" order="5" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.033854168" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.21666667" />
       <window_info anchor="bottom" id="Problems" order="11" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -457,18 +470,17 @@
       <window_info anchor="right" id="Theme Preview" order="8" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.42548597" />
       <window_info id="Favorites" order="6" side_tool="true" />
-      <window_info anchor="bottom" id="Messages" order="8" weight="0.2775378" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32984293" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info id="Nl-Palette" order="5" />
+      <window_info anchor="right" id="Database" order="6" />
       <window_info anchor="right" id="Coverage" order="10" side_tool="true" weight="0.3296875" />
-      <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="right" id="Properties" order="7" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Inspection Results" order="12" weight="0.32937366" />
-      <window_info anchor="right" id="Database" order="6" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -522,14 +534,16 @@
     <MESSAGE value="Update regular expression for DOB search to avoid long time outs." />
     <MESSAGE value="Initial set of test files, to be updated and tested against. Note that not all dob formats currently match these dates. That's allright for now." />
     <MESSAGE value="Added three test files with 1st, 2nd, 3rd, etc. extensions." />
-    <option name="LAST_COMMIT_MESSAGE" value="Added three test files with 1st, 2nd, 3rd, etc. extensions." />
+    <MESSAGE value="Initial rebase to GRIT2, with my regular expressions." />
+    <MESSAGE value="Updated Tika app." />
+    <option name="LAST_COMMIT_MESSAGE" value="Updated Tika app." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/grit/Main.java</url>
-          <line>428</line>
+          <line>415</line>
           <properties />
           <option name="timeStamp" value="16" />
         </line-breakpoint>
@@ -789,13 +803,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/.gitignore">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="34">
-          <caret line="2" column="9" selection-start-line="2" selection-start-column="9" selection-end-line="2" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/NARA-GRIT.iml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="340">
@@ -813,7 +820,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/README.md" />
     <entry file="file://$PROJECT_DIR$/dev_README.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="510">
@@ -842,10 +848,25 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="38">
+          <caret line="2" column="9" selection-start-line="2" selection-start-column="9" selection-end-line="2" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor />
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/grit/Main.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="460">
-          <caret line="327" lean-forward="true" selection-start-line="327" selection-end-line="327" />
+        <state relative-caret-position="-687">
+          <caret line="266" lean-forward="true" selection-start-line="266" selection-end-line="266" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

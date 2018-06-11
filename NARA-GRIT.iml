@@ -17,6 +17,6 @@
         <jarDirectory url="file://$MODULE_DIR$/lib" recursive="false" />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="dependencies" level="project" />
+    <orderEntry type="library" exported="" name="dependencies" level="project" />
   </component>
 </module>
