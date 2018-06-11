@@ -21,5 +21,3 @@ There is also a free text field, which should allow the user to input
 a series of search terms (delimited by commas or the
 pipe (|)) character. This functionality is currently mostly
 implemented.
-
-The sent_mail.zip file contains sample files which contain instances of all current search terms, including Social Security Numbers, and all FBI search terms.
