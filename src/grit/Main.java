@@ -36,7 +36,6 @@ import org.apache.tika.parser.odf.OpenDocumentParser;
 
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
@@ -63,6 +62,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.FileReader;
 import java.io.LineNumberReader;
+import java.net.URI;
+import java.net.URISyntaxException;
+
 
 /**
  * This program is used to find pre-defined, free text,and wildcard searches in a variety of files. Need to update versioning...
@@ -136,21 +138,21 @@ public class Main extends JFrame {
 	// GUI COMPONENTS (visible interface)
 	private JCheckBox JCBCheckAll;
 	private JCheckBox JCBAutoParser;
+	private JCheckBox caseSensitive;
 
 	private JRadioButton JRBDirectory;
 	private JRadioButton JRBFile;
 	private JRadioButton regexButton;
 	private JRadioButton wildcardButton;
 	private JRadioButton plainTextButton;
-	//private ButtonGroup searchSelectGroup;
 
-	//private JButton JBRemoveDuplicates;
 	private JButton JBInput;
 	private JButton JBRun;
 	private JButton ClearButton;
 	private JTextField JTAProgressLog;
 	private JButton JBCancel;
 	private JButton JBExport;
+	private JButton helpButton;
 
 	private JTextArea JTAResultLog;
 	private JTable JBTable;
@@ -270,10 +272,10 @@ public class Main extends JFrame {
 		//match dob,bday,birth..etc, within (120 whitespace/Non-Alpha/underscore) with DATE format (mm dd yy) or (mm dd yyy) delimited by 1-2 (whitespace/Non-alpha/newline)
 		addRegexToList("(?i:(?<!\\w)((dob[\\s\\W_])|(born(on)?[\\s\\W_])|(birth(day)?[\\s\\W_])|(b.?day[\\s\\W_]))).{0,120}?((?<!\\d)((1[0-2])|(0?[1-9])))[\\s_\\W]{1,3}((3[0-1])|(2[0-9])|(1[0-9])|(0[1-9]))[\\s_\\W]{1,3}((19|20)?(\\d\\d))", HMComponents.get("DoB").regex);
 
-		//same as previous line, but matches yyyy mm dd
+		//same as previous line, but matches yyyy mm dd or yy mm dd
 		addRegexToList("(?i:(?<!\\w)((dob[\\s\\W_])|(born(on)?[\\s\\W_])|(birth(day)?[\\s\\W_])|(b.?day[\\s\\W_]))).{0,120}?((?<![0-9])((19|20)?(\\d\\d))[\\s_\\W]{1,3})((1[0-2])|(0?[1-9]))[\\s_\\W]{1,3}((3[0-1])|(2[0-9])|(1[0-9])|(0[1-9]))", HMComponents.get("DoB").regex);
 
-		//match DOB...etc within (120 whitespace/Non-Alpha/underscore) OR (0-20 words separated by 1-5 spaces each) with DATE format Month Day year.
+		//match DOB...etc within 120 chars with DATE format Month Day year.
 		// month can be abbreviated, days have 'st, 'nd, or 'rd,  year can be " 'yy " or "yyyy"
 		addRegexToList("(?i:(?<!\\w)((dob[\\s\\W_])|(born(on)?[\\s\\W_])|(birth(day)?[\\s\\W_])|(b.?day[\\s\\W_]))).{0,120}?(?i:(Jan(\\.|uary)?|Feb(\\.|ruary)?|Mar(\\.|ch)?|Apr(\\.|il)?|May|Jun(\\.|e)?|Jul(\\.|y)?|Aug(\\.|ust)?|(Sept(\\.|ember)?|Sep(\\.|tember)?)|Oct(\\.|ober)?)|Nov(\\.|ember)?|Dec(\\.|ember)?)[\\s_\\W]{1,3}(((0|2|3)?1st)|((0|2)?2nd)|((0|2)?3rd)|(20th)|(2[4-9]th)|(1[0-9]th)|(0?[4-9]th))[\\s_\\W]{1,3}((19|20)?\\d\\d)", HMComponents.get("DoB").regex);
 
@@ -283,7 +285,7 @@ public class Main extends JFrame {
 		//same as before but matches dob...etc dd Month (yyyy) optional
 		addRegexToList("(?i:(?<!\\w)((dob[\\s\\W_])|(born(on)?[\\s\\W_])|(birth(day)?[\\s\\W_])|(b.?day[\\s\\W_]))).{0,120}?(31|30|([0-3]?[0-9]))[\\s_\\W]{1,3}(?i:(Jan(\\.|uary)?|Feb(\\.|ruary)?|Mar(\\.|ch)?|Apr(\\.|il)?|May|Jun(\\.|e)?|Jul(\\.|y)?|Aug(\\.|ust)?|(Sept(\\.|ember)?|Sep(\\.|tember)?)|Oct(\\.|ober)?)|Nov(\\.|ember)?|Dec(\\.|ember)?)[\\s_\\W]{1,3}((19|20)(\\d\\d))?", HMComponents.get("DoB").regex);
 
-		//separate pattenr for b. mm dd yyyy
+		//separate pattern for b. mm dd yyyy
 		addRegexToList("(?i:((?<![.,-\\_\\w])b\\.))[\\s\\.\\(\\)-_\\/]{0,5}?((?<!\\d)((1[0-2])|(0?[1-9]))[\\s_\\W]{1,3}((3[0-1])|(2[0-9])|(1[0-9])|(0[1-9])|([0-9]))[\\s_\\W]{1,3}((19|20)?(\\d\\d)))", HMComponents.get("DoB").regex);
 
 		//end new re-written regex patterns ----------------- ^^
@@ -522,8 +524,6 @@ public class Main extends JFrame {
 
 		panel.add(HMComponents.get("TextSearchArea").text);
 
-
-
 		regexButton = new JRadioButton("Regex");
 		regexButton.setToolTipText("Search with regular expressions");
 		wildcardButton = new JRadioButton("Wildcard");
@@ -548,23 +548,26 @@ public class Main extends JFrame {
 		plainTextButton.setSelected(true);
 
 		ClearButton = new JButton("Clear");
-		sub_pan1.add(radioButtonPanel);
-		sub_pan1.add(ClearButton);
+		helpButton = new JButton("Help");
+		caseSensitive = new JCheckBox("Case Sensitive");
+		caseSensitive.setSelected(true);
+
+		JPanel sub_pan2 = new JPanel(new FlowLayout(FlowLayout.CENTER));
+		sub_pan2.add(caseSensitive);
+		sub_pan2.add(ClearButton);
+		sub_pan2.add(helpButton);
 		ClearButton.addActionListener(new MySearchTaskListener());
+		helpButton.addActionListener(new MySearchTaskListener());
+		sub_pan1.add(radioButtonPanel);
+		sub_pan1.add(sub_pan2);
+
 
 		panel.add(sub_pan1);
 		input.add(panel);
 	}
 	private void build_PII_2(JPanel input) {
 
-		JPanel sub1 = new JPanel();	//to get proper alignment of new check boxes above "Other Match mode"
-		sub1.setPreferredSize(new Dimension(WIN_WIDTH/4,125));
-		sub1.setMaximumSize(new Dimension(WIN_WIDTH/4,125));
-
-		//JPanel sub2 = new JPanel();	//two sub panels are placed inside of panel_2 using grid layout
-
-		//sub2.setPreferredSize(new Dimension(WIN_WIDTH/4, 74));
-
+		JPanel sub1 = new JPanel();
 
 		sub1.setBorder(BorderFactory.createTitledBorder("FBI Match Modes"));
 		sub1.setLayout(new BoxLayout(sub1, BoxLayout.PAGE_AXIS));
@@ -572,16 +575,7 @@ public class Main extends JFrame {
 		sub1.add(HMComponents.get("FBIInfoFile").checkBox);
 		sub1.add(HMComponents.get("FBISource").checkBox);
 		sub1.add(HMComponents.get("FBISourceCode").checkBox);
-
-
-		JPanel panel_2 = new JPanel();
-		//panel_2.setLayout(new GridLayout(2,1,0,10));
-		//panel_2.setLayout(new BoxLayout(panel_2,BoxLayout.Y_AXIS));
-		//panel_2.setMaximumSize(new Dimension(WIN_WIDTH/4,125));
-
-		panel_2.add(sub1);
-		//panel_2.add(sub2);
-		input.add(panel_2);
+		input.add(sub1);
 
 	}
 
@@ -837,6 +831,20 @@ public class Main extends JFrame {
 				//System.exit(0);
 			} else if (event.getSource() == ClearButton) {
 				HMComponents.get("TextSearchArea").text.setText("");
+			} else if (event.getSource() == helpButton) {
+				boolean success = Desktop.isDesktopSupported();
+				String website = "https://github.com/gleporeNARA/GRIT2/wiki";
+				if(success){
+					try {
+						URI link = new URI(website);
+						Desktop.getDesktop().browse(link);
+					} catch(URISyntaxException | IOException e ) {
+						success = false;
+					}
+				}
+				if(!success) {
+					JOptionPane.showMessageDialog(null,"Java can not open links, please navigate to\n" + website);
+				}
 			}
 		}
 	}
