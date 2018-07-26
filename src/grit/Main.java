@@ -268,8 +268,9 @@ public class Main extends JFrame {
 		addRegexToList("([^0-9.-/]|^)\\d{3}[./-]\\d{2}[./-]\\d{4}([^0-9-/]|$)", HMComponents.get("SSN").regex);
 
 		//begin new re-written regex patterns ----------------- vv
-		//[\s_\W]{1,3}   old delimter pattern grabbed too many & resulted in accepting false dates
+
 		//match dob,bday,birth..etc, within (120 whitespace/Non-Alpha/underscore) with DATE format (mm dd yy) or (mm dd yyy) delimited by 1-2 (whitespace/Non-alpha/newline)
+		//		?i = case insensitive, (?<!\\w) is negative look-behind for alphanumeric chars (rules out ???dob)
 		addRegexToList("(?i:(?<!\\w)((dob[\\s\\W_])|(born(on)?[\\s\\W_])|(birth(day)?[\\s\\W_])|(b.?day[\\s\\W_]))).{0,120}?((?<!\\d)((1[0-2])|(0?[1-9])))[\\s_\\W]{1,3}((3[0-1])|(2[0-9])|(1[0-9])|(0[1-9]))[\\s_\\W]{1,3}((19|20)?(\\d\\d))", HMComponents.get("DoB").regex);
 
 		//same as previous line, but matches yyyy mm dd or yy mm dd
@@ -287,6 +288,27 @@ public class Main extends JFrame {
 
 		//separate pattern for b. mm dd yyyy
 		addRegexToList("(?i:((?<![.,-\\_\\w])b\\.))[\\s\\.\\(\\)-_\\/]{0,5}?((?<!\\d)((1[0-2])|(0?[1-9]))[\\s_\\W]{1,3}((3[0-1])|(2[0-9])|(1[0-9])|(0[1-9])|([0-9]))[\\s_\\W]{1,3}((19|20)?(\\d\\d)))", HMComponents.get("DoB").regex);
+
+
+		/* ******************************************************************************
+			reverse patterns from above
+		*/
+
+		// DATE format (mm dd yy) or (mm dd yyy) delimited by 1-2 (whitespace/Non-alpha/newline) followed by DOB
+		addRegexToList("((?<!\\d)((1[0-2])|(0?[1-9])))[\\s_\\W]{1,3}((3[0-1])|(2[0-9])|(1[0-9])|(0[1-9]))[\\s_\\W]{1,3}((19|20)?(\\d\\d)).{0,120}?(?i:(?<!\\w)((dob[\\s\\W_])|(born(on)?[\\s\\W_])|(birth(day)?[\\s\\W_])|(b.?day[\\s\\W_])))", HMComponents.get("DoB").regex);
+
+		// same but matches yyyy mm dd or yy mm dd
+		addRegexToList("((?<![0-9])((19|20)?(\\d\\d))[\\s_\\W]{1,3})((1[0-2])|(0?[1-9]))[\\s_\\W]{1,3}((3[0-1])|(2[0-9])|(1[0-9])|(0[1-9])).{0,120}?(?i:(?<!\\w)((dob[\\s\\W_])|(born(on)?[\\s\\W_])|(birth(day)?[\\s\\W_])|(b.?day[\\s\\W_])))", HMComponents.get("DoB").regex);
+
+		//match Date within 120 chars with DOB, date can be formatted as such...
+		// month can be abbreviated, days have 'st, 'nd, or 'rd,  year can be " 'yy " or "yyyy"
+		addRegexToList("(?i:(Jan(\\.|uary)?|Feb(\\.|ruary)?|Mar(\\.|ch)?|Apr(\\.|il)?|May|Jun(\\.|e)?|Jul(\\.|y)?|Aug(\\.|ust)?|(Sept(\\.|ember)?|Sep(\\.|tember)?)|Oct(\\.|ober)?)|Nov(\\.|ember)?|Dec(\\.|ember)?)[\\s_\\W]{1,3}(((0|2|3)?1st)|((0|2)?2nd)|((0|2)?3rd)|(20th)|(2[4-9]th)|(1[0-9]th)|(0?[4-9]th))[\\s_\\W]{1,3}((19|20)?\\d\\d).{0,120}?(?i:(?<!\\w)((dob[\\s\\W_])|(born(on)?[\\s\\W_])|(birth(day)?[\\s\\W_])|(b.?day[\\s\\W_])))", HMComponents.get("DoB").regex);
+
+		//same as before but without the 'th, 'nd, and 'rd
+		addRegexToList("(?i:(Jan(\\.|uary)?|Feb(\\.|ruary)?|Mar(\\.|ch)?|Apr(\\.|il)?|May|Jun(\\.|e)?|Jul(\\.|y)?|Aug(\\.|ust)?|(Sept(\\.|ember)?|Sep(\\.|tember)?)|Oct(\\.|ober)?)|Nov(\\.|ember)?|Dec(\\.|ember)?)[\\s_\\W]{1,3}(31|30|([0-3]?[0-9])[\\s_\\W]{1,3}((19|20)(\\d\\d)|\\d\\d)).{0,120}?(?i:(?<!\\w)((dob[\\s\\W_])|(born(on)?[\\s\\W_])|(birth(day)?[\\s\\W_])|(b.?day[\\s\\W_])))", HMComponents.get("DoB").regex);
+
+		//same as before but matches dd Month (yyyy) DOB.  NOTE: year is optional
+		addRegexToList("(31|30|([0-3]?[0-9]))[\\s_\\W]{1,3}(?i:(Jan(\\.|uary)?|Feb(\\.|ruary)?|Mar(\\.|ch)?|Apr(\\.|il)?|May|Jun(\\.|e)?|Jul(\\.|y)?|Aug(\\.|ust)?|(Sept(\\.|ember)?|Sep(\\.|tember)?)|Oct(\\.|ober)?)|Nov(\\.|ember)?|Dec(\\.|ember)?)[\\s_\\W]{1,3}((19|20)(\\d\\d))?.{0,120}?(?i:(?<!\\w)((dob[\\s\\W_])|(born(on)?[\\s\\W_])|(birth(day)?[\\s\\W_])|(b.?day[\\s\\W_])))", HMComponents.get("DoB").regex);
 
 		//end new re-written regex patterns ----------------- ^^
 
@@ -465,7 +487,6 @@ public class Main extends JFrame {
 		JRBFile.addActionListener(new MyRunModeListener());
 		JRBDirectory.addActionListener(new MyRunModeListener());
 
-		//JBRemoveDuplicates.addActionListener(new CleanResultsListener());
 
 		JBInput.addActionListener(new MyIOListener());
 		JBRun.addActionListener(new MySearchTaskListener());
@@ -484,7 +505,6 @@ public class Main extends JFrame {
 		build_PII_1(input); //panel 1
 		build_PII_2(input); //panel 2
 		buildTextSearch(input);//panel 3
-		//buildReadMode(input); //old panel 3
 		buildPan_4(input); //Read + Run mode panels
 
 	}
@@ -631,12 +651,6 @@ public class Main extends JFrame {
 		sub1.add(JBCancel);
 		sub1.add(JBExport);
 
-//		panel_4.setBorder(BorderFactory.createTitledBorder("Run Mode"));
-//		panel_4.setLayout(new BoxLayout(panel_4, BoxLayout.LINE_AXIS));
-//		panel_4.add(JBInput);
-//		panel_4.add(JBRun);
-//		panel_4.add(JBCancel);
-//		panel_4.add(JBExport);
 		panel_4.add(sub1);
 		buildReadMode(panel_4); // re-using old pan3 function.  pan3 is new sub1
 		input.add(panel_4);
@@ -784,10 +798,11 @@ public class Main extends JFrame {
 						//validate and add User Text to regex list in HMComponents
 						List<Pattern> temp = buildTextRegexList(HMComponents.get("TextSearchArea").text.getText());
 						if(temp == null) {
-							// temp is null only if buildTextRegexList() had a regex error
-							// buildTextRegexList() should display error
-							// need to quit due to invalid text
-
+							/*
+							* temp is null only if buildTextRegexList() had a regex error
+							* buildTextRegexList() should display error
+							* need to quit due to invalid text
+							*/
 							return; // stop here
 						}else {
 							if(temp.isEmpty() ) {
@@ -1483,9 +1498,23 @@ public class Main extends JFrame {
 							String temp = tempText[i];
 							temp = temp.replaceAll("\\?", "\\\\w");
 							temp = temp.replaceAll("\\*", "\\\\w+");
-							pattern = Pattern.compile(temp);
+
+							if(caseSensitive.isSelected()) {
+								pattern = Pattern.compile(temp);
+							}else {
+								pattern = Pattern.compile(temp, Pattern.CASE_INSENSITIVE);
+							}
 						} else if (type == 2) {
-							pattern = Pattern.compile(tempText[i], Pattern.LITERAL);
+							//value of flags
+							/*
+							https://docs.oracle.com/javase/7/docs/api/constant-values.html#java.util.regex.Pattern.CASE_INSENSITIVE
+							 */
+							if(caseSensitive.isSelected()) {
+								pattern = Pattern.compile(tempText[i], Pattern.LITERAL);
+							}else {
+								pattern = Pattern.compile(tempText[i], Pattern.LITERAL + Pattern.CASE_INSENSITIVE);
+							}
+
 						} else {
 							System.out.println("logic error, @addTextToRegex - parsing tempText\nType: " + type);
 						}
