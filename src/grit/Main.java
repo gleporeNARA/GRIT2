@@ -36,7 +36,6 @@ import org.apache.tika.parser.odf.OpenDocumentParser;
 
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
@@ -63,6 +62,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.FileReader;
 import java.io.LineNumberReader;
+import java.net.URI;
+import java.net.URISyntaxException;
+
 
 /**
  * This program is used to find pre-defined, free text,and wildcard searches in a variety of files. Need to update versioning...
@@ -93,7 +95,7 @@ import java.io.LineNumberReader;
 
 public class Main extends JFrame {
 	private static final String PROGRAM_TITLE = "GRIT";
-	private static final String PROGRAM_VERSION = "0.0.10";
+	private static final String PROGRAM_VERSION = "0.0.10 B";
 	private static final int WIN_WIDTH = 1200;
 	private static final int WIN_HEIGHT = 850;
 
@@ -136,21 +138,21 @@ public class Main extends JFrame {
 	// GUI COMPONENTS (visible interface)
 	private JCheckBox JCBCheckAll;
 	private JCheckBox JCBAutoParser;
+	private JCheckBox CaseSensitiveCheckbox;
 
 	private JRadioButton JRBDirectory;
 	private JRadioButton JRBFile;
-	private JRadioButton regexButton;
-	private JRadioButton wildcardButton;
-	private JRadioButton plainTextButton;
-	//private ButtonGroup searchSelectGroup;
+	private JRadioButton regex_Radiobutton;
+	private JRadioButton wildcard_Radiobutton;
+	private JRadioButton plainText_Radiobutton;
 
-	//private JButton JBRemoveDuplicates;
 	private JButton JBInput;
 	private JButton JBRun;
 	private JButton ClearButton;
 	private JTextField JTAProgressLog;
 	private JButton JBCancel;
 	private JButton JBExport;
+	private JButton HelpButton;
 
 	private JTextArea JTAResultLog;
 	private JTable JBTable;
@@ -266,61 +268,57 @@ public class Main extends JFrame {
 		addRegexToList("([^0-9.-/]|^)\\d{3}[./-]\\d{2}[./-]\\d{4}([^0-9-/]|$)", HMComponents.get("SSN").regex);
 
 		//begin new re-written regex patterns ----------------- vv
+		/*
+		NOTE: old regex versions before merge can be found at
 
-		//match dob,bday,birth..etc, within (120 whitespace/Non-Alpha/underscore) OR (0-20 words separated by 1-5 spaces each) with DATE format (mm dd yy) or (mm dd yyy) delimited by 1-2 (whitespace/Non-alpha/newline)
-		addRegexToList("(?i:(\\bdob\\b|\\bborn\\b|\\bbirth|\\bb.?day\\b))(([\\s\\W_]{0,100}?)|(.*{0,10}))((1[0-2])|(0?[1-9]))[\\s\\W_]{1,3}((3[0-1])|(2[0-9])|(1[0-9])|(0[1-9])|([0-9]))[\\s\\W_]{1,3}((19|20)?(\\d\\d))", HMComponents.get("DoB").regex);
+		commit: 6c9bc9d19ef55cc2a7340786c21535b9bd51e70f
+		Date: June 11 2018
+		Author: gleporeNARA
+		File: Main.java   around lines 270
 
-		//same as previous line, but matches yyyy mm dd
-		addRegexToList("(?i:(\\bdob\\b|\\bborn\\b|\\bbirth|\\bb.?day\\b))(([\\s\\W_]{0,100}?)|(.*{0,10}))((19|20)(\\d\\d)[\\s\\W_]{1,3})((1[0-2])|(0?[1-9]))[\\s\\W_]{1,2}((3[0-1])|(2[0-9])|(1[0-9])|(0[1-9])|([0-9]))", HMComponents.get("DoB").regex);
+		 */
+		//match dob,bday,birth..etc, within (120 whitespace/Non-Alpha/underscore) with DATE format (mm dd yy) or (mm dd yyy) delimited by 1-2 (whitespace/Non-alpha/newline)
+		//		?i = case insensitive, (?<!\\w) is negative look-behind for alphanumeric chars (rules out ???dob)
+		addRegexToList("(?i:(?<!\\w)((dob[\\s\\W_])|(born(on)?[\\s\\W_])|(birth(day)?[\\s\\W_])|(b.?day[\\s\\W_]))).{0,120}?((?<!\\d)((1[0-2])|(0?[1-9])))[\\s_\\W]{1,3}((3[0-1])|(2[0-9])|(1[0-9])|(0[1-9]))[\\s_\\W]{1,3}((19|20)?(\\d\\d))", HMComponents.get("DoB").regex);
 
-		//match DOB...etc within (120 whitespace/Non-Alpha/underscore) OR (0-20 words separated by 1-5 spaces each) with DATE format Month Day year.
+		//same as previous line, but matches yyyy mm dd or yy mm dd
+		addRegexToList("(?i:(?<!\\w)((dob[\\s\\W_])|(born(on)?[\\s\\W_])|(birth(day)?[\\s\\W_])|(b.?day[\\s\\W_]))).{0,120}?((?<![0-9])((19|20)?(\\d\\d))[\\s_\\W]{1,3})((1[0-2])|(0?[1-9]))[\\s_\\W]{1,3}((3[0-1])|(2[0-9])|(1[0-9])|(0[1-9]))", HMComponents.get("DoB").regex);
+
+		//match DOB...etc within 120 chars with DATE format Month Day year.
 		// month can be abbreviated, days have 'st, 'nd, or 'rd,  year can be " 'yy " or "yyyy"
-		addRegexToList("(?i:(\\bdob\\b|\\bborn\\b|\\bbirth|\\bb.?day\\b))(([\\s\\W_]{0,100}?)|(.*{0,10}))(?i:(Jan(\\.|uary)?|Feb(\\.|ruary)?|Mar(\\.|ch)?|Apr(\\.|il)?|May|Jun(\\.|e)?|Jul(\\.|y)?|Aug(\\.|ust)?|(Sept(\\.|ember)?|Sep(\\.|tember)?)|Oct(\\.|ober)?)|Nov(\\.|ember)?|Dec(\\.|ember)?)[\\s\\W_]{1,3}(((2|3)?1st)|(2?2nd)|(2?3rd)|(20th)|(1[0-9]th)|(2[4-9]th)|([4-9]th))[\\s\\W_]{1,5}((19|20)(\\d\\d)|\\d\\d)", HMComponents.get("DoB").regex);
+		addRegexToList("(?i:(?<!\\w)((dob[\\s\\W_])|(born(on)?[\\s\\W_])|(birth(day)?[\\s\\W_])|(b.?day[\\s\\W_]))).{0,120}?(?i:(Jan(\\.|uary)?|Feb(\\.|ruary)?|Mar(\\.|ch)?|Apr(\\.|il)?|May|Jun(\\.|e)?|Jul(\\.|y)?|Aug(\\.|ust)?|(Sept(\\.|ember)?|Sep(\\.|tember)?)|Oct(\\.|ober)?)|Nov(\\.|ember)?|Dec(\\.|ember)?)[\\s_\\W]{1,3}(((0|2|3)?1st)|((0|2)?2nd)|((0|2)?3rd)|(20th)|(2[4-9]th)|(1[0-9]th)|(0?[4-9]th))[\\s_\\W]{1,3}((19|20)?\\d\\d)", HMComponents.get("DoB").regex);
 
 		//same as before but without the 'th, 'nd, and 'rd
-		addRegexToList("(?i:(\\bdob\\b|\\bborn\\b|\\bbirth|\\bb.?day\\b))(([\\s\\W_]{0,100}?)|(.*{0,10}))(?i:(Jan(\\.|uary)?|Feb(\\.|ruary)?|Mar(\\.|ch)?|Apr(\\.|il)?|May|Jun(\\.|e)?|Jul(\\.|y)?|Aug(\\.|ust)?|(Sept(\\.|ember)?|Sep(\\.|tember)?)|Oct(\\.|ober)?)|Nov(\\.|ember)?|Dec(\\.|ember)?)[\\s\\W_]{1,3}(31|30|([0-3]?[0-9])[\\s\\W_]{1,3}((19|20)(\\d\\d)|\\d\\d))", HMComponents.get("DoB").regex);
+		addRegexToList("(?i:(?<!\\w)((dob[\\s\\W_])|(born(on)?[\\s\\W_])|(birth(day)?[\\s\\W_])|(b.?day[\\s\\W_]))).{0,120}?(?i:(Jan(\\.|uary)?|Feb(\\.|ruary)?|Mar(\\.|ch)?|Apr(\\.|il)?|May|Jun(\\.|e)?|Jul(\\.|y)?|Aug(\\.|ust)?|(Sept(\\.|ember)?|Sep(\\.|tember)?)|Oct(\\.|ober)?)|Nov(\\.|ember)?|Dec(\\.|ember)?)[\\s_\\W]{1,3}(31|30|([0-3]?[0-9])[\\s_\\W]{1,3}((19|20)(\\d\\d)|\\d\\d))", HMComponents.get("DoB").regex);
 
 		//same as before but matches dob...etc dd Month (yyyy) optional
-		addRegexToList("(?i:(\\bdob\\b|\\bborn\\b|\\bbirth|\\bb.?day\\b))(([\\s\\W_]{0,100}?)|(.*{0,10}))(31|30|([0-3]?[0-9]))[\\s\\W_]{1,3}(?i:(Jan(\\.|uary)?|Feb(\\.|ruary)?|Mar(\\.|ch)?|Apr(\\.|il)?|May|Jun(\\.|e)?|Jul(\\.|y)?|Aug(\\.|ust)?|(Sept(\\.|ember)?|Sep(\\.|tember)?)|Oct(\\.|ober)?)|Nov(\\.|ember)?|Dec(\\.|ember)?)[\\s\\W_]{1,3}((19|20)(\\d\\d))?", HMComponents.get("DoB").regex);
+		addRegexToList("(?i:(?<!\\w)((dob[\\s\\W_])|(born(on)?[\\s\\W_])|(birth(day)?[\\s\\W_])|(b.?day[\\s\\W_]))).{0,120}?(31|30|([0-3]?[0-9]))[\\s_\\W]{1,3}(?i:(Jan(\\.|uary)?|Feb(\\.|ruary)?|Mar(\\.|ch)?|Apr(\\.|il)?|May|Jun(\\.|e)?|Jul(\\.|y)?|Aug(\\.|ust)?|(Sept(\\.|ember)?|Sep(\\.|tember)?)|Oct(\\.|ober)?)|Nov(\\.|ember)?|Dec(\\.|ember)?)[\\s_\\W]{1,3}((19|20)(\\d\\d))?", HMComponents.get("DoB").regex);
 
-        //REVERSE FROM ABOVE
-		//match dob,bday,birth..etc, within (120 whitespace/Non-Alpha/underscore) OR (0-20 words separated by 1-5 spaces each) with DATE format (mm dd yy) or (mm dd yyy) delimited by 1-2 (whitespace/Non-alpha/newline)
-		//reverse of regex #1
-        addRegexToList("((1[0-2])|(0?[1-9]))[\\s\\W_]{1,3}((3[0-1])|(2[0-9])|(1[0-9])|(0[1-9])|([0-9]))[\\s\\W_]{1,3}((19|20)?(\\d\\d))(([\\s\\W_]{0,100}?)|(.*{0,10}))(?i:(\\bdob\\b|\\bborn\\b|\\bbirth|\\bb.?day\\b))", HMComponents.get("DoB").regex);
+		//separate pattern for b. mm dd yyyy
+		addRegexToList("(?i:((?<![.,-\\_\\w])b\\.))[\\s\\.\\(\\)-_\\/]{0,5}?((?<!\\d)((1[0-2])|(0?[1-9]))[\\s_\\W]{1,3}((3[0-1])|(2[0-9])|(1[0-9])|(0[1-9])|([0-9]))[\\s_\\W]{1,3}((19|20)?(\\d\\d)))", HMComponents.get("DoB").regex);
 
-		//same as previous line, but matches yyyy mm dd
-		addRegexToList("((19|20)(\\d\\d)[\\s\\W_]{1,3})((1[0-2])|(0?[1-9]))[\\s\\W_]{1,2}((3[0-1])|(2[0-9])|(1[0-9])|(0[1-9])|([0-9]))(([\\s\\W_]{0,100}?)|(.*{0,10}))(?i:(\\bdob\\b|\\bborn\\b|\\bbirth|\\bb.?day\\b))", HMComponents.get("DoB").regex);
 
-		//match DOB...etc within (120 whitespace/Non-Alpha/underscore) OR (0-20 words separated by 1-5 spaces each) with DATE format Month Day year.
+		/* ******************************************************************************
+			reverse patterns from above
+		*/
+
+		// DATE format (mm dd yy) or (mm dd yyy) delimited by 1-2 (whitespace/Non-alpha/newline) followed by DOB
+		addRegexToList("((?<!\\d)((1[0-2])|(0?[1-9])))[\\s_\\W]{1,3}((3[0-1])|(2[0-9])|(1[0-9])|(0[1-9]))[\\s_\\W]{1,3}((19|20)?(\\d\\d)).{0,120}?(?i:(?<!\\w)((dob[\\s\\W_])|(born(on)?[\\s\\W_])|(birth(day)?[\\s\\W_])|(b.?day[\\s\\W_])))", HMComponents.get("DoB").regex);
+
+		// same but matches yyyy mm dd or yy mm dd
+		addRegexToList("((?<![0-9])((19|20)?(\\d\\d))[\\s_\\W]{1,3})((1[0-2])|(0?[1-9]))[\\s_\\W]{1,3}((3[0-1])|(2[0-9])|(1[0-9])|(0[1-9])).{0,120}?(?i:(?<!\\w)((dob[\\s\\W_])|(born(on)?[\\s\\W_])|(birth(day)?[\\s\\W_])|(b.?day[\\s\\W_])))", HMComponents.get("DoB").regex);
+
+		//match Date within 120 chars with DOB, date can be formatted as such...
 		// month can be abbreviated, days have 'st, 'nd, or 'rd,  year can be " 'yy " or "yyyy"
-		addRegexToList("(?i:(Jan(\\.|uary)?|Feb(\\.|ruary)?|Mar(\\.|ch)?|Apr(\\.|il)?|May|Jun(\\.|e)?|Jul(\\.|y)?|Aug(\\.|ust)?|(Sept(\\.|ember)?|Sep(\\.|tember)?)|Oct(\\.|ober)?)|Nov(\\.|ember)?|Dec(\\.|ember)?)[\\s\\W_]{1,3}(((2|3)?1st)|(2?2nd)|(2?3rd)|(20th)|(1[0-9]th)|(2[4-9]th)|([4-9]th))[\\s\\W_]{1,5}((19|20)(\\d\\d)|\\d\\d)(([\\s\\W_]{0,100}?)|(.*{0,10}))(?i:(\\bdob\\b|\\bborn\\b|\\bbirth|\\bb.?day\\b))", HMComponents.get("DoB").regex);
+		addRegexToList("(?i:(Jan(\\.|uary)?|Feb(\\.|ruary)?|Mar(\\.|ch)?|Apr(\\.|il)?|May|Jun(\\.|e)?|Jul(\\.|y)?|Aug(\\.|ust)?|(Sept(\\.|ember)?|Sep(\\.|tember)?)|Oct(\\.|ober)?)|Nov(\\.|ember)?|Dec(\\.|ember)?)[\\s_\\W]{1,3}(((0|2|3)?1st)|((0|2)?2nd)|((0|2)?3rd)|(20th)|(2[4-9]th)|(1[0-9]th)|(0?[4-9]th))[\\s_\\W]{1,3}((19|20)?\\d\\d).{0,120}?(?i:(?<!\\w)((dob[\\s\\W_])|(born(on)?[\\s\\W_])|(birth(day)?[\\s\\W_])|(b.?day[\\s\\W_])))", HMComponents.get("DoB").regex);
 
 		//same as before but without the 'th, 'nd, and 'rd
-		addRegexToList("(?i:(Jan(\\.|uary)?|Feb(\\.|ruary)?|Mar(\\.|ch)?|Apr(\\.|il)?|May|Jun(\\.|e)?|Jul(\\.|y)?|Aug(\\.|ust)?|(Sept(\\.|ember)?|Sep(\\.|tember)?)|Oct(\\.|ober)?)|Nov(\\.|ember)?|Dec(\\.|ember)?)[\\s\\W_]{1,3}(31|30|([0-3]?[0-9])[\\s\\W_]{1,3}((19|20)(\\d\\d)|\\d\\d))(([\\s\\W_]{0,100}?)|(.*{0,10}))(?i:(\\bdob\\b|\\bborn\\b|\\bbirth|\\bb.?day\\b))", HMComponents.get("DoB").regex);
+		addRegexToList("(?i:(Jan(\\.|uary)?|Feb(\\.|ruary)?|Mar(\\.|ch)?|Apr(\\.|il)?|May|Jun(\\.|e)?|Jul(\\.|y)?|Aug(\\.|ust)?|(Sept(\\.|ember)?|Sep(\\.|tember)?)|Oct(\\.|ober)?)|Nov(\\.|ember)?|Dec(\\.|ember)?)[\\s_\\W]{1,3}(31|30|([0-3]?[0-9])[\\s_\\W]{1,3}((19|20)(\\d\\d)|\\d\\d)).{0,120}?(?i:(?<!\\w)((dob[\\s\\W_])|(born(on)?[\\s\\W_])|(birth(day)?[\\s\\W_])|(b.?day[\\s\\W_])))", HMComponents.get("DoB").regex);
 
-		//same as before but matches dob...etc dd Month (yyyy) optional
-		addRegexToList("(31|30|([0-3]?[0-9]))[\\s\\W_]{1,3}(?i:(Jan(\\.|uary)?|Feb(\\.|ruary)?|Mar(\\.|ch)?|Apr(\\.|il)?|May|Jun(\\.|e)?|Jul(\\.|y)?|Aug(\\.|ust)?|(Sept(\\.|ember)?|Sep(\\.|tember)?)|Oct(\\.|ober)?)|Nov(\\.|ember)?|Dec(\\.|ember)?)[\\s\\W_]{1,3}((19|20)(\\d\\d))?(([\\s\\W_]{0,100}?)|(.*{0,10}))(?i:(\\bdob\\b|\\bborn\\b|\\bbirth|\\bb.?day\\b))", HMComponents.get("DoB").regex);
-
-
-        //B. MATCHING EXPRESSIONS
-
-		addRegexToList("b\\.\\s{1,3}((1[0-2])|(0?[1-9]))[\\s\\W_]{1,3}((3[0-1])|(2[0-9])|(1[0-9])|(0[1-9])|([0-9]))[\\s\\W_]{1,3}((19|20)?(\\d\\d))", HMComponents.get("DoB").regex);
-
-		//same as previous line, but matches yyyy mm dd
-		addRegexToList("b\\.\\s{1,3}((19|20)(\\d\\d)[\\s\\W_]{1,3})((1[0-2])|(0?[1-9]))[\\s\\W_]{1,2}((3[0-1])|(2[0-9])|(1[0-9])|(0[1-9])|([0-9]))", HMComponents.get("DoB").regex);
-
-		//match DOB...etc within (120 whitespace/Non-Alpha/underscore) OR (0-20 words separated by 1-5 spaces each) with DATE format Month Day year.
-		// month can be abbreviated, days have 'st, 'nd, or 'rd,  year can be " 'yy " or "yyyy"
-		addRegexToList("b\\.\\s{1,3}(?i:(Jan(\\.|uary)?|Feb(\\.|ruary)?|Mar(\\.|ch)?|Apr(\\.|il)?|May|Jun(\\.|e)?|Jul(\\.|y)?|Aug(\\.|ust)?|(Sept(\\.|ember)?|Sep(\\.|tember)?)|Oct(\\.|ober)?)|Nov(\\.|ember)?|Dec(\\.|ember)?)[\\s\\W_]{1,3}(((2|3)?1st)|(2?2nd)|(2?3rd)|(20th)|(1[0-9]th)|(2[4-9]th)|([4-9]th))[\\s\\W_]{1,5}((19|20)(\\d\\d)|\\d\\d)", HMComponents.get("DoB").regex);
-
-		//same as before but without the 'th, 'nd, and 'rd
-		addRegexToList("b\\.\\s{1,3}(?i:(Jan(\\.|uary)?|Feb(\\.|ruary)?|Mar(\\.|ch)?|Apr(\\.|il)?|May|Jun(\\.|e)?|Jul(\\.|y)?|Aug(\\.|ust)?|(Sept(\\.|ember)?|Sep(\\.|tember)?)|Oct(\\.|ober)?)|Nov(\\.|ember)?|Dec(\\.|ember)?)[\\s\\W_]{1,3}(31|30|([0-3]?[0-9])[\\s\\W_]{1,3}((19|20)(\\d\\d)|\\d\\d))", HMComponents.get("DoB").regex);
-
-		//same as before but matches dob...etc dd Month (yyyy) optional
-		addRegexToList("b\\.\\s{1,3}(31|30|([0-3]?[0-9]))[\\s\\W_]{1,3}(?i:(Jan(\\.|uary)?|Feb(\\.|ruary)?|Mar(\\.|ch)?|Apr(\\.|il)?|May|Jun(\\.|e)?|Jul(\\.|y)?|Aug(\\.|ust)?|(Sept(\\.|ember)?|Sep(\\.|tember)?)|Oct(\\.|ober)?)|Nov(\\.|ember)?|Dec(\\.|ember)?)[\\s\\W_]{1,3}((19|20)(\\d\\d))?", HMComponents.get("DoB").regex);
+		//same as before but matches dd Month (yyyy) DOB.  NOTE: year is optional
+		addRegexToList("(31|30|([0-3]?[0-9]))[\\s_\\W]{1,3}(?i:(Jan(\\.|uary)?|Feb(\\.|ruary)?|Mar(\\.|ch)?|Apr(\\.|il)?|May|Jun(\\.|e)?|Jul(\\.|y)?|Aug(\\.|ust)?|(Sept(\\.|ember)?|Sep(\\.|tember)?)|Oct(\\.|ober)?)|Nov(\\.|ember)?|Dec(\\.|ember)?)[\\s_\\W]{1,3}((19|20)(\\d\\d))?.{0,120}?(?i:(?<!\\w)((dob[\\s\\W_])|(born(on)?[\\s\\W_])|(birth(day)?[\\s\\W_])|(b.?day[\\s\\W_])))", HMComponents.get("DoB").regex);
 
 		//end new re-written regex patterns ----------------- ^^
-
 
 		//Place of Birth
 		addRegexToList("(?i:(POB|Place of Birth|birth place|birthplace|born in|born at|bornin|bornat|place ofbirth))", HMComponents.get("PoB").regex);
@@ -497,7 +495,6 @@ public class Main extends JFrame {
 		JRBFile.addActionListener(new MyRunModeListener());
 		JRBDirectory.addActionListener(new MyRunModeListener());
 
-		//JBRemoveDuplicates.addActionListener(new CleanResultsListener());
 
 		JBInput.addActionListener(new MyIOListener());
 		JBRun.addActionListener(new MySearchTaskListener());
@@ -516,7 +513,6 @@ public class Main extends JFrame {
 		build_PII_1(input); //panel 1
 		build_PII_2(input); //panel 2
 		buildTextSearch(input);//panel 3
-		//buildReadMode(input); //old panel 3
 		buildPan_4(input); //Read + Run mode panels
 
 	}
@@ -556,19 +552,17 @@ public class Main extends JFrame {
 
 		panel.add(HMComponents.get("TextSearchArea").text);
 
-
-
-		regexButton = new JRadioButton("Regex");
-		regexButton.setToolTipText("Search with regular expressions");
-		wildcardButton = new JRadioButton("Wildcard");
-		wildcardButton.setToolTipText("Search using * and ?  Example *.doc  w??d.txt\"");
-		plainTextButton = new JRadioButton("Plain Text");
-		plainTextButton.setToolTipText("Search using exact matching text");
+		regex_Radiobutton = new JRadioButton("Regex");
+		regex_Radiobutton.setToolTipText("Search with regular expressions");
+		wildcard_Radiobutton = new JRadioButton("Wildcard");
+		wildcard_Radiobutton.setToolTipText("Search using * and ?  Example *.doc  w??d.txt\"");
+		plainText_Radiobutton = new JRadioButton("Plain Text");
+		plainText_Radiobutton.setToolTipText("Search using exact matching text");
 
 		ButtonGroup searchSelectGroup = new ButtonGroup();
-		searchSelectGroup.add(regexButton);
-		searchSelectGroup.add(wildcardButton);
-		searchSelectGroup.add(plainTextButton);
+		searchSelectGroup.add(regex_Radiobutton);
+		searchSelectGroup.add(wildcard_Radiobutton);
+		searchSelectGroup.add(plainText_Radiobutton);
 
 		//JPanel sub_pan1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		JPanel sub_pan1 = new JPanel();
@@ -576,29 +570,35 @@ public class Main extends JFrame {
 
 		sub_pan1.setLayout(new BoxLayout(sub_pan1,BoxLayout.Y_AXIS));
 
-		radioButtonPanel.add(plainTextButton);
-		radioButtonPanel.add(wildcardButton);
-		radioButtonPanel.add(regexButton);
-		plainTextButton.setSelected(true);
+		radioButtonPanel.add(plainText_Radiobutton);
+		radioButtonPanel.add(wildcard_Radiobutton);
+		radioButtonPanel.add(regex_Radiobutton);
+		plainText_Radiobutton.setSelected(true);
 
 		ClearButton = new JButton("Clear");
+		HelpButton = new JButton("Help");
+		CaseSensitiveCheckbox = new JCheckBox("Case Sensitive");
+		CaseSensitiveCheckbox.setSelected(true);
+
+		JPanel sub_pan2 = new JPanel(new FlowLayout(FlowLayout.CENTER));
+		sub_pan2.add(CaseSensitiveCheckbox);
+		sub_pan2.add(ClearButton);
+		sub_pan2.add(HelpButton);
+		ClearButton.addActionListener(new TextSearchListener());
+		HelpButton.addActionListener(new TextSearchListener());
+		plainText_Radiobutton.addActionListener(new TextSearchListener());
+		wildcard_Radiobutton.addActionListener(new TextSearchListener());
+		regex_Radiobutton.addActionListener(new TextSearchListener());
 		sub_pan1.add(radioButtonPanel);
-		sub_pan1.add(ClearButton);
-		ClearButton.addActionListener(new MySearchTaskListener());
+		sub_pan1.add(sub_pan2);
+
 
 		panel.add(sub_pan1);
 		input.add(panel);
 	}
 	private void build_PII_2(JPanel input) {
 
-		JPanel sub1 = new JPanel();	//to get proper alignment of new check boxes above "Other Match mode"
-		sub1.setPreferredSize(new Dimension(WIN_WIDTH/4,125));
-		sub1.setMaximumSize(new Dimension(WIN_WIDTH/4,125));
-
-		//JPanel sub2 = new JPanel();	//two sub panels are placed inside of panel_2 using grid layout
-
-		//sub2.setPreferredSize(new Dimension(WIN_WIDTH/4, 74));
-
+		JPanel sub1 = new JPanel();
 
 		sub1.setBorder(BorderFactory.createTitledBorder("FBI Match Modes"));
 		sub1.setLayout(new BoxLayout(sub1, BoxLayout.PAGE_AXIS));
@@ -606,16 +606,7 @@ public class Main extends JFrame {
 		sub1.add(HMComponents.get("FBIInfoFile").checkBox);
 		sub1.add(HMComponents.get("FBISource").checkBox);
 		sub1.add(HMComponents.get("FBISourceCode").checkBox);
-
-
-		JPanel panel_2 = new JPanel();
-		//panel_2.setLayout(new GridLayout(2,1,0,10));
-		//panel_2.setLayout(new BoxLayout(panel_2,BoxLayout.Y_AXIS));
-		//panel_2.setMaximumSize(new Dimension(WIN_WIDTH/4,125));
-
-		panel_2.add(sub1);
-		//panel_2.add(sub2);
-		input.add(panel_2);
+		input.add(sub1);
 
 	}
 
@@ -671,12 +662,6 @@ public class Main extends JFrame {
 		sub1.add(JBCancel);
 		sub1.add(JBExport);
 
-//		panel_4.setBorder(BorderFactory.createTitledBorder("Run Mode"));
-//		panel_4.setLayout(new BoxLayout(panel_4, BoxLayout.LINE_AXIS));
-//		panel_4.add(JBInput);
-//		panel_4.add(JBRun);
-//		panel_4.add(JBCancel);
-//		panel_4.add(JBExport);
 		panel_4.add(sub1);
 		buildReadMode(panel_4); // re-using old pan3 function.  pan3 is new sub1
 		input.add(panel_4);
@@ -710,6 +695,34 @@ public class Main extends JFrame {
 		}
 	}
 
+	private class TextSearchListener implements ActionListener {
+		public void actionPerformed(ActionEvent event) {
+	 		if (event.getSource() == ClearButton) {
+				HMComponents.get("TextSearchArea").text.setText("");
+			} else if (event.getSource() == HelpButton) {
+				boolean success = Desktop.isDesktopSupported();
+				String website = "https://github.com/gleporeNARA/GRIT2/wiki";
+				if(success){
+					try {
+						URI link = new URI(website);
+						Desktop.getDesktop().browse(link);
+					} catch(URISyntaxException | IOException e ) {
+						success = false;
+					}
+				}
+				if(!success) {
+					JOptionPane.showMessageDialog(null,"Java can not open links, please navigate to\n" + website);
+				}
+			} else if( event.getSource() == regex_Radiobutton) {
+				CaseSensitiveCheckbox.setEnabled(false);
+				CaseSensitiveCheckbox.setSelected(false);
+			} else if( event.getSource() == wildcard_Radiobutton) {
+				CaseSensitiveCheckbox.setEnabled(true);
+			} else if( event.getSource() == plainText_Radiobutton) {
+				CaseSensitiveCheckbox.setEnabled(true);
+			}
+		}
+	}
 	/**
 	 * listens for user's interaction with run mode.
 	 */
@@ -824,10 +837,11 @@ public class Main extends JFrame {
 						//validate and add User Text to regex list in HMComponents
 						List<Pattern> temp = buildTextRegexList(HMComponents.get("TextSearchArea").text.getText());
 						if(temp == null) {
-							// temp is null only if buildTextRegexList() had a regex error
-							// buildTextRegexList() should display error
-							// need to quit due to invalid text
-
+							/*
+							* temp is null only if buildTextRegexList() had a regex error
+							* buildTextRegexList() should display error
+							* need to quit due to invalid text
+							*/
 							return; // stop here
 						}else {
 							if(temp.isEmpty() ) {
@@ -869,11 +883,9 @@ public class Main extends JFrame {
 			} else if (event.getSource() == JBCancel) {		// CANCEL BUTTON
 				searchTask.cancel(true);
 				//System.exit(0);
-			} else if (event.getSource() == ClearButton) {
-				HMComponents.get("TextSearchArea").text.setText("");
 			}
-		}
-	}
+		}//end action performec
+	}//end search task listener
 
 	/* *******************************************************************************************************************
 	 *											The Search Task Section													*
@@ -1484,14 +1496,14 @@ public class Main extends JFrame {
 		int type = -1;
 		//try to parse string into a List
 		try {
-			if (regexButton.isSelected()) {
+			if (regex_Radiobutton.isSelected()) {
 				type = 0;
 				pattern = Pattern.compile(input);
 				result.add(pattern);
 			}
-			else if (wildcardButton.isSelected()) {
+			else if (wildcard_Radiobutton.isSelected()) {
 				type = 1;
-			}else if(plainTextButton.isSelected()) {
+			}else if(plainText_Radiobutton.isSelected()) {
 				type = 2;
 			}else {
 				System.out.println("fatal logic error @addTextToRegex()\nButtonSelected = " + type + " \tInput:\n" + input);
@@ -1509,9 +1521,23 @@ public class Main extends JFrame {
 							String temp = tempText[i];
 							temp = temp.replaceAll("\\?", "\\\\w");
 							temp = temp.replaceAll("\\*", "\\\\w+");
-							pattern = Pattern.compile(temp);
+
+							if(CaseSensitiveCheckbox.isSelected()) {
+								pattern = Pattern.compile(temp);
+							}else {
+								pattern = Pattern.compile(temp, Pattern.CASE_INSENSITIVE);
+							}
 						} else if (type == 2) {
-							pattern = Pattern.compile(tempText[i], Pattern.LITERAL);
+							//value of flags
+							/*
+							https://docs.oracle.com/javase/7/docs/api/constant-values.html#java.util.regex.Pattern.CASE_INSENSITIVE
+							 */
+							if(CaseSensitiveCheckbox.isSelected()) {
+								pattern = Pattern.compile(tempText[i], Pattern.LITERAL);
+							}else {
+								pattern = Pattern.compile(tempText[i], Pattern.LITERAL + Pattern.CASE_INSENSITIVE);
+							}
+
 						} else {
 							System.out.println("logic error, @addTextToRegex - parsing tempText\nType: " + type);
 						}
