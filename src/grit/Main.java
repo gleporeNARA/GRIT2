@@ -268,7 +268,15 @@ public class Main extends JFrame {
 		addRegexToList("([^0-9.-/]|^)\\d{3}[./-]\\d{2}[./-]\\d{4}([^0-9-/]|$)", HMComponents.get("SSN").regex);
 
 		//begin new re-written regex patterns ----------------- vv
+		/*
+		NOTE: old regex versions before merge can be found at
 
+		commit: 6c9bc9d19ef55cc2a7340786c21535b9bd51e70f
+		Date: June 11 2018
+		Author: gleporeNARA
+		File: Main.java   around lines 270
+
+		 */
 		//match dob,bday,birth..etc, within (120 whitespace/Non-Alpha/underscore) with DATE format (mm dd yy) or (mm dd yyy) delimited by 1-2 (whitespace/Non-alpha/newline)
 		//		?i = case insensitive, (?<!\\w) is negative look-behind for alphanumeric chars (rules out ???dob)
 		addRegexToList("(?i:(?<!\\w)((dob[\\s\\W_])|(born(on)?[\\s\\W_])|(birth(day)?[\\s\\W_])|(b.?day[\\s\\W_]))).{0,120}?((?<!\\d)((1[0-2])|(0?[1-9])))[\\s_\\W]{1,3}((3[0-1])|(2[0-9])|(1[0-9])|(0[1-9]))[\\s_\\W]{1,3}((19|20)?(\\d\\d))", HMComponents.get("DoB").regex);
