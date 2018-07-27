@@ -138,13 +138,13 @@ public class Main extends JFrame {
 	// GUI COMPONENTS (visible interface)
 	private JCheckBox JCBCheckAll;
 	private JCheckBox JCBAutoParser;
-	private JCheckBox caseSensitive;
+	private JCheckBox CaseSensitiveCheckbox;
 
 	private JRadioButton JRBDirectory;
 	private JRadioButton JRBFile;
-	private JRadioButton regexButton;
-	private JRadioButton wildcardButton;
-	private JRadioButton plainTextButton;
+	private JRadioButton regex_Radiobutton;
+	private JRadioButton wildcard_Radiobutton;
+	private JRadioButton plainText_Radiobutton;
 
 	private JButton JBInput;
 	private JButton JBRun;
@@ -152,7 +152,7 @@ public class Main extends JFrame {
 	private JTextField JTAProgressLog;
 	private JButton JBCancel;
 	private JButton JBExport;
-	private JButton helpButton;
+	private JButton HelpButton;
 
 	private JTextArea JTAResultLog;
 	private JTable JBTable;
@@ -544,17 +544,17 @@ public class Main extends JFrame {
 
 		panel.add(HMComponents.get("TextSearchArea").text);
 
-		regexButton = new JRadioButton("Regex");
-		regexButton.setToolTipText("Search with regular expressions");
-		wildcardButton = new JRadioButton("Wildcard");
-		wildcardButton.setToolTipText("Search using * and ?  Example *.doc  w??d.txt\"");
-		plainTextButton = new JRadioButton("Plain Text");
-		plainTextButton.setToolTipText("Search using exact matching text");
+		regex_Radiobutton = new JRadioButton("Regex");
+		regex_Radiobutton.setToolTipText("Search with regular expressions");
+		wildcard_Radiobutton = new JRadioButton("Wildcard");
+		wildcard_Radiobutton.setToolTipText("Search using * and ?  Example *.doc  w??d.txt\"");
+		plainText_Radiobutton = new JRadioButton("Plain Text");
+		plainText_Radiobutton.setToolTipText("Search using exact matching text");
 
 		ButtonGroup searchSelectGroup = new ButtonGroup();
-		searchSelectGroup.add(regexButton);
-		searchSelectGroup.add(wildcardButton);
-		searchSelectGroup.add(plainTextButton);
+		searchSelectGroup.add(regex_Radiobutton);
+		searchSelectGroup.add(wildcard_Radiobutton);
+		searchSelectGroup.add(plainText_Radiobutton);
 
 		//JPanel sub_pan1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		JPanel sub_pan1 = new JPanel();
@@ -562,22 +562,25 @@ public class Main extends JFrame {
 
 		sub_pan1.setLayout(new BoxLayout(sub_pan1,BoxLayout.Y_AXIS));
 
-		radioButtonPanel.add(plainTextButton);
-		radioButtonPanel.add(wildcardButton);
-		radioButtonPanel.add(regexButton);
-		plainTextButton.setSelected(true);
+		radioButtonPanel.add(plainText_Radiobutton);
+		radioButtonPanel.add(wildcard_Radiobutton);
+		radioButtonPanel.add(regex_Radiobutton);
+		plainText_Radiobutton.setSelected(true);
 
 		ClearButton = new JButton("Clear");
-		helpButton = new JButton("Help");
-		caseSensitive = new JCheckBox("Case Sensitive");
-		caseSensitive.setSelected(true);
+		HelpButton = new JButton("Help");
+		CaseSensitiveCheckbox = new JCheckBox("Case Sensitive");
+		CaseSensitiveCheckbox.setSelected(true);
 
 		JPanel sub_pan2 = new JPanel(new FlowLayout(FlowLayout.CENTER));
-		sub_pan2.add(caseSensitive);
+		sub_pan2.add(CaseSensitiveCheckbox);
 		sub_pan2.add(ClearButton);
-		sub_pan2.add(helpButton);
-		ClearButton.addActionListener(new MySearchTaskListener());
-		helpButton.addActionListener(new MySearchTaskListener());
+		sub_pan2.add(HelpButton);
+		ClearButton.addActionListener(new TextSearchListener());
+		HelpButton.addActionListener(new TextSearchListener());
+		plainText_Radiobutton.addActionListener(new TextSearchListener());
+		wildcard_Radiobutton.addActionListener(new TextSearchListener());
+		regex_Radiobutton.addActionListener(new TextSearchListener());
 		sub_pan1.add(radioButtonPanel);
 		sub_pan1.add(sub_pan2);
 
@@ -684,6 +687,34 @@ public class Main extends JFrame {
 		}
 	}
 
+	private class TextSearchListener implements ActionListener {
+		public void actionPerformed(ActionEvent event) {
+	 		if (event.getSource() == ClearButton) {
+				HMComponents.get("TextSearchArea").text.setText("");
+			} else if (event.getSource() == HelpButton) {
+				boolean success = Desktop.isDesktopSupported();
+				String website = "https://github.com/gleporeNARA/GRIT2/wiki";
+				if(success){
+					try {
+						URI link = new URI(website);
+						Desktop.getDesktop().browse(link);
+					} catch(URISyntaxException | IOException e ) {
+						success = false;
+					}
+				}
+				if(!success) {
+					JOptionPane.showMessageDialog(null,"Java can not open links, please navigate to\n" + website);
+				}
+			} else if( event.getSource() == regex_Radiobutton) {
+				CaseSensitiveCheckbox.setEnabled(false);
+				CaseSensitiveCheckbox.setSelected(false);
+			} else if( event.getSource() == wildcard_Radiobutton) {
+				CaseSensitiveCheckbox.setEnabled(true);
+			} else if( event.getSource() == plainText_Radiobutton) {
+				CaseSensitiveCheckbox.setEnabled(true);
+			}
+		}
+	}
 	/**
 	 * listens for user's interaction with run mode.
 	 */
@@ -844,25 +875,9 @@ public class Main extends JFrame {
 			} else if (event.getSource() == JBCancel) {		// CANCEL BUTTON
 				searchTask.cancel(true);
 				//System.exit(0);
-			} else if (event.getSource() == ClearButton) {
-				HMComponents.get("TextSearchArea").text.setText("");
-			} else if (event.getSource() == helpButton) {
-				boolean success = Desktop.isDesktopSupported();
-				String website = "https://github.com/gleporeNARA/GRIT2/wiki";
-				if(success){
-					try {
-						URI link = new URI(website);
-						Desktop.getDesktop().browse(link);
-					} catch(URISyntaxException | IOException e ) {
-						success = false;
-					}
-				}
-				if(!success) {
-					JOptionPane.showMessageDialog(null,"Java can not open links, please navigate to\n" + website);
-				}
 			}
-		}
-	}
+		}//end action performec
+	}//end search task listener
 
 	/* *******************************************************************************************************************
 	 *											The Search Task Section													*
@@ -1473,14 +1488,14 @@ public class Main extends JFrame {
 		int type = -1;
 		//try to parse string into a List
 		try {
-			if (regexButton.isSelected()) {
+			if (regex_Radiobutton.isSelected()) {
 				type = 0;
 				pattern = Pattern.compile(input);
 				result.add(pattern);
 			}
-			else if (wildcardButton.isSelected()) {
+			else if (wildcard_Radiobutton.isSelected()) {
 				type = 1;
-			}else if(plainTextButton.isSelected()) {
+			}else if(plainText_Radiobutton.isSelected()) {
 				type = 2;
 			}else {
 				System.out.println("fatal logic error @addTextToRegex()\nButtonSelected = " + type + " \tInput:\n" + input);
@@ -1499,7 +1514,7 @@ public class Main extends JFrame {
 							temp = temp.replaceAll("\\?", "\\\\w");
 							temp = temp.replaceAll("\\*", "\\\\w+");
 
-							if(caseSensitive.isSelected()) {
+							if(CaseSensitiveCheckbox.isSelected()) {
 								pattern = Pattern.compile(temp);
 							}else {
 								pattern = Pattern.compile(temp, Pattern.CASE_INSENSITIVE);
@@ -1509,7 +1524,7 @@ public class Main extends JFrame {
 							/*
 							https://docs.oracle.com/javase/7/docs/api/constant-values.html#java.util.regex.Pattern.CASE_INSENSITIVE
 							 */
-							if(caseSensitive.isSelected()) {
+							if(CaseSensitiveCheckbox.isSelected()) {
 								pattern = Pattern.compile(tempText[i], Pattern.LITERAL);
 							}else {
 								pattern = Pattern.compile(tempText[i], Pattern.LITERAL + Pattern.CASE_INSENSITIVE);
