@@ -5,6 +5,7 @@ import javax.swing.JTable;
 import javax.swing.border.TitledBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
+import java.time.LocalTime;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.poi.hsmf.MAPIMessage;
@@ -95,7 +96,7 @@ import java.net.URISyntaxException;
 
 public class Main extends JFrame {
 	private static final String PROGRAM_TITLE = "GRIT";
-	private static final String PROGRAM_VERSION = "0.0.10 B";
+	private static final String PROGRAM_VERSION = "0.0.10";
 	private static final int WIN_WIDTH = 1200;
 	private static final int WIN_HEIGHT = 850;
 
@@ -103,8 +104,8 @@ public class Main extends JFrame {
 	private File outputFileHTML;
 	private File outputFileCSV;
 
-	private static JProgressBar JPBStatus;
-	private static JProgressBar JPBStatus2;
+	private static JProgressBar fileProgressStatusBar;
+	private static JProgressBar directoryProgressStatusBar;
 	private static JFileChooser textFileChooser;
 	private static JFileChooser fileChooser;
 	private static JFileChooser fileSaver;
@@ -391,19 +392,19 @@ public class Main extends JFrame {
 		JTAProgressLog.setMargin(new Insets(2, 2, 2, 2));
 		JTAProgressLog.setToolTipText("Displays the current number of processed files");
 
-		JPBStatus = new JProgressBar(0,100);
-		JPBStatus.setBorderPainted(false);
-		JPBStatus.setVisible(false);
-		JPBStatus.setForeground(new Color(129,218,245));
-		JPBStatus.setMinimumSize(new Dimension(Integer.MAX_VALUE, 3));
-		JPBStatus.setMaximumSize(new Dimension(Integer.MAX_VALUE, 3));
+		fileProgressStatusBar = new JProgressBar(0,100);
+		fileProgressStatusBar.setBorderPainted(false);
+		fileProgressStatusBar.setVisible(false);
+		fileProgressStatusBar.setForeground(new Color(129,218,245));
+		fileProgressStatusBar.setMinimumSize(new Dimension(Integer.MAX_VALUE, 3));
+		fileProgressStatusBar.setMaximumSize(new Dimension(Integer.MAX_VALUE, 3));
 
-		JPBStatus2 = new JProgressBar(0,100);
-		JPBStatus2.setBorderPainted(false);
-		JPBStatus2.setVisible(false);
-		JPBStatus2.setForeground(new Color(129,218,245));
-		JPBStatus2.setMinimumSize(new Dimension(Integer.MAX_VALUE, 3));
-		JPBStatus2.setMaximumSize(new Dimension(Integer.MAX_VALUE, 3));
+		directoryProgressStatusBar = new JProgressBar(0,100);
+		directoryProgressStatusBar.setBorderPainted(false);
+		directoryProgressStatusBar.setVisible(false);
+		directoryProgressStatusBar.setForeground(new Color(129,218,245));
+		directoryProgressStatusBar.setMinimumSize(new Dimension(Integer.MAX_VALUE, 3));
+		directoryProgressStatusBar.setMaximumSize(new Dimension(Integer.MAX_VALUE, 3));
 
 		//Row3: Elements
 		JTAResultLog = new JTextArea(getTutorial());
@@ -426,8 +427,8 @@ public class Main extends JFrame {
 		panel5.setMinimumSize(new Dimension(Integer.MAX_VALUE, 20));
 		panel5.setMaximumSize(new Dimension(Integer.MAX_VALUE, 20));
 		panel5.add(JTAProgressLog);
-		panel5.add(JPBStatus2);
-		panel5.add(JPBStatus);
+		panel5.add(directoryProgressStatusBar);
+		panel5.add(fileProgressStatusBar);
 
 		//Row2: Elements Populated
 		JPanel row2 = new JPanel();
@@ -906,7 +907,7 @@ public class Main extends JFrame {
 				return;
 
 			totalFiles += inputFiles.size();	// update counter
-			JPBStatus.setMaximum (totalFiles);	//sets progress bar maximum to relative num of files to process
+			fileProgressStatusBar.setMaximum (totalFiles);	//sets progress bar maximum to relative num of files to process
 
 			//buildTextRegexList(); //Done in JBRun action listener
 			for (File file: inputFiles) {		// process file by file
@@ -1045,8 +1046,34 @@ public class Main extends JFrame {
 					System.out.println ("ConcurrentModificationException: " + e);
 				}
 
-				JPBStatus.setValue(++progressCounter);	// update progress bar for many files search, directory search
+				fileProgressStatusBar.setValue(++progressCounter);	// update progress bar for many files search, directory search
 			}
+		}
+
+		/**
+		 * Gets number of seconds between t1 and t2.
+		 * this function handles if t1 > t2 and reverses math.
+		 *
+		 * @param t1 - time 1 (start)
+		 * @param t2 - time 2 (end)
+		 * @return int seconds
+		 */
+		private int getDeltaSeconds(LocalTime t1 , LocalTime t2) {
+			int t1_sec = 0;
+			int t2_sec = 0;
+			int min_prefix = 60;
+			int hour_prefix = 60 * 60;
+			if(t1.compareTo(t2) < 0 ) {
+				t1_sec = (t1.getHour() * hour_prefix) + (t1.getMinute() * min_prefix) + t1.getSecond();
+				t2_sec = (t2.getHour() * hour_prefix) + (t2.getMinute() * min_prefix) + t2.getSecond();
+			}else if(t1.compareTo(t2) > 0) {
+				//need to invert them so t2 > t1
+				t2_sec = (t1.getHour() * hour_prefix) + (t1.getMinute() * min_prefix) + t1.getSecond();
+				t1_sec = (t2.getHour() * hour_prefix) + (t2.getMinute() * min_prefix) + t2.getSecond();
+			}else {
+				return 0;
+			}
+			return t2_sec - t1_sec;
 		}
 
 		/**
@@ -1075,13 +1102,14 @@ public class Main extends JFrame {
 			int lineNum = 1;		// init line counter
 			int oneExtraRun = 1;	//causes the line reader to run one extra time when last line in file is reached so that
 			//next line can be reassign to current line for matching on current line
+			LocalTime searchStart = LocalTime.now();
 
 			StringBuilder currLine = new StringBuilder ();	//between the end of the previous line and start at the beginning of the next line
 			StringBuilder nextLine = new StringBuilder ();	//look ahead line check if match is found between joined line to avoid double counting
 			StringBuilder combLine = new StringBuilder ();	//this is the combine line of the previous line and the current line
 
-			JPBStatus2.setMaximum (countLines (file));	//sets progress bar max to relative num of lines in file
-			JPBStatus2.setValue (0);	// reset line progress bar
+			directoryProgressStatusBar.setMaximum (countLines (file));	//sets progress bar max to relative num of lines in file
+			directoryProgressStatusBar.setValue (0);	// reset line progress bar
 			progressCounter2 = 0;
 
 			//removed, this calls numerous times and duplicates entries in the regex list
@@ -1115,9 +1143,7 @@ public class Main extends JFrame {
 
 					if (comp.isActive ()) {
 						//iterate through arrayList 'regex' in Component class.
-						if(comp.TYPE == 'T') {
-							System.out.println("textbox");
-						}
+
 						for (Pattern regex : comp.regex) {
 							int crrMchCnt, nxtMchCnt, cmbMchCnt;
 
@@ -1143,11 +1169,16 @@ public class Main extends JFrame {
 					}
 				}
 				Main.this.setString (currLine, nextLine); //set next line to current line
-				JPBStatus2.setValue(++progressCounter2);	// update progress bar for single file search, count lines
+				directoryProgressStatusBar.setValue(++progressCounter2);	// update progress bar for single file search, count lines
 				++lineNum;
 			}
 
 			fileReader.close();				// tidy up and update progress
+			LocalTime searchFinish = LocalTime.now();
+			int result = getDeltaSeconds(searchStart,searchFinish);
+			if( result > 2) {
+				System.out.println(file.getPath() + "/" + file.getName() + " took " + result + " seconds to search");
+			}
 			publish("printCurrentProgress");
 			fileCounter ++;
 		}
@@ -1295,9 +1326,9 @@ public class Main extends JFrame {
 		@Override
 		protected Void doInBackground() throws Exception {
 			startSearch = new Date();
-			JPBStatus.setValue(0);
-			JPBStatus2.setVisible(true);
-			JPBStatus.setVisible(true);
+			fileProgressStatusBar.setValue(0);
+			directoryProgressStatusBar.setVisible(true);
+			fileProgressStatusBar.setVisible(true);
 			runSearch(userInput);
 			return null;
 		}
@@ -1319,8 +1350,8 @@ public class Main extends JFrame {
 			//System.out.println(skipFiles.toString());			//<=========== for debug
 
 			Toolkit.getDefaultToolkit().beep();		// notify
-			JPBStatus.setVisible(false);
-			JPBStatus2.setVisible(false);
+			fileProgressStatusBar.setVisible(false);
+			directoryProgressStatusBar.setVisible(false);
 
 			JBTableModel.setRowCount(0);	//<========= for debug, remove later ! this line removes live search result from table and display result stored from list
 			getResults(HMComponents.get ("TextSearchArea"));		// update
