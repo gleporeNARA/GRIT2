@@ -1523,7 +1523,7 @@ public class Main extends JFrame {
 		List<Pattern> result = new ArrayList<>();
 		Pattern pattern = null;
 		input = input.trim();
-		String[] tempText = input.split(","); //split text entry on commas
+		String[] tempTextlist = input.split(","); //split text entry on commas
 		int type = -1;
 		//try to parse string into a List
 		try {
@@ -1543,13 +1543,13 @@ public class Main extends JFrame {
 			//begin parsing Plain & Wilcard types
 			if(type != 0) {
 
-				for (int i = 0; i < tempText.length; i++) {
+				for (int i = 0; i < tempTextlist.length; i++) {
 					//check for empty indexes
-					tempText[i] = tempText[i].trim();
-					if (!tempText[i].matches("")) {
+					tempTextlist[i] = tempTextlist[i].trim();
+					if (!tempTextlist[i].matches("")) {
 
 						if (type == 1) {
-							String temp = tempText[i];
+							String temp = tempTextlist[i];
 							temp = temp.replaceAll("\\?", "\\\\w");
 							temp = temp.replaceAll("\\*", "\\\\w+");
 
@@ -1564,9 +1564,9 @@ public class Main extends JFrame {
 							https://docs.oracle.com/javase/7/docs/api/constant-values.html#java.util.regex.Pattern.CASE_INSENSITIVE
 							 */
 							if(CaseSensitiveCheckbox.isSelected()) {
-								pattern = Pattern.compile(tempText[i], Pattern.LITERAL);
+								pattern = Pattern.compile(tempTextlist[i], Pattern.LITERAL);
 							}else {
-								pattern = Pattern.compile(tempText[i], Pattern.LITERAL + Pattern.CASE_INSENSITIVE);
+								pattern = Pattern.compile(tempTextlist[i], Pattern.LITERAL + Pattern.CASE_INSENSITIVE);
 							}
 
 						} else {
@@ -1575,7 +1575,7 @@ public class Main extends JFrame {
 						result.add(pattern);
 
 					}//end if empty
-				}//end tempText iteration
+				}//end tempTextList iteration
 			}//end if type != 0
 		}catch (PatternSyntaxException e){
 			JOptionPane.showMessageDialog(Main.this, "ERROR in Search Pattern\n" + e.getDescription());
