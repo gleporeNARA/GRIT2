@@ -72,6 +72,14 @@ import java.net.URISyntaxException;
  *
  * @author Tam Tran (tranthientam@comcast.net), Gautam Mehta (gxmehta@gmail.com), Duy L Nguyen (duyl3nguy3n@gmail.com)
  * @version 0.0.4
+ *
+ * Version 0.1.0 Beta
+ * @author Brian Wilson (bwilso1@umbc.edu)
+ * - rewrote regex patterns for better accuracy & bugfix
+ * - added text search
+ * - re-organized GUI
+ * - re-structured code for readabiltiy
+ *
  * Version 0.0.4
  * - Revised Input Regex boxes to ONE
  * - Added Input button for regex file to be read (Currently Not-Functional)
@@ -96,7 +104,7 @@ import java.net.URISyntaxException;
 
 public class Main extends JFrame {
 	private static final String PROGRAM_TITLE = "GRIT";
-	private static final String PROGRAM_VERSION = "0.0.10";
+	private static final String PROGRAM_VERSION = "0.1.0 BETA";
 	private static final int WIN_WIDTH = 1200;
 	private static final int WIN_HEIGHT = 850;
 
