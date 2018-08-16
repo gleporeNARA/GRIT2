@@ -18,6 +18,7 @@ For Intellij IntelliJ IDEA 2017.3.4 (Ultimate Edition) on Windows 7
 
 If previously configured:
 1. click Build > "Build Artifacts"
+2. NARA-GRIT.jar is located in NARA-GRIT\out\artifacts\NARA_GRIT_jar\
 
 From scratch:
 1. Click "File > Project Structure > Artifacts"
