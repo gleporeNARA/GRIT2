@@ -29,6 +29,7 @@ import org.apache.tika.parser.html.HtmlParser;
 import org.apache.tika.parser.mbox.MboxParser;
 import org.apache.tika.parser.mbox.OutlookPSTParser;
 import org.apache.tika.parser.microsoft.JackcessParser;
+import org.apache.tika.parser.microsoft.OfficeParser;
 import org.apache.tika.parser.pdf.PDFParser;
 import org.apache.tika.parser.rtf.RTFParser;
 import org.apache.tika.parser.Parser;
@@ -104,7 +105,7 @@ import java.net.URISyntaxException;
 
 public class Main extends JFrame {
 	private static final String PROGRAM_TITLE = "GRIT";
-	private static final String PROGRAM_VERSION = "0.1.0 BETA";
+	private static final String PROGRAM_VERSION = "0.1.01 BETA";
 	private static final int WIN_WIDTH = 1200;
 	private static final int WIN_HEIGHT = 850;
 
@@ -146,7 +147,6 @@ public class Main extends JFrame {
 
 	// GUI COMPONENTS (visible interface)
 	private JCheckBox JCBCheckAll;
-	private JCheckBox JCBAutoParser;
 	private JCheckBox CaseSensitiveCheckbox;
 
 	private JRadioButton JRBDirectory;
@@ -628,9 +628,6 @@ public class Main extends JFrame {
 		JRBFile = new JRadioButton("One File");
 		JRBFile.setToolTipText("Single file search");
 
-		JCBAutoParser = new JCheckBox("Read Additional Formats");
-		JCBAutoParser.setToolTipText("The program will attempt to read additional file formats.");
-
 		ButtonGroup BGReadMode = new ButtonGroup();		//adding radio button to group
 		BGReadMode.add(JRBDirectory);
 		BGReadMode.add(JRBFile);
@@ -639,7 +636,7 @@ public class Main extends JFrame {
 		panel_3.setLayout(new BoxLayout(panel_3, BoxLayout.PAGE_AXIS));
 		panel_3.add(JRBDirectory);
 		panel_3.add(JRBFile);
-		panel_3.add(JCBAutoParser);
+
 
 		input.add(panel_3);
 	}
@@ -755,9 +752,10 @@ public class Main extends JFrame {
 				int userRespond = fileChooser.showOpenDialog(Main.this);	// open browse directory/file dialog
 				if (userRespond == JFileChooser.APPROVE_OPTION) {	// user select a directory/file
 					userInput = fileChooser.getSelectedFile();
-					System.out.println ("In MyIOListerner: " + userInput);			//<================ for debug
-					printToProgress("Input: " + userInput + "\n");
+					printToProgressBar("Input: " + userInput + "\n");
+					System.out.println("user hit INPUT");
 				}
+
 			} else if (event.getSource() == JBExport) {				// HTML SAVE BUTTON
 				Calendar cal = Calendar.getInstance ();		// get today date
 				// open save file dialog with a default file name
@@ -790,7 +788,7 @@ public class Main extends JFrame {
 								bufferedWriter.close();
 								fileWriter.close();
 
-								printToProgress("Result has been saved: " + outputFileHTML + "\n");
+								printToProgressBar("Result has been saved: " + outputFileHTML + "\n");
 								printToLog("*Result has been saved: " + outputFileHTML + "\n");
 							} catch (IOException e) {
 								JOptionPane.showMessageDialog(Main.this, "ERROR: Invalid output file");
@@ -820,7 +818,7 @@ public class Main extends JFrame {
 								bufferedWriter.close();
 								fileWriter.close();
 
-								printToProgress("Result has been saved: " + outputFileCSV + "\n");
+								printToProgressBar("Result has been saved: " + outputFileCSV + "\n");
 								printToLog("*Result has been saved: " + outputFileCSV + "\n");
 							} catch (IOException e) {
 								JOptionPane.showMessageDialog(Main.this, "ERROR: Invalid output file.");
@@ -941,6 +939,10 @@ public class Main extends JFrame {
 						continue;
 					}
 
+					//TODO - test
+					Parser temp = new OfficeParser();
+					Set junk = temp.getSupportedTypes(new ParseContext());
+					System.out.println(junk);
 					if (fileExtension.equals("txt") || fileExtension.equals("csv")) { //explicitly add csv files to native Java
 						fileReader = new Scanner(input);	//for txt files we will let java read them natively instead of Tika parser
 					} else if (fileExtension.equals("msg")) {
@@ -1000,19 +1002,10 @@ public class Main extends JFrame {
 						extractor.setIncludeSheetNames(false);
 						fileReader = new Scanner(extractor.getText());
 						npoifs.close();
-					} else if (fileExtension.isEmpty()) {
+					} else {
 						AutoDetectParser parser = new AutoDetectParser();
 						parser.parse(input, handler, new Metadata(), new ParseContext());
 						fileReader = new Scanner(handler.toString());
-					} else {
-						if (JCBAutoParser.isSelected()) {
-							AutoDetectParser parser = new AutoDetectParser();
-							parser.parse(input, handler, new Metadata(), new ParseContext());
-							fileReader = new Scanner(handler.toString());
-						} else { //files added here contains extensions not supported by grit and "Read Additional Format" was not selected
-							skipFiles.add(file);
-							continue;
-						}
 					}
 
 					matchRegex(file, fileExtension);	// find matching regex in current processing file
@@ -1348,7 +1341,7 @@ public class Main extends JFrame {
 
 			for (String msg : msgList)
 				if (msg.equals("printCurrentProgress"))
-					printToProgress("Completed " + fileCounter + " / " + totalFiles + " files." + " Results: " + (HMComponents.get ("TextSearchArea").counter + HMComponents.get ("SSN").counter + matchCounter) );
+					printToProgressBar("Completed " + fileCounter + " / " + totalFiles + " files." + " Results: " + (HMComponents.get ("TextSearchArea").counter + HMComponents.get ("SSN").counter + matchCounter) );
 				else
 					printToLog(msg);
 		}
@@ -1384,13 +1377,13 @@ public class Main extends JFrame {
 
 			if (isCancelled()) {
 				String title = "Search is cancelled\n";
-				printToProgress(title);
+				printToProgressBar(title);
 				printToLog("*" + title);
 				printToLog(msg.toString ());
 				JOptionPane.showMessageDialog(Main.this, msg.toString (), title, JOptionPane.INFORMATION_MESSAGE);
 			} else if (isDone()) {
 				String title = "Search is done\n";
-				printToProgress(title);
+				printToProgressBar(title);
 				printToLog("*" + title);
 				printToLog(msg.toString ());
 				JOptionPane.showMessageDialog(Main.this, msg.toString (), title, JOptionPane.INFORMATION_MESSAGE);
@@ -1673,7 +1666,7 @@ public class Main extends JFrame {
 	 * This method prints a given message to the progress log.
 	 * @param msg - message that need to be displayed.
 	 */
-	private void printToProgress(String msg) {
+	private void printToProgressBar(String msg) {
 		JTAProgressLog.setText(msg.trim());
 	}
 
