@@ -60,7 +60,8 @@ III.	Jar / Artifact Configuration
 	2.	Select "Artifacts" in the left side bar
 	3.	Click the green plus sign near top left
 	4.	Jar > From Modules with dependencies
-	5.	leave "main class" blank and click "next"
+	5.	Select Main.java as the main class and click "next"
+		5.a	The meta-inf should be placed by default in the src folder
 	6.	Ensure "Extracted tika-app-1.18.jar" shows up under OutputLayout
 		6.a	if not click the green plus sign with drop down arrow
 		6.b	select Extracted Directory
