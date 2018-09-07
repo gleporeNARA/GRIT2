@@ -134,7 +134,7 @@ public class HTMLWriter
     public String addResultTitle(Date timeStamp)
     {
         String title = "";
-        title += "<center><h2>PII Search Results on " + timeStamp + "</h2></center>";
+        title += "<center><h3>PII Search Results on " + timeStamp + "</h3></center>";
 
         return title;
     }
