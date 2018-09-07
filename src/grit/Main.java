@@ -241,7 +241,7 @@ public class Main extends JFrame {
 		 */
 		HMComponents = new HashMap<>();
 		//  <Key(String),  Component>
-		HMComponents.put ("TextSearchArea", new Component ('T', "Text", "", "Enter your own search text here"));
+		HMComponents.put ("TextSearchArea", new Component ('T', "Custom Text", "", "Enter your own search text here"));
 		HMComponents.put ("SSN", new Component ('C', "SSN", "SSN Match", "Matches (SSN#, SS#, SSN, 555-55-5555). Most likely to match SSNs. Fewest false positives."));
 		HMComponents.put ("DoB", new Component ('C', "DoB", "Date of Birth", "(Birth, Born, DOB with a date) Matches terms related to date of birth."));
 		HMComponents.put ("Maiden", new Component ('C', "Maiden", "Mother's Maiden Name or Nee", "Matches terms related to maiden names."));
@@ -939,10 +939,7 @@ public class Main extends JFrame {
 						continue;
 					}
 
-					//TODO - test
-					Parser temp = new OfficeParser();
-					Set junk = temp.getSupportedTypes(new ParseContext());
-					System.out.println(junk);
+
 					if (fileExtension.equals("txt") || fileExtension.equals("csv")) { //explicitly add csv files to native Java
 						fileReader = new Scanner(input);	//for txt files we will let java read them natively instead of Tika parser
 					} else if (fileExtension.equals("msg")) {
@@ -1286,7 +1283,32 @@ public class Main extends JFrame {
 			postHtmlResult.append (htmlWriter.addCloseNavULTag());
 			postHtmlResult.append (htmlWriter.addCloseNavTag());
 			postHtmlResult.append (htmlWriter.addCloseCenterTag());
+			//end posting counts
 
+
+			///begin positing custom search text (if active)
+			HMComponents.get("TextSearchArea").isActive(); {
+				String link = "CustomTextWords";
+				String lnkLabel = "Your custom words";
+				String tableTagId = "CustomWordsTable";
+				String [] temp = HMComponents.get("TextSearchArea").text.getText().trim().split(",");;
+				StringBuilder html = new StringBuilder();
+				for(int i = 0; i < temp.length; i++) {
+					html.append("<tr><td>");
+					html.append(temp[i]);
+					html.append("</td></tr>\n");
+				}
+
+				//taken from buildHTMLPanel, but without the header line
+				postHtmlResult.append (htmlWriter.addOpenPanelTag());
+				postHtmlResult.append (htmlWriter.addAnchorLink(link, lnkLabel));
+				postHtmlResult.append (htmlWriter.addOpenTableTag(tableTagId));
+				postHtmlResult.append (html.toString ());
+				postHtmlResult.append (htmlWriter.addCloseTableTag());
+				postHtmlResult.append (htmlWriter.addBackToTopLink("top", "Back to Top"));
+				postHtmlResult.append (htmlWriter.addClosePanelTag());
+
+			}
 			postHtmlResult.append (htmlWriter.addOpenCenterTag());
 			postHtmlResult.append (htmlWriter.addOpenNavTag());
 			postHtmlResult.append (htmlWriter.addOpenNavULTag());	// ********* !! possible bug !! why line below only considers ssnCounter and textCounter? **********
@@ -1444,7 +1466,7 @@ public class Main extends JFrame {
 		JBTableModel.addRow(new Object[]{comp.counter, comp.SYM, patternMatcher.group(), line.toString(), fileExt, file, lineNum});
 
 		//NOTE: switched from comp.SYM == "SSN" to line below
-		if (comp.SYM.equals("SSN") || comp.SYM.equals("Text")) {
+		if (comp.SYM.equals("SSN") || comp.TYPE == 'T') {
 			comp.resultList.add(new Match(comp.counter, comp.SYM, patternMatcher.group(), line.toString(), fileExt, file, lineNum));
 			comp.resultListUnique.add(new Match(comp.counter, comp.SYM, patternMatcher.group(), line.toString(), fileExt, file, lineNum));
 		} else {
